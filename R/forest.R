@@ -12,11 +12,11 @@
 #' required input is a data frame with a column called vlabel, beta, beta_lci and beta_uci.
 #'
 #' @param dat data frame with variables called
-#' vlabel (labels), nx with x=1,2,... (columns with n or descriptives, printed after label),
-#' beta, beta_lci, beta_uci (point estimates and confidence interval to make forests)
-#' optionally beta_format (formatted text along forest, generated from beta if not given)
-#' px with x=1,2,.. (columns with p-value)
-#' @param nrows number of rows, setting for layout, typically 1
+#' vlabel (labels), nx with x=1,2,... (num or chr columns with strings, e.g. number of observations or descriptives),
+#' beta, beta_lci, beta_uci (num columns with point estimates and confidence interval)
+#' optionally beta_format (num or chr column with formatted text to be printed along forest, generated from beta if not given)
+#' px with x=1,2,.. (num or chr columns with p-value(s))
+#' @param nrows number of rows, setting for layout, default is 1
 #' @param ncols number of columns, setting for layout, typically derived from the data
 #' @param nns number of n columns, derived from data if not given
 #' @param lheights lheights: relative height of rows, length is typically 3 (header, data ,footer)
@@ -52,6 +52,11 @@
 #' @param bottomline lines at the bottom if not NA
 #' @param headline  1 line for header if not NA, 2 lines if 2
 #' @param headline_pos  vector with position of lower and upper headline (if applicable), default c(0,1)
+#' @param beta2 if not NULL a second forest is generated, needs variables beta2, beta2_lci and beta2_uci in dat
+#' @param xlab2 see xlab for 2nd forest
+#' @param xlab_text2 see xlab_text for 2nd forest
+#' @param xlim2 see xlim for 2nd forest
+#' @param xtitle2 see xtitle for 2nd forest
 #' @param ... options passed to ff_ci for formatting the effects (if beta_format not goven)
 #'
 #' @return forest plot
@@ -59,9 +64,81 @@
 #' @export
 #'
 #' @importFrom grDevices rgb
-#' @importFrom graphics arrows layout
+#' @importFrom graphics arrows layout axis lines mtext par points text
 #'
 #' @examples
+#' data(forplotdata)
+#' # Minimal example
+#' fplot(dat=forplotdata[,c("vlabel","beta","beta_lci","beta_uci")])
+#'
+#' # Standard example
+#' fplot(dat=forplotdata)
+#'
+#' # Set widths and heights
+#' lwidths<-c(0.05,0.5,0.2,0.8,0.2,0.8,1.2,1.2,0.5,0.05)
+#' lheights<-c(0.15,1,0.04)
+#' fplot(dat=forplotdata,lwidths=lwidths,lheights=lheights)
+#'
+#'
+#' # Include header:
+#' header<-c("","Group1\nN","Group0\nmean (sd)","Group2\nN","Group2\nmean (sd)",
+#'	"Mean difference\n95% CI","","P-value")
+#' fplot(dat=forplotdata,lwidths=lwidths,lheights=lheights,header=header)
+#'
+#'
+#' ## more options for header
+#' header1<-list(y=0.5,cex=1.2,text=header)
+#' fplot(dat=forplotdata,header=header1,lwidths=lwidths,lheights=lheights)
+#'
+#' header2<-list(y=0.5,cex=1.0,text=header,x=c(0,0.1,0.2,0.3,0.4,0.7,0,0.98))
+#' fplot(dat=forplotdata,header=header2,lwidths=lwidths,lheights=lheights)
+#'
+#' header3<-list(list(y=0.6,
+#' 	text=c("Group1","Group2","Mean difference (95% CI)","P-value"),
+#' 	x=c(0.15,0.35,0.7,0.98)),
+#' 	list(y=0.3,text=c("N","mean (sd)","N","mean (sd)"),
+#' 	x=c(0.1,0.2,0.3,0.4)))
+#' fplot(dat=forplotdata,header=header3,lwidths=lwidths,lheights=lheights)
+#'
+#' # x-axis and label of plots
+#' xtitle<-list(x=0.85,y=0.4,textl="Group 1 better    ",textr="    Group 2 better")
+#' fplot(dat=forplotdata,header=header3,lwidths=lwidths,lheights=lheights,
+#'	xtitle=xtitle,ref=list(x=0),xlim=c(-1,0.5))
+#'
+#' xtitle<-list(x=0.85,y=0.8,textl="Group 1 better    ",textr="    Group 2 better")
+#' fplot(dat=forplotdata,header=header3,lwidths=lwidths,lheights=lheights,
+#' 	ref=list(x=0,col=1,extend=0.5),
+#' 	shift_ymin=0.3,
+#' 	shift_xaxis=0.5,xlab_line=-1.6,xlab_cex=0.7,
+#' 	xtitle=xtitle,xlim=c(-1,0.5))
+#'
+#' # Format points
+#' ps<-list(pch=16,cex=rnorm(10,2,0.2),col=1)
+#' fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,ps=ps)
+#'
+#' # Lines at header
+#' fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
+#' 	headline=1)
+#' fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
+#' 	headline=2,bottomline=1)
+#'
+#' #Plot window size
+#' dev.new(width=6,height=4,pointsize=14)
+#' lwidths<-c(0.05,0.5,0.2,0.8,0.2,0.8,1.2,1.2,0.5,0.05)
+#' lheights<-c(0.12,1,0.04)
+#' header3<-list(list(y=0.7,
+#' 	text=c("Group1","Group2","Mean difference (95% CI)","P-value"),
+#' 	x=c(0.15,0.35,0.7,0.98)),
+#' 	list(y=0.3,text=c("N","mean (sd)","N","mean (sd)"),
+#' 	x=c(0.1,0.2,0.3,0.4)))
+#' xtitle<-list(x=0.85,y=0.8,textl="Group 1 better    ",textr="    Group 2 better")
+#' fplot(dat=forplotdata,header=header3,lwidths=lwidths,lheights=lheights,
+#' 	ref=list(x=0),
+#' 	cap_length=0.03,
+#' 	shift_xaxis=0.5,xlab_line=-1.4,
+#' 	xtitle=xtitle,xlim=c(-1,0.5),
+#' 	headline=2,bottomline=1)
+#'
 #'
 fplot<-function(dat,
                 nrows=1,ncols=NA,
@@ -81,7 +158,9 @@ fplot<-function(dat,
                 ps=NA,
                 header=NA,
                 ref=list(x=NA,extend=0,lty=2,col="grey50",lwd=lwd),
-                bottomline=NA,headline=NA,headline_pos=c(0,1),...) {
+                bottomline=NA,headline=NA,headline_pos=c(0,1),
+				beta2=NULL, xlab2=NA,xlab_text2=NA,xlim2=NA,xtitle2=NA,
+				...) {
 
   #%%%%%%%%%%%
   #setup
@@ -129,6 +208,16 @@ fplot<-function(dat,
   }
   xlim<-c(min(xlab,xlim),max(xlab,xlim))
 
+  if (!is.null(beta2)) {
+    if (sum(!is.na(xlim2))==0) {
+  	  xlim2<-c(min(dat$beta_lci2,na.rm=TRUE),max(dat$beta_uci2,na.rm=TRUE))
+    }
+    if (sum(!is.na(xlab2))==0) {
+  	  xlab2<-pretty(xlim2)
+    }
+    xlim2<-c(min(xlab2,xlim2),max(xlab2,xlim2))
+  }
+
   #points
   if (sum(!is.na(ps))==0) {
     ps<-list(pch=15,cex=1,col=1)
@@ -152,7 +241,7 @@ fplot<-function(dat,
 
   #layout
   #%%%%%%%%%%%
-  
+
   ma<-lma(rows=nrows,cols=ncols,commonx1=TRUE,commonx2=TRUE)
   layout(ma,heights=lheights,widths=lwidths)
 
@@ -177,7 +266,7 @@ fplot<-function(dat,
 
   #n columns
   #%%%%%%%%%%%
-  
+
   if (nns!=0) {
     for (ni in 1:nns) {
       plot(0,type="n",xlim=c(0,1),ylim=ylim,yaxt="n",ylab="",xlab="",axes=FALSE)
@@ -196,7 +285,7 @@ fplot<-function(dat,
 
   #beta text
   #%%%%%%%%%%%
-  
+
   plot(0,type="n",xlim=c(0,1),ylim=ylim,yaxt="n",ylab="",xlab="",axes=FALSE)
   if (sum(grepl("beta_format",colnames(dat)))==0) {
     if (lscale=="yes") {
@@ -217,12 +306,12 @@ fplot<-function(dat,
 
   #beta
   #%%%%%%%%%%%
-  
+
   plot(0,type="n",xlim=xlim,ylim=ylim,yaxt="n",ylab="",xlab="",axes=FALSE)
   #symbols(dat$beta,y.at,squares=1/dat$beta_se,add=TRUE,inches=0.15,bg=pcol,fg=NA)
   points(dat$beta,y.at,pch=ps[["pch"]],cex=ps[["cex"]],col=ps[["col"]])
   arrows(y0=y.at,y1=y.at,x0=dat$beta_lci,x1=dat$beta_uci,code=3,angle=90,length=0)
-  
+
   #arrows and caps
   sel<-dat$beta_lci<min(xlim) | dat$beta_uci>max(xlim)
   sel<-sel & !is.na(sel)
@@ -246,14 +335,14 @@ fplot<-function(dat,
 			code<-ifelse(code==1,2,1)
 			arrows(y0=y.at[sel][li],y1=y.at[sel][li],x0=dats$beta_lci[li],x1=dats$beta_uci[li],
 				code=code,angle=90,length=cap_length)
-		}		
+		}
 	}
 	arrows(y0=y.at[!sel],y1=y.at[!sel],x0=dat$beta_lci[!sel],x1=dat$beta_uci[!sel],code=3,angle=90,length=cap_length)
   } else {
 	arrows(y0=y.at,y1=y.at,x0=dat$beta_lci,x1=dat$beta_uci,code=3,angle=90,length=cap_length)
   }
-	  
-  #lines and axis  
+
+  #lines and axis
   if (!is.na(ref[["x"]])) {
     lines(x=rep(ref[["x"]],2),y=c(ylim[1]-shift_ymin+shift_xaxis,ylim[2]+shift_ymax+ref[["extend"]]),
           lty=ref[["lty"]],col=ref[["col"]],lwd=ref[["lwd"]])
@@ -268,10 +357,83 @@ fplot<-function(dat,
     lines(x=c(par("usr")[1],par("usr")[2]),y=c(shift_xaxis,shift_xaxis),xpd=TRUE)
   }
 
+  #2nd beta:
+  ##########
+
+  #text:
+  if (!is.null(beta2)) {
+     plot(0,type="n",xlim=c(0,1),ylim=ylim,yaxt="n",ylab="",xlab="",axes=FALSE)
+	  if (sum(grepl("beta_format2",colnames(dat)))==0) {
+		if (lscale=="yes") {
+		  risk<-apply(dat[,c("beta2","beta_lci2","beta_uci2")],1,function(x) ff_ci(exp(x),...))
+		} else {
+		  risk<-apply(dat[,c("beta2","beta_lci2","beta_uci2")],1,function(x) ff_ci(x,...))
+		}
+		risk[is.na(dat$beta2)]<-""
+	  } else {
+		risk<-dat$beta_format2
+	  }
+	  text(risk,x=0.5+shift_textbeta_col,y=y.at,adj=c(0.5,0.5))
+
+	  if (!is.na(bottomline)) {
+		lines(x=c(par("usr")[1],par("usr")[2]),y=c(shift_xaxis,shift_xaxis),xpd=TRUE)
+	  }
+
+    #beta2
+
+    plot(0,type="n",xlim=xlim2,ylim=ylim,yaxt="n",ylab="",xlab="",axes=FALSE)
+    points(dat$beta2,y.at,pch=ps[["pch"]],cex=ps[["cex"]],col=ps[["col"]])
+    arrows(y0=y.at,y1=y.at,x0=dat$beta_lci2,x1=dat$beta_uci2,code=3,angle=90,length=0)
+
+    #arrows and caps
+    sel<-dat$beta_lci2<min(xlim2) | dat$beta_uci2>max(xlim2)
+    sel<-sel & !is.na(sel)
+    if (any(sel) & arrow==TRUE) {
+	  dats<-dat[sel,]
+	  for (li in 1:nrow(dats)) {
+	  	if (dats$beta_lci2[li]<min(xlim2)) {
+	  		code<-1
+	  		dats$beta_lci2[li]<-min(xlim2)
+	  	}
+	  	if (dats$beta_uci2[li]>max(xlim2)) {
+	  		code<-2
+	  		dats$beta_uci2[li]<-max(xlim2)
+	  	}
+	  	if (dats$beta_lci2[li]<min(xlim2) & dats$beta_uci2[li]>max(xlim2)) {
+	  		code<-3
+	  	}
+	  	arrows(y0=y.at[sel][li],y1=y.at[sel][li],x0=dats$beta_lci2[li],x1=dats$beta_uci2[li],
+	  		code=code,angle=arrow_angle,length=arrow_length)
+	  	if (cap_length>0 & code!=3) {
+	  		code<-ifelse(code==1,2,1)
+	  		arrows(y0=y.at[sel][li],y1=y.at[sel][li],x0=dats$beta_lci2[li],x1=dats$beta_uci2[li],
+	  			code=code,angle=90,length=cap_length)
+	  	}
+	  }
+	  arrows(y0=y.at[!sel],y1=y.at[!sel],x0=dat$beta_lci2[!sel],x1=dat$beta_uci2[!sel],code=3,angle=90,length=cap_length)
+    } else {
+	  arrows(y0=y.at,y1=y.at,x0=dat$beta_lci2,x1=dat$beta_uci2,code=3,angle=90,length=cap_length)
+    }
+
+    #lines and axis
+    if (!is.na(ref[["x"]])) {
+      lines(x=rep(ref[["x"]],2),y=c(ylim[1]-shift_ymin+shift_xaxis,ylim[2]+shift_ymax+ref[["extend"]]),
+            lty=ref[["lty"]],col=ref[["col"]],lwd=ref[["lwd"]])
+    }
+    if (sum(!is.na(xlab_text2))==0) {
+      xlab_text2<-xlab2
+    }
+    axis(side=1,pos=shift_xaxis,at=xlab2,labels=rep("",length(xlab2)),las=1,tick=TRUE,tck=tck,lwd=lwd)
+    mtext(side=1,line=xlab_line,at=xlab2,text=xlab_text2,cex=xlab_cex)
+
+    if (!is.na(bottomline)) {
+      lines(x=c(par("usr")[1],par("usr")[2]),y=c(shift_xaxis,shift_xaxis),xpd=TRUE)
+    }
+  }
 
   #p columns
   #%%%%%%%%%%%
-  
+
   if (np!=0) {
     for (pi in 1:np) {
       plot(0,type="n",xlim=c(0,1),ylim=ylim,yaxt="n",ylab="",xlab="",axes=FALSE)
@@ -293,11 +455,14 @@ fplot<-function(dat,
     text(x=xtitle[["x"]],y=xtitle[["y"]],xtitle[["textr"]],adj=c(0,0.5),xpd=TRUE,cex=xtitle[["cex"]])
     text(x=xtitle[["x"]],y=xtitle[["y"]],xtitle[["textl"]],adj=c(1,0.5),xpd=TRUE,cex=xtitle[["cex"]])
   }
-
+  if (sum(!is.na(xtitle2))>0) {
+    text(x=xtitle2[["x"]],y=xtitle2[["y"]],xtitle2[["textr"]],adj=c(0,0.5),xpd=TRUE,cex=xtitle2[["cex"]])
+    text(x=xtitle2[["x"]],y=xtitle2[["y"]],xtitle2[["textl"]],adj=c(1,0.5),xpd=TRUE,cex=xtitle2[["cex"]])
+  }
 
   #header
   #%%%%%%%%%%%
-   
+
   yline<-0.5
   yadj<-0.5
 
