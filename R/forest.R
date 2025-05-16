@@ -99,7 +99,7 @@
 #'
 #' # Shift x-axis, labels and title	
 #' xtitle<-list(x=0.86,y=0.6,textl="Group 1 better  ",textr="  Group 2 better")
-#' fplot(dat=forplotdata,header=header3,lwidths=lwidths,lheights=lheights,
+#' fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
 #'	ref=list(x=0,col=2,extend=2),
 #'	xtitle=xtitle,xlim=c(-1,0.5),shift_xaxis=0.3,xlab_line=-0.8)
 #'
