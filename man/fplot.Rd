@@ -26,7 +26,7 @@ fplot(
   xlab_text = NA,
   xlim = NA,
   xlab_cex = 0.6,
-  xlab_line = -0.5,
+  xlab_line = 0,
   tck = -0.04,
   shift_xaxis = 0,
   xtitle = NA,
@@ -147,14 +147,14 @@ required input is a data frame with a column called vlabel, beta, beta_lci and b
 \examples{
 data(forplotdata)
 # Minimal example
-fplot(dat=forplotdata[,c("vlabel","beta","beta_lci","beta_uci")])
+ fplot(dat=forplotdata[,c("vlabel","beta","beta_lci","beta_uci")])
 
 # Standard example
 fplot(dat=forplotdata)
 
 # Set widths and heights
 lwidths<-c(0.05,0.5,0.2,0.8,0.2,0.8,1.2,1.2,0.5,0.05)
-lheights<-c(0.15,1,0.04)
+lheights<-c(0.14,1,0.08)
 fplot(dat=forplotdata,lwidths=lwidths,lheights=lheights)
 
 
@@ -163,58 +163,28 @@ header<-c("","Group1\nN","Group0\nmean (sd)","Group2\nN","Group2\nmean (sd)",
 "Mean difference\n95\% CI","","P-value")
 fplot(dat=forplotdata,lwidths=lwidths,lheights=lheights,header=header)
 
-
-## more options for header
-header1<-list(y=0.5,cex=1.2,text=header)
-fplot(dat=forplotdata,header=header1,lwidths=lwidths,lheights=lheights)
-
-header2<-list(y=0.5,cex=1.0,text=header,x=c(0,0.1,0.2,0.3,0.4,0.7,0,0.98))
-fplot(dat=forplotdata,header=header2,lwidths=lwidths,lheights=lheights)
-
-header3<-list(list(y=0.6,
+header<-list(list(y=0.7,
 	text=c("Group1","Group2","Mean difference (95\% CI)","P-value"),
-	x=c(0.15,0.35,0.7,0.98)),
+	x=c(0.10,0.32,0.7,0.98)),
 	list(y=0.3,text=c("N","mean (sd)","N","mean (sd)"),
-	x=c(0.1,0.2,0.3,0.4)))
-fplot(dat=forplotdata,header=header3,lwidths=lwidths,lheights=lheights)
+	x=c(0.07,0.18,0.28,0.38)))
+fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights)
 
-# x-axis and label of plots
-xtitle<-list(x=0.85,y=0.4,textl="Group 1 better    ",textr="    Group 2 better")
-fplot(dat=forplotdata,header=header3,lwidths=lwidths,lheights=lheights,
+# Reference line and xlim
+xtitle<-list(x=0.86,y=0.2,textl="Group 1 better  ",textr="  Group 2 better")
+fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
 xtitle=xtitle,ref=list(x=0),xlim=c(-1,0.5))
 
-xtitle<-list(x=0.85,y=0.8,textl="Group 1 better    ",textr="    Group 2 better")
+# Shift x-axis, labels and title	
+xtitle<-list(x=0.86,y=0.6,textl="Group 1 better  ",textr="  Group 2 better")
 fplot(dat=forplotdata,header=header3,lwidths=lwidths,lheights=lheights,
-	ref=list(x=0,col=1,extend=0.5),
-	shift_ymin=0.3,
-	shift_xaxis=0.5,xlab_line=-1.6,xlab_cex=0.7,
-	xtitle=xtitle,xlim=c(-1,0.5))
+ref=list(x=0,col=2,extend=2),
+xtitle=xtitle,xlim=c(-1,0.5),shift_xaxis=0.3,xlab_line=-0.8)
 
-# Format points
-ps<-list(pch=16,cex=rnorm(10,2,0.2),col=1)
-fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,ps=ps)
-
-# Lines at header
+# Lines at header and bottom
 fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
-	headline=1)
-fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
-	headline=2,bottomline=1)
-
-#Plot window size
-dev.new(width=6,height=4,pointsize=14)
-lwidths<-c(0.05,0.5,0.2,0.8,0.2,0.8,1.2,1.2,0.5,0.05)
-lheights<-c(0.12,1,0.04)
-header3<-list(list(y=0.7,
-	text=c("Group1","Group2","Mean difference (95\% CI)","P-value"),
-	x=c(0.15,0.35,0.7,0.98)),
-	list(y=0.3,text=c("N","mean (sd)","N","mean (sd)"),
-	x=c(0.1,0.2,0.3,0.4)))
-xtitle<-list(x=0.85,y=0.8,textl="Group 1 better    ",textr="    Group 2 better")
-fplot(dat=forplotdata,header=header3,lwidths=lwidths,lheights=lheights,
-	ref=list(x=0),
-	cap_length=0.03,
-	shift_xaxis=0.5,xlab_line=-1.4,
-	xtitle=xtitle,xlim=c(-1,0.5),
+ 	ref=list(x=0,col=2,extend=2),
+	xtitle=xtitle,xlim=c(-1,0.5),shift_xaxis=0.3,xlab_line=-0.8,
 	headline=2,bottomline=1)
 
 
