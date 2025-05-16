@@ -1,0 +1,154 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-"
+)
+```
+
+# `forplot` 
+
+A package to generate forest plots.
+
+## Installation
+
+`forplot` can be installed from github:
+
+```{r gh-installation, eval = FALSE}
+# install.packages("remotes")
+remotes::install_github("CTU-Bern/forplot")
+```
+
+Note that `remotes` treats any warnings (e.g. that a certain package was built under a different version of R) as errors. If you see such an error, run the following line and try again:
+
+```{r remotes-error, eval = FALSE}
+Sys.setenv(R_REMOTES_NO_ERRORS_FROM_WARNINGS = "true")
+```
+
+## Overview
+`forpplot` and it's main function fplot needs a data frame with specific column names. 
+
+- vlabel: a chr column with the variable labels printed on the left of the forest plot 
+- nx: any number of chr or num columns numbered sequentially (i.e. n1, n2, n3, ...). Printed in that seqence after the 
+	column label. May contain the number of observations and/or summary per group.
+- beta, beta_lci, beta_uci: three num columns with point estimates and confidence interval to be plotted as forest.
+- beta_format: optional chr column with formatted text to be prin§ted along forest, generated from beta if not given.
+- px: any number of chr or num columns numbered sequentially (i.e. p1, p2, p3, ...), printed on the very right of the plot.
+	May contain p-values.
+
+The package includes an example dataset with 10 variables:
+
+```{r}
+# load package
+#library(forplot)
+devtools::load_all()
+
+# demonstration data
+data(forplotdata)
+
+forplotdata
+```
+
+The nx columns included the number of observations and descritpives (mean (sd)) for each group, beta is a mean difference, p1 the p-value.
+
+The minimal plot only includes a label and the forest and needs columns vlabel, beta, beta_lci, beta_uci.
+
+```{r, fig.height=3.5, fig.width=5}
+fplot(dat=forplotdata[,c("vlabel","beta","beta_lci","beta_uci")])
+```
+
+We can add the nx and px columns:
+```{r, fig.height=3.5, fig.width=8}
+fplot(dat=forplotdata)
+```
+
+Set more sensible widths and heights.
+The widths has to be the same length as the number of columns for the input 
+	data plus two for the left and right margin.
+The length is usually three, header, body and footer.	
+
+```{r, fig.height=3.5, fig.width=8}
+lwidths<-c(0.05,0.5,0.2,0.8,0.2,0.8,1.2,1.2,0.5,0.05)
+
+lheights<-c(0.14,1,0.08)
+
+fplot(dat=forplotdata,lwidths=lwidths,lheights=lheights)
+```
+
+A header can be given using a character vector the same 
+	length as the number of columns of the input data, which then 
+	places it above the columns
+
+```{r, fig.height=3.5, fig.width=8}
+header<-c("","Group1\nN","Group0\nmean (sd)","Group2\nN","Group2\nmean (sd)",
+	"Mean difference\n95% CI","","P-value")
+
+fplot(dat=forplotdata,lwidths=lwidths,lheights=lheights,header=header)
+```
+
+The header can also be placed at any x/y position using a list 
+	with one element per header line.
+
+```{r, fig.height=3.5, fig.width=8}
+header<-list(list(y=0.7,
+	text=c("Group1","Group2","Mean difference (95% CI)","P-value"),
+	x=c(0.10,0.32,0.7,0.98)),
+	list(y=0.3,text=c("N","mean (sd)","N","mean (sd)"),
+	x=c(0.07,0.18,0.28,0.38)))
+
+fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights)
+```
+
+A label can be placed below the x-axis using option xtitle.
+Option ref adds a vertical reference line and xlim specifies the 
+	limits for the axis.
+
+```{r, fig.height=3.5, fig.width=8}
+xtitle<-list(x=0.86,y=0.2,textl="Group 1 better  ",textr="  Group 2 better")
+
+fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
+	xtitle=xtitle,ref=list(x=0),xlim=c(-1,0.5))
+```
+
+Note that arrows are shown if the limits of the CIs are not included within xlim.
+
+There are further options for the reference line and we can shift the x-axis
+  if the gap at the bottom is too large.
+	
+```{r, fig.height=3.5, fig.width=8}
+xtitle<-list(x=0.86,y=0.6,textl="Group 1 better  ",textr="  Group 2 better")
+
+fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
+	ref=list(x=0,col=2,extend=2),
+	xtitle=xtitle,xlim=c(-1,0.5),shift_xaxis=0.3,xlab_line=-0.8)
+
+```
+
+The points of the forest plots can also be formatted.
+
+```{r, fig.height=3.5, fig.width=8}
+ps<-list(pch=16,cex=rnorm(10,2,0.2),col=1)
+
+fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
+	ref=list(x=0,col=2,extend=2),
+	xtitle=xtitle,xlim=c(-1,0.5),shift_xaxis=0.3,xlab_line=-0.8,
+	ps=ps)
+
+```
+
+Lines at the top and bottom can be added.
+
+```{r, fig.height=3.5, fig.width=8}
+fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
+  ref=list(x=0,col=2,extend=2),
+	xtitle=xtitle,xlim=c(-1,0.5),shift_xaxis=0.3,xlab_line=-0.8,
+	headline=2,bottomline=1)
+```
+
+
