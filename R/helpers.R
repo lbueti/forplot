@@ -46,7 +46,7 @@ ff<-function(x,dig=2) {
 
 # Format point estimat with confidence interval
 
-ff_ci<-function(est,dig=NULL,fs="pe (lci - uci)") {
+ff_ci<-function(est,dig=NULL,fs="pe (lci to uci)") {
 
   if (!is.na(sum(est))) {
 
