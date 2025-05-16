@@ -44,9 +44,7 @@ The package includes an example dataset with 10 variables:
 
 ``` r
 # load package
-#library(forplot)
-devtools::load_all()
-#> ℹ Loading forplot
+library(forplot)
 
 # demonstration data
 data(forplotdata)
