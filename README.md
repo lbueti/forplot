@@ -197,3 +197,31 @@ fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
 ```
 
 ![](man/figures/README-unnamed-chunk-12-1.png)<!-- -->
+
+## Under development
+
+A feature under development is adding a second forest plot (e.g. to show
+a risk difference and ratio). That needs a beta, beta_lci2 and beta_uci2
+column in the dataset (just copied over in the example below). Options
+xlab2,xlab_text2,xlim2 and xtitle2 are available to format the second
+plot.
+
+``` r
+
+forplotdata2<-forplotdata
+forplotdata2$beta2<-forplotdata2$beta
+forplotdata2$beta_lci2<-forplotdata2$beta_lci
+forplotdata2$beta_uci2<-forplotdata2$beta_uci
+forplotdata2<-forplotdata2[,colnames(forplotdata2) != "p1"]
+forplotdata2$p1<-forplotdata$p1
+  
+lwidths<-c(0.05,0.5,0.2,0.8,0.2,0.8,1.2,1.2,1.2,1.2,0.5,0.05)
+lheights<-c(0.14,1,0.08)
+
+fplot(dat=forplotdata2,beta2 = TRUE,
+      lwidths=lwidths,lheights=lheights,
+      xlim=c(-1,0.5),xlim2=c(-1,0.5),
+      headline=2,bottomline=1)
+```
+
+![](man/figures/README-unnamed-chunk-13-1.png)<!-- -->
