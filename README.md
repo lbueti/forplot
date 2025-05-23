@@ -157,6 +157,7 @@ fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
 The points of the forest plots can also be formatted.
 
 ``` r
+set.seed(1345)
 ps<-list(pch=16,cex=rnorm(10,2,0.2),col=1)
 
 fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
