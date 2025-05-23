@@ -183,6 +183,28 @@
 <span>    headline<span class="op">=</span><span class="fl">2</span>,bottomline<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-12-1.png"><!-- --></p>
 </div>
+<div class="section level2">
+<h2 id="under-development">Under development<a class="anchor" aria-label="anchor" href="#under-development"></a>
+</h2>
+<p>A feature under development is adding a second forest plot (e.g. to show a risk difference and ratio). That needs a beta, beta_lci2 and beta_uci2 column in the dataset (just copied over in the example below). Options xlab2,xlab_text2,xlim2 and xtitle2 are available to format the second plot.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="va">forplotdata2</span><span class="op">&lt;-</span><span class="va">forplotdata</span></span>
+<span><span class="va">forplotdata2</span><span class="op">$</span><span class="va">beta2</span><span class="op">&lt;-</span><span class="va">forplotdata2</span><span class="op">$</span><span class="va">beta</span></span>
+<span><span class="va">forplotdata2</span><span class="op">$</span><span class="va">beta_lci2</span><span class="op">&lt;-</span><span class="va">forplotdata2</span><span class="op">$</span><span class="va">beta_lci</span></span>
+<span><span class="va">forplotdata2</span><span class="op">$</span><span class="va">beta_uci2</span><span class="op">&lt;-</span><span class="va">forplotdata2</span><span class="op">$</span><span class="va">beta_uci</span></span>
+<span><span class="va">forplotdata2</span><span class="op">&lt;-</span><span class="va">forplotdata2</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">forplotdata2</span><span class="op">)</span> <span class="op">!=</span> <span class="st">"p1"</span><span class="op">]</span></span>
+<span><span class="va">forplotdata2</span><span class="op">$</span><span class="va">p1</span><span class="op">&lt;-</span><span class="va">forplotdata</span><span class="op">$</span><span class="va">p1</span></span>
+<span>  </span>
+<span><span class="va">lwidths</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.05</span>,<span class="fl">0.5</span>,<span class="fl">0.2</span>,<span class="fl">0.8</span>,<span class="fl">0.2</span>,<span class="fl">0.8</span>,<span class="fl">1.2</span>,<span class="fl">1.2</span>,<span class="fl">1.2</span>,<span class="fl">1.2</span>,<span class="fl">0.5</span>,<span class="fl">0.05</span><span class="op">)</span></span>
+<span><span class="va">lheights</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.14</span>,<span class="fl">1</span>,<span class="fl">0.08</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="reference/fplot.html">fplot</a></span><span class="op">(</span>dat<span class="op">=</span><span class="va">forplotdata2</span>,beta2 <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>      lwidths<span class="op">=</span><span class="va">lwidths</span>,lheights<span class="op">=</span><span class="va">lheights</span>,</span>
+<span>      xlim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>,<span class="fl">0.5</span><span class="op">)</span>,xlim2<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>,<span class="fl">0.5</span><span class="op">)</span>,</span>
+<span>      headline<span class="op">=</span><span class="fl">2</span>,bottomline<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-13-1.png"><!-- --></p>
+</div>
 </div>
   </div>
 
