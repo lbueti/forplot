@@ -175,7 +175,7 @@ xtitle<-list(x=0.86,y=0.2,textl="Group 1 better  ",textr="  Group 2 better")
 fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
 xtitle=xtitle,ref=list(x=0),xlim=c(-1,0.5))
 
-# Shift x-axis, labels and title	
+# Shift x-axis, labels and title
 xtitle<-list(x=0.86,y=0.6,textl="Group 1 better  ",textr="  Group 2 better")
 fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
 ref=list(x=0,col=2,extend=2),

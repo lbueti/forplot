@@ -97,7 +97,7 @@
 #' fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
 #'	xtitle=xtitle,ref=list(x=0),xlim=c(-1,0.5))
 #'
-#' # Shift x-axis, labels and title	
+#' # Shift x-axis, labels and title
 #' xtitle<-list(x=0.86,y=0.6,textl="Group 1 better  ",textr="  Group 2 better")
 #' fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
 #'	ref=list(x=0,col=2,extend=2),
@@ -141,6 +141,13 @@ fplot<-function(dat,
       ncols<-ncol(dat)-1
     } else {
       ncols<-ncol(dat)-1-1
+    }
+  }
+  if (!is.null(beta2)) {
+    if (sum(grepl("beta_format2",colnames(dat)))==0) {
+      ncols<-ncols - 1
+    } else {
+      ncols<-ncols - 1-1
     }
   }
 
@@ -418,6 +425,8 @@ fplot<-function(dat,
   }
 
   #axis text
+  #%%%%%%%%%%%
+
   plot(0,type="n",axes=FALSE,ylim=c(0,1),xlim=c(0,1))
   if (sum(!is.na(xtitle))>0) {
     text(x=xtitle[["x"]],y=xtitle[["y"]],xtitle[["textr"]],adj=c(0,0.5),xpd=TRUE,cex=xtitle[["cex"]])
@@ -457,6 +466,11 @@ fplot<-function(dat,
 
     ht<-colnames(dat)[!(colnames(dat) %in% c("beta_uci","beta_format"))]
     ht[ht %in% c("beta","beta_lci")]<-c("beta (ci)","")
+    if (!is.null(beta2)) {
+      ht<-ht[!(ht %in% c("beta_uci2","beta_format2"))]
+      ht[ht %in% c("beta2","beta_lci2")]<-c("beta2 (ci)","")
+    }
+
     headerd<-list(x=hpc,y=yline,text=ht,cex=1)
 
     #add defaults if missing
