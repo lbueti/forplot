@@ -32,7 +32,7 @@ fplot(
   xtitle = NA,
   lwd = 1,
   pcol = rgb(0.1, 0.1, 0.1, 0.2),
-  lscale = c("no", "yes"),
+  lscale = FALSE,
   ps = NA,
   header = NA,
   ref = list(x = NA, extend = 0, lty = 2, col = "grey50", lwd = lwd),
@@ -107,7 +107,7 @@ list with x (xpos), y (ypos), textr and textl (text at the right/left side), cex
 
 \item{pcol}{color if symbols are used, not active}
 
-\item{lscale}{beta given on log scale, use exp to format beta, default is no}
+\item{lscale}{logicial, beta given on log scale, use exp to format beta, default is FALSE}
 
 \item{ps}{points for plot, list with pch, cex, and col}
 
