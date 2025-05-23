@@ -43,7 +43,7 @@
 #' list with x (xpos), y (ypos), textr and textl (text at the right/left side), cex (text size)
 #' @param lwd line widths
 #' @param pcol color if symbols are used, not active
-#' @param lscale beta given on log scale, use exp to format beta, default is no
+#' @param lscale logicial, beta given on log scale, use exp to format beta, default is FALSE
 #' @param ps  points for plot, list with pch, cex, and col
 #' @param header for table, either a character vector or a list with any of
 #'  x (vector with xpos), y (single y-position), text (character vector with labels), cex (text size),
@@ -124,7 +124,7 @@ fplot<-function(dat,
                 xtitle=NA,
                 lwd=1,
                 pcol=rgb(.1,.1,.1,.2),
-                lscale=c("no","yes"),
+                lscale=FALSE,
                 ps=NA,
                 header=NA,
                 ref=list(x=NA,extend=0,lty=2,col="grey50",lwd=lwd),
@@ -135,8 +135,6 @@ fplot<-function(dat,
   #%%%%%%%%%%%
   #setup
   #%%%%%%%%%%%
-
-  lscale<-match.arg(lscale)
 
   if (is.na(ncols)) {
     if (sum(grepl("beta_format",colnames(dat)))==0) {
@@ -258,7 +256,7 @@ fplot<-function(dat,
 
   plot(0,type="n",xlim=c(0,1),ylim=ylim,yaxt="n",ylab="",xlab="",axes=FALSE)
   if (sum(grepl("beta_format",colnames(dat)))==0) {
-    if (lscale=="yes") {
+    if (lscale) {
       risk<-apply(dat[,c("beta","beta_lci","beta_uci")],1,function(x) ff_ci(exp(x),...))
     } else {
       risk<-apply(dat[,c("beta","beta_lci","beta_uci")],1,function(x) ff_ci(x,...))
@@ -334,7 +332,7 @@ fplot<-function(dat,
   if (!is.null(beta2)) {
      plot(0,type="n",xlim=c(0,1),ylim=ylim,yaxt="n",ylab="",xlab="",axes=FALSE)
 	  if (sum(grepl("beta_format2",colnames(dat)))==0) {
-		if (lscale=="yes") {
+		if (lscale) {
 		  risk<-apply(dat[,c("beta2","beta_lci2","beta_uci2")],1,function(x) ff_ci(exp(x),...))
 		} else {
 		  risk<-apply(dat[,c("beta2","beta_lci2","beta_uci2")],1,function(x) ff_ci(x,...))

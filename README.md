@@ -177,3 +177,23 @@ fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
 ```
 
 ![](man/figures/README-unnamed-chunk-11-1.png)<!-- -->
+
+If effect measures are on the log-scale (e.g. for odds ratios), option
+lscale can be used to indicate that the text should contain the
+exponentiated values. Axis ticks and labels have to be adapted by hand.
+
+``` r
+
+xlab_text<-c(0.3,0.5,0.8,1.0,1.5)
+xlab<-log(xlab_text)
+xlim<-log(c(min(xlab_text),max(xlab_text)))
+
+fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
+  ref=list(x=0,col=2,extend=2),
+  lscale=TRUE,
+    xtitle=xtitle,shift_xaxis=0.3,xlab_line=-0.8,
+  xlim=xlim,xlab=xlab, xlab_text=xlab_text,
+    headline=2,bottomline=1)
+```
+
+![](man/figures/README-unnamed-chunk-12-1.png)<!-- -->
