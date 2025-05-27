@@ -135,7 +135,7 @@ fplot<-function(dat,
   #%%%%%%%%%%%
   #setup
   #%%%%%%%%%%%
-
+	
   if (is.na(ncols)) {
     if (sum(grepl("beta_format",colnames(dat)))==0) {
       ncols<-ncol(dat)-1
@@ -209,7 +209,39 @@ fplot<-function(dat,
       ref[[refopt[i]]]<-refdef[[i]]
     }
   }
-
+	
+  #standard column ordering 
+  seq<-colnames(dat)  
+  npl<-which(seq=="vlabel")
+  if (nns!=0) {
+    for (ni in 1:nns) {
+		npl<-c(npl,which(seq==paste0("n",ni)))
+	}
+  }
+  if (sum(grepl("beta_format",colnames(dat)))==0) {
+     npl<-c(npl,which(seq=="beta"))
+	 npl<-c(npl,npl[length(npl)]+1)
+  } else {
+	npl<-c(npl,which(seq=="beta"))
+	npl<-c(npl,which(seq=="beta_format"))
+  }
+  if (!is.null(beta2)) {
+    if (sum(grepl("beta_format2",colnames(dat)))==0) {
+  	 npl<-c(npl,which(seq=="beta2"))
+  	 npl<-c(npl,npl[length(npl)]+1)
+    } else {
+  	  npl<-c(npl,which(seq=="beta2"))
+  	  npl<-c(npl,which(seq=="beta_format2"))
+    }
+  }
+  if (np!=0) {
+    for (pi in 1:np) {
+      npl<-c(npl,which(seq==paste0("p",pi)))
+    }
+  }	
+  npl2<-(1:ncols)[order(npl)]	
+  		
+  
   #%%%%%%%%%%%
   #plot
   #######
@@ -218,6 +250,10 @@ fplot<-function(dat,
   #%%%%%%%%%%%
 
   ma<-lma(rows=nrows,cols=ncols,commonx1=TRUE,commonx2=TRUE)
+  if (nrows==1) {
+	ma[2,2:(ncols+1)]<-npl2
+  }
+  
   layout(ma,heights=lheights,widths=lwidths)
 
   par(mar=c(0,0,0,0))
