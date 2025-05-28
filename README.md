@@ -22,23 +22,23 @@ error, run the following line and try again:
 Sys.setenv(R_REMOTES_NO_ERRORS_FROM_WARNINGS = "true")
 ```
 
-## Overview
+## Usage
 
-`forpplot` and it’s main function fplot needs a data frame with specific
+`forplot` and its main function `fplot` needs a data frame with specific
 column names.
 
-- vlabel: a chr column with the variable labels printed on the left of
-  the forest plot
-- nx: any number of chr or num columns numbered sequentially (i.e. n1,
-  n2, n3, …). Printed in that seqence after the column label. May
-  contain the number of observations and/or summary per group.
-- beta, beta_lci, beta_uci: three num columns with point estimates and
-  confidence interval to be plotted as forest.
-- beta_format: optional chr column with formatted text to be prin§ted
-  along forest, generated from beta if not given.
-- px: any number of chr or num columns numbered sequentially (i.e. p1,
-  p2, p3, …), printed on the very right of the plot. May contain
-  p-values.
+- *vlabel*: a *chr* column with the variable labels.
+- *nx*: any number of *chr* or *num* columns numbered sequentially
+  (i.e. *n1*, *n2*, *n3*, …). Could contain the number of observations
+  and/or summary per group.
+- *beta*, *beta_lci*, *beta_uci*: three *num* columns with point
+  estimates and confidence interval to be plotted as forest.
+- *beta_format*: optional *chr* column with formatted text to be printed
+  along forest, generated from betas if not given.
+- *px*: any number of *chr* or *num* columns numbered sequentially
+  (i.e. *p1*, *p2*, *p3*, …). Could contain p-values.
+
+The order of the columns is kept for the plot.
 
 The package includes an example dataset with 10 variables:
 
@@ -63,11 +63,12 @@ forplotdata
 #> 10  out10 100 5.1 (1.1) 100 5.4 (1.1) -0.28700316 -0.5822050  0.008198722 0.057
 ```
 
-The nx columns included the number of observations and descritpives
-(mean (sd)) for each group, beta is a mean difference, p1 the p-value.
+The *nx* columns include the number of observations and descriptives
+(mean (sd)) for each group, *beta* is a mean difference, *p1* the
+p-value.
 
 The minimal plot only includes a label and the forest and needs columns
-vlabel, beta, beta_lci, beta_uci.
+*vlabel*, *beta*, *beta_lci*, *beta_uci*.
 
 ``` r
 fplot(dat=forplotdata[,c("vlabel","beta","beta_lci","beta_uci")])
@@ -75,7 +76,7 @@ fplot(dat=forplotdata[,c("vlabel","beta","beta_lci","beta_uci")])
 
 ![](man/figures/README-unnamed-chunk-3-1.png)<!-- -->
 
-We can add the nx and px columns:
+Adding *nx* and *px* columns:
 
 ``` r
 fplot(dat=forplotdata)
@@ -83,9 +84,11 @@ fplot(dat=forplotdata)
 
 ![](man/figures/README-unnamed-chunk-4-1.png)<!-- -->
 
-Set more sensible widths and heights. The widths has to be the same
-length as the number of columns for the input data plus two for the left
-and right margin. The length is usually three, header, body and footer.
+Set more sensible widths and heights:
+
+- lwidths has to be the same length as the number of columns for the
+  input data plus two for the left and right margin
+- lheight is usually of length three, for header, body and footer
 
 ``` r
 lwidths<-c(0.05,0.5,0.2,0.8,0.2,0.8,1.2,1.2,0.5,0.05)
@@ -98,8 +101,7 @@ fplot(dat=forplotdata,lwidths=lwidths,lheights=lheights)
 ![](man/figures/README-unnamed-chunk-5-1.png)<!-- -->
 
 A header can be given using a character vector the same length as the
-number of columns of the input data, which then places it above the
-columns
+number of columns of the input data:
 
 ``` r
 header<-c("","Group1\nN","Group0\nmean (sd)","Group2\nN","Group2\nmean (sd)",
@@ -111,23 +113,23 @@ fplot(dat=forplotdata,lwidths=lwidths,lheights=lheights,header=header)
 ![](man/figures/README-unnamed-chunk-6-1.png)<!-- -->
 
 The header can also be placed at any x/y position using a list with one
-element per header line.
+element per header line:
 
 ``` r
-header<-list(list(y=0.7,
-    text=c("Group1","Group2","Mean difference (95% CI)","P-value"),
-    x=c(0.10,0.32,0.7,0.98)),
-    list(y=0.3,text=c("N","mean (sd)","N","mean (sd)"),
-    x=c(0.07,0.18,0.28,0.38)))
+header<-list(
+  list(y=0.7,text=c("Group1","Group2","Mean difference (95% CI)","P-value"),x=c(0.10,0.32,0.7,0.98)),
+  list(y=0.3,text=c("N","mean (sd)","N","mean (sd)"),x=c(0.07,0.18,0.28,0.38)))
 
 fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights)
 ```
 
 ![](man/figures/README-unnamed-chunk-7-1.png)<!-- -->
 
-A label can be placed below the x-axis using option xtitle. Option ref
-adds a vertical reference line and xlim specifies the limits for the
-axis.
+Further formatting options for the forest plot include:
+
+- *xtitle*: a label below the x-axis
+- *ref*: adds a vertical reference line
+- *xlim*: limits for the x-axis
 
 ``` r
 xtitle<-list(x=0.86,y=0.2,textl="Group 1 better  ",textr="  Group 2 better")
@@ -138,11 +140,11 @@ fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
 
 ![](man/figures/README-unnamed-chunk-8-1.png)<!-- -->
 
-Note that arrows are shown if the limits of the CIs are not included
-within xlim.
+Note that arrows are shown if the limits of the confidence intervals are
+not included within *xlim*.
 
 There are further options for the reference line and we can shift the
-x-axis if the gap at the bottom is too large.
+x-axis if the gap at the bottom is too large:
 
 ``` r
 xtitle<-list(x=0.86,y=0.6,textl="Group 1 better  ",textr="  Group 2 better")
@@ -154,7 +156,7 @@ fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
 
 ![](man/figures/README-unnamed-chunk-9-1.png)<!-- -->
 
-The points of the forest plots can also be formatted.
+The points of the forest plots can also be formatted:
 
 ``` r
 set.seed(1345)
@@ -168,7 +170,7 @@ fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
 
 ![](man/figures/README-unnamed-chunk-10-1.png)<!-- -->
 
-Lines at the top and bottom can be added.
+Lines at the top and bottom can be added:
 
 ``` r
 fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
@@ -180,11 +182,10 @@ fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
 ![](man/figures/README-unnamed-chunk-11-1.png)<!-- -->
 
 If effect measures are on the log-scale (e.g. for odds ratios), option
-lscale can be used to indicate that the text should contain the
+*lscale* can be used to indicate that the text should contain the
 exponentiated values. Axis ticks and labels have to be adapted by hand.
 
 ``` r
-
 xlab_text<-c(0.3,0.5,0.8,1.0,1.5)
 xlab<-log(xlab_text)
 xlim<-log(c(min(xlab_text),max(xlab_text)))
@@ -202,10 +203,10 @@ fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
 ## Under development
 
 A feature under development is adding a second forest plot (e.g. to show
-a risk difference and ratio). That needs a beta, beta_lci2 and beta_uci2
-column in the dataset (just copied over in the example below). Options
-xlab2,xlab_text2,xlim2 and xtitle2 are available to format the second
-plot.
+a risk difference and ratio) by setting *beta2 = TRUE*. That needs
+columns *beta2*, *beta_lci2* and *beta_uci2* in the dataset (just copied
+over in the example below). Options *xlab2*, *xlab_text2*, *xlim2* and
+*xtitle2* are available to format the second plot.
 
 ``` r
 
@@ -219,7 +220,7 @@ forplotdata2$p1<-forplotdata$p1
 lwidths<-c(0.05,0.5,0.2,0.8,0.2,0.8,1.2,1.2,1.2,1.2,0.5,0.05)
 lheights<-c(0.14,1,0.08)
 
-fplot(dat=forplotdata2,beta2 = TRUE,
+fplot(dat=forplotdata2, beta2 = TRUE,
       lwidths=lwidths,lheights=lheights,
       xlim=c(-1,0.5),xlim2=c(-1,0.5),
       headline=2,bottomline=1)
