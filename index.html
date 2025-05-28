@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">forplot</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.2</span>
       </span>
     </div>
 
@@ -75,16 +75,22 @@
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span>R_REMOTES_NO_ERRORS_FROM_WARNINGS <span class="op">=</span> <span class="st">"true"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
+<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
-<p><code>forpplot</code> and it’s main function fplot needs a data frame with specific column names.</p>
+<p><code>forplot</code> and its main function <code>fplot</code> needs a data frame with specific column names.</p>
 <ul>
-<li>vlabel: a chr column with the variable labels printed on the left of the forest plot</li>
-<li>nx: any number of chr or num columns numbered sequentially (i.e. n1, n2, n3, …). Printed in that seqence after the column label. May contain the number of observations and/or summary per group.</li>
-<li>beta, beta_lci, beta_uci: three num columns with point estimates and confidence interval to be plotted as forest.</li>
-<li>beta_format: optional chr column with formatted text to be prin§ted along forest, generated from beta if not given.</li>
-<li>px: any number of chr or num columns numbered sequentially (i.e. p1, p2, p3, …), printed on the very right of the plot. May contain p-values.</li>
+<li>
+<em>vlabel</em>: a <em>chr</em> column with the variable labels.</li>
+<li>
+<em>nx</em>: any number of <em>chr</em> or <em>num</em> columns numbered sequentially (i.e. <em>n1</em>, <em>n2</em>, <em>n3</em>, …). Could contain the number of observations and/or summary per group.</li>
+<li>
+<em>beta</em>, <em>beta_lci</em>, <em>beta_uci</em>: three <em>num</em> columns with point estimates and confidence interval to be plotted as forest.</li>
+<li>
+<em>beta_format</em>: optional <em>chr</em> column with formatted text to be printed along forest, generated from betas if not given.</li>
+<li>
+<em>px</em>: any number of <em>chr</em> or <em>num</em> columns numbered sequentially (i.e. <em>p1</em>, <em>p2</em>, <em>p3</em>, …). Could contain p-values.</li>
 </ul>
+<p>The order of the columns is kept for the plot.</p>
 <p>The package includes an example dataset with 10 variables:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># load package</span></span>
@@ -105,16 +111,20 @@
 <span><span class="co">#&gt; 8    out8 100 5.1 (1.0) 100 5.5 (1.1) -0.40311974 -0.6955442 -0.110695309 0.007</span></span>
 <span><span class="co">#&gt; 9    out9 100 4.9 (1.0) 100 5.4 (1.2) -0.50709366 -0.8110643 -0.203123036 0.001</span></span>
 <span><span class="co">#&gt; 10  out10 100 5.1 (1.1) 100 5.4 (1.1) -0.28700316 -0.5822050  0.008198722 0.057</span></span></code></pre></div>
-<p>The nx columns included the number of observations and descritpives (mean (sd)) for each group, beta is a mean difference, p1 the p-value.</p>
-<p>The minimal plot only includes a label and the forest and needs columns vlabel, beta, beta_lci, beta_uci.</p>
+<p>The <em>nx</em> columns include the number of observations and descriptives (mean (sd)) for each group, <em>beta</em> is a mean difference, <em>p1</em> the p-value.</p>
+<p>The minimal plot only includes a label and the forest and needs columns <em>vlabel</em>, <em>beta</em>, <em>beta_lci</em>, <em>beta_uci</em>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/fplot.html">fplot</a></span><span class="op">(</span>dat<span class="op">=</span><span class="va">forplotdata</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"vlabel"</span>,<span class="st">"beta"</span>,<span class="st">"beta_lci"</span>,<span class="st">"beta_uci"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-3-1.png"><!-- --></p>
-<p>We can add the nx and px columns:</p>
+<p>Adding <em>nx</em> and <em>px</em> columns:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/fplot.html">fplot</a></span><span class="op">(</span>dat<span class="op">=</span><span class="va">forplotdata</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-4-1.png"><!-- --></p>
-<p>Set more sensible widths and heights. The widths has to be the same length as the number of columns for the input data plus two for the left and right margin. The length is usually three, header, body and footer.</p>
+<p>Set more sensible widths and heights:</p>
+<ul>
+<li>lwidths has to be the same length as the number of columns for the input data plus two for the left and right margin</li>
+<li>lheight is usually of length three, for header, body and footer</li>
+</ul>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">lwidths</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.05</span>,<span class="fl">0.5</span>,<span class="fl">0.2</span>,<span class="fl">0.8</span>,<span class="fl">0.2</span>,<span class="fl">0.8</span>,<span class="fl">1.2</span>,<span class="fl">1.2</span>,<span class="fl">0.5</span>,<span class="fl">0.05</span><span class="op">)</span></span>
 <span></span>
@@ -122,32 +132,38 @@
 <span></span>
 <span><span class="fu"><a href="reference/fplot.html">fplot</a></span><span class="op">(</span>dat<span class="op">=</span><span class="va">forplotdata</span>,lwidths<span class="op">=</span><span class="va">lwidths</span>,lheights<span class="op">=</span><span class="va">lheights</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-5-1.png"><!-- --></p>
-<p>A header can be given using a character vector the same length as the number of columns of the input data, which then places it above the columns</p>
+<p>A header can be given using a character vector the same length as the number of columns of the input data:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">header</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">""</span>,<span class="st">"Group1\nN"</span>,<span class="st">"Group0\nmean (sd)"</span>,<span class="st">"Group2\nN"</span>,<span class="st">"Group2\nmean (sd)"</span>,</span>
 <span>    <span class="st">"Mean difference\n95% CI"</span>,<span class="st">""</span>,<span class="st">"P-value"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/fplot.html">fplot</a></span><span class="op">(</span>dat<span class="op">=</span><span class="va">forplotdata</span>,lwidths<span class="op">=</span><span class="va">lwidths</span>,lheights<span class="op">=</span><span class="va">lheights</span>,header<span class="op">=</span><span class="va">header</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-6-1.png"><!-- --></p>
-<p>The header can also be placed at any x/y position using a list with one element per header line.</p>
+<p>The header can also be placed at any x/y position using a list with one element per header line:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">header</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>y<span class="op">=</span><span class="fl">0.7</span>,</span>
-<span>    text<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Group1"</span>,<span class="st">"Group2"</span>,<span class="st">"Mean difference (95% CI)"</span>,<span class="st">"P-value"</span><span class="op">)</span>,</span>
-<span>    x<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.10</span>,<span class="fl">0.32</span>,<span class="fl">0.7</span>,<span class="fl">0.98</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>y<span class="op">=</span><span class="fl">0.3</span>,text<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"N"</span>,<span class="st">"mean (sd)"</span>,<span class="st">"N"</span>,<span class="st">"mean (sd)"</span><span class="op">)</span>,</span>
-<span>    x<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.07</span>,<span class="fl">0.18</span>,<span class="fl">0.28</span>,<span class="fl">0.38</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">header</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>y<span class="op">=</span><span class="fl">0.7</span>,text<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Group1"</span>,<span class="st">"Group2"</span>,<span class="st">"Mean difference (95% CI)"</span>,<span class="st">"P-value"</span><span class="op">)</span>,x<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.10</span>,<span class="fl">0.32</span>,<span class="fl">0.7</span>,<span class="fl">0.98</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>y<span class="op">=</span><span class="fl">0.3</span>,text<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"N"</span>,<span class="st">"mean (sd)"</span>,<span class="st">"N"</span>,<span class="st">"mean (sd)"</span><span class="op">)</span>,x<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.07</span>,<span class="fl">0.18</span>,<span class="fl">0.28</span>,<span class="fl">0.38</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/fplot.html">fplot</a></span><span class="op">(</span>dat<span class="op">=</span><span class="va">forplotdata</span>,header<span class="op">=</span><span class="va">header</span>,lwidths<span class="op">=</span><span class="va">lwidths</span>,lheights<span class="op">=</span><span class="va">lheights</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-7-1.png"><!-- --></p>
-<p>A label can be placed below the x-axis using option xtitle. Option ref adds a vertical reference line and xlim specifies the limits for the axis.</p>
+<p>Further formatting options for the forest plot include:</p>
+<ul>
+<li>
+<em>xtitle</em>: a label below the x-axis</li>
+<li>
+<em>ref</em>: adds a vertical reference line</li>
+<li>
+<em>xlim</em>: limits for the x-axis</li>
+</ul>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">xtitle</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x<span class="op">=</span><span class="fl">0.86</span>,y<span class="op">=</span><span class="fl">0.2</span>,textl<span class="op">=</span><span class="st">"Group 1 better  "</span>,textr<span class="op">=</span><span class="st">"  Group 2 better"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/fplot.html">fplot</a></span><span class="op">(</span>dat<span class="op">=</span><span class="va">forplotdata</span>,header<span class="op">=</span><span class="va">header</span>,lwidths<span class="op">=</span><span class="va">lwidths</span>,lheights<span class="op">=</span><span class="va">lheights</span>,</span>
 <span>    xtitle<span class="op">=</span><span class="va">xtitle</span>,ref<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x<span class="op">=</span><span class="fl">0</span><span class="op">)</span>,xlim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>,<span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-8-1.png"><!-- --></p>
-<p>Note that arrows are shown if the limits of the CIs are not included within xlim.</p>
-<p>There are further options for the reference line and we can shift the x-axis if the gap at the bottom is too large.</p>
+<p>Note that arrows are shown if the limits of the confidence intervals are not included within <em>xlim</em>.</p>
+<p>There are further options for the reference line and we can shift the x-axis if the gap at the bottom is too large:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">xtitle</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x<span class="op">=</span><span class="fl">0.86</span>,y<span class="op">=</span><span class="fl">0.6</span>,textl<span class="op">=</span><span class="st">"Group 1 better  "</span>,textr<span class="op">=</span><span class="st">"  Group 2 better"</span><span class="op">)</span></span>
 <span></span>
@@ -155,7 +171,7 @@
 <span>    ref<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x<span class="op">=</span><span class="fl">0</span>,col<span class="op">=</span><span class="fl">2</span>,extend<span class="op">=</span><span class="fl">2</span><span class="op">)</span>,</span>
 <span>    xtitle<span class="op">=</span><span class="va">xtitle</span>,xlim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>,<span class="fl">0.5</span><span class="op">)</span>,shift_xaxis<span class="op">=</span><span class="fl">0.3</span>,xlab_line<span class="op">=</span><span class="op">-</span><span class="fl">0.8</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-9-1.png"><!-- --></p>
-<p>The points of the forest plots can also be formatted.</p>
+<p>The points of the forest plots can also be formatted:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1345</span><span class="op">)</span></span>
 <span><span class="va">ps</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pch<span class="op">=</span><span class="fl">16</span>,cex<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">10</span>,<span class="fl">2</span>,<span class="fl">0.2</span><span class="op">)</span>,col<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span>
@@ -165,17 +181,16 @@
 <span>    xtitle<span class="op">=</span><span class="va">xtitle</span>,xlim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>,<span class="fl">0.5</span><span class="op">)</span>,shift_xaxis<span class="op">=</span><span class="fl">0.3</span>,xlab_line<span class="op">=</span><span class="op">-</span><span class="fl">0.8</span>,</span>
 <span>    ps<span class="op">=</span><span class="va">ps</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-10-1.png"><!-- --></p>
-<p>Lines at the top and bottom can be added.</p>
+<p>Lines at the top and bottom can be added:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/fplot.html">fplot</a></span><span class="op">(</span>dat<span class="op">=</span><span class="va">forplotdata</span>,header<span class="op">=</span><span class="va">header</span>,lwidths<span class="op">=</span><span class="va">lwidths</span>,lheights<span class="op">=</span><span class="va">lheights</span>,</span>
 <span>  ref<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x<span class="op">=</span><span class="fl">0</span>,col<span class="op">=</span><span class="fl">2</span>,extend<span class="op">=</span><span class="fl">2</span><span class="op">)</span>,</span>
 <span>    xtitle<span class="op">=</span><span class="va">xtitle</span>,xlim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>,<span class="fl">0.5</span><span class="op">)</span>,shift_xaxis<span class="op">=</span><span class="fl">0.3</span>,xlab_line<span class="op">=</span><span class="op">-</span><span class="fl">0.8</span>,</span>
 <span>    headline<span class="op">=</span><span class="fl">2</span>,bottomline<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-11-1.png"><!-- --></p>
-<p>If effect measures are on the log-scale (e.g. for odds ratios), option lscale can be used to indicate that the text should contain the exponentiated values. Axis ticks and labels have to be adapted by hand.</p>
+<p>If effect measures are on the log-scale (e.g. for odds ratios), option <em>lscale</em> can be used to indicate that the text should contain the exponentiated values. Axis ticks and labels have to be adapted by hand.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="va">xlab_text</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.3</span>,<span class="fl">0.5</span>,<span class="fl">0.8</span>,<span class="fl">1.0</span>,<span class="fl">1.5</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">xlab_text</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.3</span>,<span class="fl">0.5</span>,<span class="fl">0.8</span>,<span class="fl">1.0</span>,<span class="fl">1.5</span><span class="op">)</span></span>
 <span><span class="va">xlab</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">xlab_text</span><span class="op">)</span></span>
 <span><span class="va">xlim</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">xlab_text</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">xlab_text</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -190,7 +205,7 @@
 <div class="section level2">
 <h2 id="under-development">Under development<a class="anchor" aria-label="anchor" href="#under-development"></a>
 </h2>
-<p>A feature under development is adding a second forest plot (e.g. to show a risk difference and ratio). That needs a beta, beta_lci2 and beta_uci2 column in the dataset (just copied over in the example below). Options xlab2,xlab_text2,xlim2 and xtitle2 are available to format the second plot.</p>
+<p>A feature under development is adding a second forest plot (e.g. to show a risk difference and ratio) by setting <em>beta2 = TRUE</em>. That needs columns <em>beta2</em>, <em>beta_lci2</em> and <em>beta_uci2</em> in the dataset (just copied over in the example below). Options <em>xlab2</em>, <em>xlab_text2</em>, <em>xlim2</em> and <em>xtitle2</em> are available to format the second plot.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">forplotdata2</span><span class="op">&lt;-</span><span class="va">forplotdata</span></span>
@@ -203,7 +218,7 @@
 <span><span class="va">lwidths</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.05</span>,<span class="fl">0.5</span>,<span class="fl">0.2</span>,<span class="fl">0.8</span>,<span class="fl">0.2</span>,<span class="fl">0.8</span>,<span class="fl">1.2</span>,<span class="fl">1.2</span>,<span class="fl">1.2</span>,<span class="fl">1.2</span>,<span class="fl">0.5</span>,<span class="fl">0.05</span><span class="op">)</span></span>
 <span><span class="va">lheights</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.14</span>,<span class="fl">1</span>,<span class="fl">0.08</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="reference/fplot.html">fplot</a></span><span class="op">(</span>dat<span class="op">=</span><span class="va">forplotdata2</span>,beta2 <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span><span class="fu"><a href="reference/fplot.html">fplot</a></span><span class="op">(</span>dat<span class="op">=</span><span class="va">forplotdata2</span>, beta2 <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>      lwidths<span class="op">=</span><span class="va">lwidths</span>,lheights<span class="op">=</span><span class="va">lheights</span>,</span>
 <span>      xlim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>,<span class="fl">0.5</span><span class="op">)</span>,xlim2<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>,<span class="fl">0.5</span><span class="op">)</span>,</span>
 <span>      headline<span class="op">=</span><span class="fl">2</span>,bottomline<span class="op">=</span><span class="fl">1</span><span class="op">)</span></span></code></pre></div>
