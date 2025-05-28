@@ -7,19 +7,17 @@ A package to generate forest plots.
 
 ## Installation
 
-`forplot` can be installed from github:
+`forplot` can be installed via the R universe:
+
+``` r
+install.packages('forplot', repos = c('https://ctu-bern.r-universe.dev', 'https://cloud.r-project.org'))
+```
+
+or from github:
 
 ``` r
 # install.packages("remotes")
 remotes::install_github("CTU-Bern/forplot")
-```
-
-Note that `remotes` treats any warnings (e.g. that a certain package was
-built under a different version of R) as errors. If you see such an
-error, run the following line and try again:
-
-``` r
-Sys.setenv(R_REMOTES_NO_ERRORS_FROM_WARNINGS = "true")
 ```
 
 ## Usage
@@ -45,6 +43,7 @@ The package includes an example dataset with 10 variables:
 ``` r
 # load package
 library(forplot)
+#> Warning: Paket 'forplot' wurde unter R Version 4.4.3 erstellt
 
 # demonstration data
 data(forplotdata)
