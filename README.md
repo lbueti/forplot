@@ -43,7 +43,6 @@ The package includes an example dataset with 10 variables:
 ``` r
 # load package
 library(forplot)
-#> Warning: Paket 'forplot' wurde unter R Version 4.4.3 erstellt
 
 # demonstration data
 data(forplotdata)
