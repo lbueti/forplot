@@ -117,13 +117,13 @@ the list can be >1 to define more than one header line}
 
 \item{ref}{reference line, list with x (xposition), extend (extension on top), lty (line type), col (line color), lwd (line width)}
 
-\item{bottomline}{lines at the bottom if not NA}
+\item{bottomline}{line at the bottom if not NA}
 
-\item{headline}{1 line for header if not NA, 2 lines if 2}
+\item{headline}{line for header if not NA, 1 for one line at the bottom, 2 for a line at the bottom and top}
 
 \item{headline_pos}{vector with position of lower and upper headline (if applicable), default c(0,1)}
 
-\item{beta2}{if not NULL a second forest is generated, needs variables beta2, beta2_lci and beta2_uci in dat}
+\item{beta2}{if not NULL a second forest is generated, needs variables beta2, beta_lci2 and beta_uci2 in dat}
 
 \item{xlab2}{see xlab for 2nd forest}
 
@@ -133,7 +133,7 @@ the list can be >1 to define more than one header line}
 
 \item{xtitle2}{see xtitle for 2nd forest}
 
-\item{...}{options passed to ff_ci for formatting the effects (if beta_format not goven)}
+\item{...}{options passed to ff_ci for formatting the effects (if beta_format not given)}
 }
 \value{
 forest plot
