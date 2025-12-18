@@ -6,5 +6,8 @@ ordering of columns according to input
 
 forplot 0.0.2
 ------------------
-
 bug fix in help file
+
+forplot 0.0.3
+------------------
+plotting reference line before data

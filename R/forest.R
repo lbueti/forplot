@@ -1,8 +1,8 @@
 #************************************#
 #* Function for forest plots
 #* Author: Lukas Buetikofer
-#* Date created: 03.05.2018
-#* Last update: November 2020
+#* Date created: 2018-05-03
+#* Last update: 2025-12
 #* **********************************#
 
 #' forest
@@ -319,6 +319,23 @@ fplot<-function(dat,
   #%%%%%%%%%%%
 
   plot(0,type="n",xlim=xlim,ylim=ylim,yaxt="n",ylab="",xlab="",axes=FALSE)
+  
+  #lines and axis
+  if (!is.na(ref[["x"]])) {
+    lines(x=rep(ref[["x"]],2),y=c(ylim[1]-shift_ymin+shift_xaxis,ylim[2]+shift_ymax+ref[["extend"]]),
+          lty=ref[["lty"]],col=ref[["col"]],lwd=ref[["lwd"]])
+  }
+  if (sum(!is.na(xlab_text))==0) {
+    xlab_text<-xlab
+  }
+  axis(side=1,pos=shift_xaxis,at=xlab,labels=rep("",length(xlab)),las=1,tick=TRUE,tck=tck,lwd=lwd)
+  mtext(side=1,line=xlab_line,at=xlab,text=xlab_text,cex=xlab_cex)
+
+  if (!is.na(bottomline)) {
+    lines(x=c(par("usr")[1],par("usr")[2]),y=c(shift_xaxis,shift_xaxis),xpd=TRUE)
+  }
+  
+  #points and arrows
   #symbols(dat$beta,y.at,squares=1/dat$beta_se,add=TRUE,inches=0.15,bg=pcol,fg=NA)
   points(dat$beta,y.at,pch=ps[["pch"]],cex=ps[["cex"]],col=ps[["col"]])
   arrows(y0=y.at,y1=y.at,x0=dat$beta_lci,x1=dat$beta_uci,code=3,angle=90,length=0)
@@ -353,26 +370,15 @@ fplot<-function(dat,
 	arrows(y0=y.at,y1=y.at,x0=dat$beta_lci,x1=dat$beta_uci,code=3,angle=90,length=cap_length)
   }
 
-  #lines and axis
-  if (!is.na(ref[["x"]])) {
-    lines(x=rep(ref[["x"]],2),y=c(ylim[1]-shift_ymin+shift_xaxis,ylim[2]+shift_ymax+ref[["extend"]]),
-          lty=ref[["lty"]],col=ref[["col"]],lwd=ref[["lwd"]])
-  }
-  if (sum(!is.na(xlab_text))==0) {
-    xlab_text<-xlab
-  }
-  axis(side=1,pos=shift_xaxis,at=xlab,labels=rep("",length(xlab)),las=1,tick=TRUE,tck=tck,lwd=lwd)
-  mtext(side=1,line=xlab_line,at=xlab,text=xlab_text,cex=xlab_cex)
-
-  if (!is.na(bottomline)) {
-    lines(x=c(par("usr")[1],par("usr")[2]),y=c(shift_xaxis,shift_xaxis),xpd=TRUE)
-  }
+  
 
   #2nd beta:
   ##########
-
-  #text:
   if (!is.null(beta2)) {
+	
+	#2nd beta text:
+	##########
+  
      plot(0,type="n",xlim=c(0,1),ylim=ylim,yaxt="n",ylab="",xlab="",axes=FALSE)
 	  if (sum(grepl("beta_format2",colnames(dat)))==0) {
 		if (lscale) {
@@ -390,9 +396,26 @@ fplot<-function(dat,
 		lines(x=c(par("usr")[1],par("usr")[2]),y=c(shift_xaxis,shift_xaxis),xpd=TRUE)
 	  }
 
-    #beta2
-
+    #2nd beta
+	#######
     plot(0,type="n",xlim=xlim2,ylim=ylim,yaxt="n",ylab="",xlab="",axes=FALSE)
+	
+	#lines and axis
+    if (!is.na(ref[["x"]])) {
+      lines(x=rep(ref[["x"]],2),y=c(ylim[1]-shift_ymin+shift_xaxis,ylim[2]+shift_ymax+ref[["extend"]]),
+            lty=ref[["lty"]],col=ref[["col"]],lwd=ref[["lwd"]])
+    }
+    if (sum(!is.na(xlab_text2))==0) {
+      xlab_text2<-xlab2
+    }
+    axis(side=1,pos=shift_xaxis,at=xlab2,labels=rep("",length(xlab2)),las=1,tick=TRUE,tck=tck,lwd=lwd)
+    mtext(side=1,line=xlab_line,at=xlab2,text=xlab_text2,cex=xlab_cex)
+
+    if (!is.na(bottomline)) {
+      lines(x=c(par("usr")[1],par("usr")[2]),y=c(shift_xaxis,shift_xaxis),xpd=TRUE)
+    }
+	
+	#points and arrows
     points(dat$beta2,y.at,pch=ps[["pch"]],cex=ps[["cex"]],col=ps[["col"]])
     arrows(y0=y.at,y1=y.at,x0=dat$beta_lci2,x1=dat$beta_uci2,code=3,angle=90,length=0)
 
@@ -426,20 +449,7 @@ fplot<-function(dat,
 	  arrows(y0=y.at,y1=y.at,x0=dat$beta_lci2,x1=dat$beta_uci2,code=3,angle=90,length=cap_length)
     }
 
-    #lines and axis
-    if (!is.na(ref[["x"]])) {
-      lines(x=rep(ref[["x"]],2),y=c(ylim[1]-shift_ymin+shift_xaxis,ylim[2]+shift_ymax+ref[["extend"]]),
-            lty=ref[["lty"]],col=ref[["col"]],lwd=ref[["lwd"]])
-    }
-    if (sum(!is.na(xlab_text2))==0) {
-      xlab_text2<-xlab2
-    }
-    axis(side=1,pos=shift_xaxis,at=xlab2,labels=rep("",length(xlab2)),las=1,tick=TRUE,tck=tck,lwd=lwd)
-    mtext(side=1,line=xlab_line,at=xlab2,text=xlab_text2,cex=xlab_cex)
-
-    if (!is.na(bottomline)) {
-      lines(x=c(par("usr")[1],par("usr")[2]),y=c(shift_xaxis,shift_xaxis),xpd=TRUE)
-    }
+   
   }
 
   #p columns
