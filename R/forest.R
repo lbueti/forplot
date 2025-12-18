@@ -338,7 +338,6 @@ fplot<-function(dat,
   #points and arrows
   #symbols(dat$beta,y.at,squares=1/dat$beta_se,add=TRUE,inches=0.15,bg=pcol,fg=NA)
   points(dat$beta,y.at,pch=ps[["pch"]],cex=ps[["cex"]],col=ps[["col"]])
-  arrows(y0=y.at,y1=y.at,x0=dat$beta_lci,x1=dat$beta_uci,code=3,angle=90,length=0)
 
   #arrows and caps
   sel<-dat$beta_lci<min(xlim) | dat$beta_uci>max(xlim)
@@ -417,7 +416,6 @@ fplot<-function(dat,
 	
 	#points and arrows
     points(dat$beta2,y.at,pch=ps[["pch"]],cex=ps[["cex"]],col=ps[["col"]])
-    arrows(y0=y.at,y1=y.at,x0=dat$beta_lci2,x1=dat$beta_uci2,code=3,angle=90,length=0)
 
     #arrows and caps
     sel<-dat$beta_lci2<min(xlim2) | dat$beta_uci2>max(xlim2)

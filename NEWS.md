@@ -11,3 +11,7 @@ bug fix in help file
 forplot 0.0.3
 ------------------
 plotting reference line before data
+
+forplot 0.0.4
+------------------
+bug fix with arrow heads
