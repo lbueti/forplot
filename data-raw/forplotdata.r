@@ -1,4 +1,5 @@
-#to generate example dataset
+#example dataset with a continuous variable
+
 set.seed(1)
 forplotdata<-numeric(0)
 for (i in 1:10) {
@@ -19,3 +20,34 @@ for (i in 1:10) {
 }
 
 usethis::use_data(forplotdata, overwrite = TRUE)
+
+#example dataset with a binary variable inlcuding the proporions
+
+set.seed(1)
+forplotdata_prop<-numeric(0)
+for (i in 1:10) {
+	n0<-100
+	n1<-100
+	nt<-n0+n1
+	dat0<-rbinom(n0,1,0.5)
+	dat1<-rbinom(n1,1,0.4)
+	x<-c(sum(dat0),sum(dat1))
+	n<-c(length(dat0),length(dat1))
+	tt<-prop.test(x,n)
+	out<-data.frame(vlabel=paste0("out",i),
+		n1=n0,
+		n2=paste0(sprintf("%1.0f",sum(dat0))," (",sprintf("%1.0f",mean(dat0)*100),"%)"),
+		n3=n1,
+		n4=paste0(sprintf("%1.0f",sum(dat1))," (",sprintf("%1.0f",mean(dat1)*100),"%)"),
+		prop1=mean(dat0),
+		prop2=mean(dat1),
+		beta=(mean(dat0)-mean(dat1)),beta_lci=tt$conf.int[1],beta_uci=tt$conf.int[2],
+		beta_format=paste0(sprintf("%1.1f",(mean(dat0)-mean(dat1))*100),"% (",
+			sprintf("%1.1f",tt$conf.int[1]*100)," to ",
+			sprintf("%1.1f",tt$conf.int[2]*100),"%)"),
+		p1=sprintf("%0.3f",tt$p.value))
+	forplotdata_prop<-rbind(forplotdata_prop,out)
+}
+
+usethis::use_data(forplotdata_prop, overwrite = TRUE)
+
