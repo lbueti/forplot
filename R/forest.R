@@ -51,7 +51,7 @@
 #' @param ps  points for plot, list with pch, cex, and col
 #' @param prps  points for proportion scatterplot, list with pch, cex, and col
 #' @param header for table, either a character vector or a list with any of
-#'  x (vector with xpos), y (single y-position), text (character vector with labels), cex (text size),
+#'  x (vector with xpos), y (single y-position), text (character vector with labels), cex (text size), col (text colour),
 #'  the list can be >1 to define more than one header line
 #' @param ref reference line, list with x (xposition), extend (extension on top), lty (line type), col (line color), lwd (line width)
 #' @param bottomline line at the bottom if not NA
@@ -123,7 +123,7 @@
 #' header<-list(list(y=0.7,
 #' 	text=c("Group1","Group2","Proportions (%)","Risk difference in %","P-value"),
 #' 	x=c(0.10,0.25,0.45,0.7,0.98)),
-#' 	list(y=0.3,text=c("N","n (%)","N","n (%)","(1: black, 2: red)", "(95% CI)"),
+#' 	list(y=0.3,text=c("N","n (%)","N","n (%)","(1: red, 2: blue)", "(95% CI)"),
 #' 	x=c(0.07,0.15,0.22,0.30,0.45,0.7)))
 #'  xtitle<-list(x=0.83,y=0.4,textl="Group 1 better  ",textr="  Group 2 better")
 #' 
@@ -615,7 +615,7 @@ fplot<-function(dat,
       ht[ht %in% c("beta2","beta_lci2")]<-c("beta2 (ci)","")
     }
 
-    headerd<-list(x=hpc,y=yline,text=ht,cex=1)
+    headerd<-list(x=hpc,y=yline,text=ht,cex=1,col=NULL)
 
     #add defaults if missing
     if (sum(!is.na(header))>0) {
@@ -662,10 +662,8 @@ fplot<-function(dat,
           xadj<-0.5
         }
         text(x=header[[nhd]][["x"]][i],y=header[[nhd]][["y"]],header[[nhd]][["text"]][i],
-             adj=c(xadj,yadj),xpd=TRUE,cex=header[[nhd]][["cex"]])
+             adj=c(xadj,yadj),xpd=TRUE,cex=header[[nhd]][["cex"]],col=header[[nhd]][["col"]][i])
       }
     }
   }
 }
-
-

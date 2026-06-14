@@ -216,8 +216,9 @@ lheights<-c(0.14,1,0.08)
 header<-list(
   list(y=0.7,text=c("Group1","Group2","Proportions (%)","Risk difference in %","P-value"),
     x=c(0.10,0.25,0.45,0.7,0.98)),
-  list(y=0.3,text=c("N","n (%)","N","n (%)","(1: black, 2: red)", "(95% CI)"),
-    x=c(0.07,0.15,0.22,0.30,0.45,0.7)))
+  list(y=0.3,text=c("N","n (%)","N","n (%)","Group 1","Group 2", "(95% CI)"),
+    x=c(0.07,0.15,0.22,0.30,0.41,0.49,0.7),
+    col=c(rep("black",4),rgb(1,0,0,1),rgb(0,0,1,1),"black")))
 
 xtitle<-list(x=0.83,y=0.6,textl="Group 1 better  ",textr="  Group 2 better")
 

@@ -127,7 +127,7 @@ list with x (xpos), y (ypos), textr and textl (text at the right/left side), cex
 \item{prps}{points for proportion scatterplot, list with pch, cex, and col}
 
 \item{header}{for table, either a character vector or a list with any of
-x (vector with xpos), y (single y-position), text (character vector with labels), cex (text size),
+x (vector with xpos), y (single y-position), text (character vector with labels), cex (text size), col (text colour),
 the list can be >1 to define more than one header line}
 
 \item{ref}{reference line, list with x (xposition), extend (extension on top), lty (line type), col (line color), lwd (line width)}
@@ -213,7 +213,7 @@ lheights<-c(0.08,1,0.04)
 header<-list(list(y=0.7,
 	text=c("Group1","Group2","Proportions (\%)","Risk difference in \%","P-value"),
 	x=c(0.10,0.25,0.45,0.7,0.98)),
-	list(y=0.3,text=c("N","n (\%)","N","n (\%)","(1: black, 2: red)", "(95\% CI)"),
+	list(y=0.3,text=c("N","n (\%)","N","n (\%)","(1: red, 2: blue)", "(95\% CI)"),
 	x=c(0.07,0.15,0.22,0.30,0.45,0.7)))
  xtitle<-list(x=0.83,y=0.4,textl="Group 1 better  ",textr="  Group 2 better")
 
