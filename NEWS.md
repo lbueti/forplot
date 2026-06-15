@@ -23,3 +23,7 @@ option to include a scatterplot for proportions
 forplot 0.1.1
 ------------------
 color option for header
+
+forplot 0.1.1
+------------------
+option to include a boxplot

@@ -33,14 +33,14 @@
 #' @param shift_textbeta_col inset of formatted effects (beta_format)
 #' @param shift_ymax down-shift of maximal y-value, smaller space to top
 #' @param shift_ymin  up-shift of minimal y-value, smaller space to bottom
+#' @param xlim limits for x-axis in forest plots, derived from beta by default
 #' @param xlab  position of labels for x-axis, derived from beta by default
 #' @param xlab_text text at the labels, derived from beta by default
-#' @param xlim limits for x-axis in forest plots, derived from beta by default
 #' @param xlab_cex size of x-axis labels (not title)
 #' @param xlab_line  position of x-axis label (not title)
+#' @param plim limits for x-axis of the proportion scatterplot (if any), c(0,1) by default
 #' @param plab position of labels for x-axis of the proportion scatterplot (if any), pretty(plim) by default
 #' @param plab_text text at the labels, 100*plab by default (percentages from proportion)
-#' @param plim limits for x-axis of the proportion scatterplot (if any), c(0,1) by default
 #' @param tck x-axis tick length
 #' @param shift_xaxis shift position of x-axis
 #' @param xtitle x axis title and format,
@@ -58,6 +58,13 @@
 #' @param headline line for header if not NA, 1 for one line at the bottom, 2 for a line at the bottom and top
 #' @param headline_pos vector with position of lower and upper headline (if applicable), default c(0,1)
 #' @param sideline logical, whether to show lines at the side of the proportion scatterplot
+#' @param bpdat Optional data frame in a long format used to generate boxplots, must have columns
+#'	out (the outcome value), var (the outcome variable, safest as a factor to preserve the order in the plot), and 
+#'	arm (the treatment arm, safest as a factor to preserve the order in the plot)
+#' @param bpopt List of options to pass to boxplot, with elements "col" and "boxwex"
+#' @param bplim limits for x-axis of the boxplot (if any), c(min,max) by default
+#' @param bplab position of labels for x-axis of the boxplot (if any), pretty(bplim) by default
+#' @param bplab_text text at the labels, bplab by default
 #' @param beta2 if not NULL a second forest is generated, needs variables beta2, beta_lci2 and beta_uci2 in dat
 #' @param xlab2 see xlab for 2nd forest
 #' @param xlab_text2 see xlab_text for 2nd forest
@@ -71,7 +78,7 @@
 #' @export
 #'
 #' @importFrom grDevices rgb
-#' @importFrom graphics arrows layout axis lines mtext par points text
+#' @importFrom graphics arrows layout axis lines mtext par points text boxplot
 #'
 #' @examples
 #' data(forplotdata)
@@ -116,6 +123,24 @@
 #'		xtitle=xtitle,xlim=c(-1,0.5),shift_xaxis=0.3,xlab_line=-0.8,
 #'		headline=2,bottomline=1)
 #'
+#' #Add boxplot for continuous outcomes 
+#' lwidths<-c(0.05,0.5,0.3,0.6,0.3,0.6,0.8,1.2,1.2,0.5,0.05)
+#' lheights<-c(0.08,1,0.04)
+#' 
+#' header<-list(list(y=0.7,
+#' 	text=c("Group1","Group2","Mean difference (95% CI)","P-value"),
+#' 	x=c(0.10,0.3,0.7,0.98),col=c("red","blue","black","black")),
+#' 	list(y=0.3,text=c("N","mean (sd)","N","mean (sd)"),
+#' 	x=c(0.07,0.15,0.25,0.32)))
+#' 	
+#' xtitle<-list(x=0.88,y=0.3,textl="Group 1 better  ",textr="  Group 2 better")
+#' 
+#' fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
+#'   	ref=list(x=0,col=2,extend=2),
+#' 	xtitle=xtitle,xlim=c(-1,0.5),shift_ymin=0.5, shift_xaxis=0.5,xlab_line=-1,
+#' 	headline=2,bottomline=1,
+#' 	bpdat=forplotdata_bp)
+#'
 #' #Add a scatterplot for proportions 
 #' data(forplotdata)
 #' lwidths<-c(0.05,0.5,0.2,0.6,0.2,0.6,1.0,1.2,1.0,0.5,0.05)
@@ -148,8 +173,8 @@ fplot<-function(dat,
                 shift_label_col=0,center_label_col=NA,
                 shift_textbeta_col=0,
                 shift_ymax=0,shift_ymin=0,
-                xlab=NA,xlab_text=NA,xlim=NA,
-				plab=NA,plab_text=NA,plim=NA,
+                xlim=NA,xlab=NA,xlab_text=NA,
+				plim=NA,plab=NA,plab_text=NA,
 				xlab_cex=0.6,xlab_line=0,tck=-0.04,shift_xaxis=0,
                 xtitle=NA,
                 lwd=1,
@@ -160,6 +185,7 @@ fplot<-function(dat,
                 header=NA,
                 ref=list(x=NA,extend=0,lty=2,col="grey50",lwd=lwd),
                 bottomline=NA,headline=NA,headline_pos=c(0,1),sideline=FALSE,
+				bpdat=NULL,bpopt=NA,bplim=NA,bplab=NA,bplab_text=NA,
 				beta2=NULL, xlab2=NA,xlab_text2=NA,xlim2=NA,xtitle2=NA,
 				sorder=FALSE,
 				...) {
@@ -186,6 +212,10 @@ fplot<-function(dat,
       ncols<-ncols - 1-1
     }
   }
+
+  if (!is.null(bpdat)) {
+    ncols<-ncols+1
+  }  
 
   if (is.na(nns)) {
     nns<-sum(regexpr("^n",colnames(dat))==1)
@@ -228,14 +258,6 @@ fplot<-function(dat,
     }
     xlim2<-c(min(xlab2,xlim2),max(xlab2,xlim2))
   }
-	
-  if (sum(!is.na(plim))==0) {
-    plim<-c(0,1)
-  }
-  if (sum(!is.na(plab))==0) {
-    plab<-pretty(plim)
-  }
-
 		
   #points
   if (sum(!is.na(ps))==0) {
@@ -252,6 +274,10 @@ fplot<-function(dat,
 		}
 	  }
   }
+  
+  #boxplot option
+  
+  
   #pval
   np<-sum(regexpr("^p",colnames(dat))==1 &  regexpr("^prop",colnames(dat))==(-1))
 
@@ -357,6 +383,15 @@ fplot<-function(dat,
   #############
   
   if (nprops!=0) {
+    if (sum(!is.na(plim))==0) {	
+		pmi<-min(0,min(dat[,grepl("^prop",colnames(dat))]))
+		pma<-max(1,max(dat[,grepl("^prop",colnames(dat))]))
+		plim<-c(pmi,pma)
+	}
+	if (sum(!is.na(plab))==0) {
+	  plab<-pretty(plim)
+	}
+	
 	plot(0,type="n",xlim=plim,ylim=ylim,yaxt="n",ylab="",xlab="",axes=FALSE)
 	clabs<-numeric(0)
 	for (pi in 1:nprops) {
@@ -373,7 +408,7 @@ fplot<-function(dat,
 			lines(x=plim,y=c(y.at[i],y.at[i]),lty=3)
 		}
 	}
-
+	
     #axis  
     if (sum(!is.na(plab_text))==0) {
       plab_text<-100*plab
@@ -391,6 +426,60 @@ fplot<-function(dat,
 	  lines(x=c(plim[2],plim[2]),y=c(shift_xaxis,par("usr")[4]+shift_ymax),xpd=FALSE,col=1)
     }
   }	
+  
+   #boxplot
+  #############
+  
+  if (!is.null(bpdat)) {
+	if (sum(!is.na(bplim))==0) {	
+	  bplim<-c(min(bpdat$out),max(bpdat$out))
+	}
+	if (sum(!is.na(bplab))==0) {
+	  bplab<-pretty(bplim)
+	  bplab<-bplab[bplab>bplim[1] & bplab<bplim[2]]
+	}
+	pm<-0.2
+	gap<-0.1
+	bwidth <- 2*pm - gap
+	
+	bp.at<-sort(c(y.at-pm,y.at+pm))
+	
+	bpoptused<-list(NA,length=2) 
+	names(bpoptused)<-c("col","boxwex")
+	bpoptused[["col"]]<-c(rgb(1,0,0,0.3),rgb(0,0,1,0.3))
+	bpoptused[["boxwex"]]<-bwidth
+	
+	if (sum(!is.na(bpopt))>0) {
+		if (!is.null(bpopt[["col"]])) {
+			bpoptused[["col"]]<-bpopt[["col"]]
+		}
+		if (!is.null(bpopt[["boxwex"]])) {
+			bpoptused[["boxwex"]]<-bpopt[["boxwex"]]
+		}
+	}
+	
+	boxplot(out ~ rev(arm)*rev(var), data=bpdat,at=bp.at,boxwex = bpoptused[["boxwex"]], horizontal=TRUE,
+		ylim=bplim,xlim=ylim,yaxt="n",ylab="",xlab="",axes=FALSE, col=rev(bpoptused[["col"]]))
+	
+	 #axis  
+	if (sum(!is.na(bplab_text))==0) {
+	  bplab_text<-bplab
+	}
+	axis(side=1,pos=shift_xaxis,at=bplab,labels=rep("",length(bplab)),las=1,tick=TRUE,tck=tck,lwd=lwd)
+	mtext(side=1,line=xlab_line,at=bplab,text=bplab_text,cex=xlab_cex)
+	
+	if (!is.na(bottomline)) {
+	  lines(x=c(par("usr")[1],par("usr")[2]),y=c(shift_xaxis,shift_xaxis),xpd=TRUE)
+	}
+	
+	#lines 
+	if (sideline) {
+	  lines(x=c(bplim[1],bplim[1]),y=c(shift_xaxis,par("usr")[4]+shift_ymax),xpd=FALSE,col=1)
+	  lines(x=c(bplim[2],bplim[2]),y=c(shift_xaxis,par("usr")[4]+shift_ymax),xpd=FALSE,col=1)
+	}
+  }
+		
+		
   
   #beta text
   #%%%%%%%%%%%

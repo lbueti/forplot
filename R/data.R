@@ -1,4 +1,4 @@
-#' Demonstration data set with continous outcome
+#' Demonstration data set with continous outcomes
 #'
 #' Simulated summary data from 10 outcomes to be presented in a forest plot.
 #' Each row represents the summary of one outcome variable for two treatment groups with 
@@ -11,8 +11,18 @@
 #'
 "forplotdata"
 
+#' Raw data for continous outcomes
+#'
+#' Simulated raw data from 10 outcomes in a long format.
+#' Includes columns for the outcome values (out), 
+#'	the outcome variable (var) as factor,
+#' and the treatment arm (arm) as a factor.
+#'
+#' @format A data frame with 3 columns: \code{out}, \code{var} and \code{arm}.
+#'
+"forplotdata_bp"
 
-#' Demonstration data set with binary outcome
+#' Demonstration data set with binary outcomes
 #'
 #' Simulated summary data from 10 outcomes to be presented in a forest plot.
 #' Each row represents the summary of one outcome variable for two treatment groups with 

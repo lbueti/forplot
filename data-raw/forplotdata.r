@@ -2,12 +2,16 @@
 
 set.seed(1)
 forplotdata<-numeric(0)
+forplotdata_bp<-numeric(0)
 for (i in 1:10) {
 	n0<-100
 	n1<-100
 	nt<-n0+n1
 	dat0<-rnorm(n0,5,1)
 	dat1<-rnorm(n1,5.5,1)
+	
+	forplotdata_bp<-rbind(forplotdata_bp,data.frame(out=c(dat0,dat1),var=paste0("var",i),arm=c(rep(1,n0),rep(2,n1))))
+	
 	tt<-t.test(dat0,dat1)
 	out<-data.frame(vlabel=paste0("out",i),
 		n1=n0,
@@ -19,7 +23,11 @@ for (i in 1:10) {
 	forplotdata<-rbind(forplotdata,out)
 }
 
+forplotdata_bp$var<-factor(forplotdata_bp$var,levels=paste0("var",1:10))
+forplotdata_bp$arm<-factor(forplotdata_bp$arm,levels=1:2)
+
 usethis::use_data(forplotdata, overwrite = TRUE)
+usethis::use_data(forplotdata_bp, overwrite = TRUE)
 
 #example dataset with a binary variable inlcuding the proporions
 

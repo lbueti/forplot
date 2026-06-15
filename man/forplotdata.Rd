@@ -3,7 +3,7 @@
 \docType{data}
 \name{forplotdata}
 \alias{forplotdata}
-\title{Demonstration data set with continous outcome}
+\title{Demonstration data set with continous outcomes}
 \format{
 A data frame with 9 columns: \code{vlabel}, \code{n1}, \code{n2}, \code{n3}, \code{n4},
 \code{beta}, \code{beta_lci}, \code{beta_uci} and \code{p1}.
