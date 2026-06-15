@@ -19,3 +19,7 @@ bug fix with arrow heads
 forplot 0.1.0
 ------------------
 option to include a scatterplot for proportions
+
+forplot 0.1.1
+------------------
+color option for header
