@@ -22,7 +22,7 @@ column names.
 - *vlabel*: a *chr* column with the variable labels.
 - *nx*: any number of *chr* or *num* columns numbered sequentially
   (i.e. *n1*, *n2*, *n3*, …). Could contain the number of observations
-  and/or summary per group.
+  and/or summary per arm.
 - *beta*, *beta_lci*, *beta_uci*: three *num* columns with point
   estimates and confidence interval to be plotted as forest.
 - *beta_format*: optional *chr* column with formatted text to be printed
@@ -56,8 +56,7 @@ forplotdata
 ```
 
 The *nx* columns include the number of observations and descriptives
-(mean (sd)) for each group, *beta* is a mean difference, *p1* the
-p-value.
+(mean (sd)) for each arm, *beta* is a mean difference, *p1* the p-value.
 
 The minimal plot only includes a label and the forest and needs columns
 *vlabel*, *beta*, *beta_lci*, *beta_uci*.
@@ -96,7 +95,7 @@ A header can be given using a character vector the same length as the
 number of columns of the input data:
 
 ``` r
-header<-c("","Group1\nN","Group0\nmean (sd)","Group2\nN","Group2\nmean (sd)",
+header<-c("","Group1\nN","Group1\nmean (sd)","Group2\nN","Group2\nmean (sd)",
     "Mean difference\n95% CI","","P-value")
 
 fplot(dat=forplotdata,lwidths=lwidths,lheights=lheights,header=header)
@@ -195,14 +194,18 @@ fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
 ## Boxplot for continous variables
 
 For a more in-depth presentation of the raw data in each group, a
-boxplot can be added. However, it needs the input of the raw data as a
-data frame in a long format with columns:
+boxplot can be added. It depends on the input of the raw data as a data
+frame in a long format with columns:
 
-- out: the outcome value (numerical),
-- var: the outcome variable, safest as a factor to preserve the order in
-  the plot, and
-- arm: the treatment arm, safest as a factor to preserve the order in
+- *out*: the outcome value (numerical),
+- *var*: the outcome variable, safest as a factor to preserve the order
+  in the plot, and
+- *arm*: the treatment arm, safest as a factor to preserve the order in
   the plot.
+
+Boxplot layout can be controlled via *bpopt* (currenlty just colour and
+width), the additional x-axis via *bplim*, *bplab* and *bplab_text*;
+lines at the side of the plot can be added via *sideline*.
 
 ``` r
 data(forplotdata_bp)
@@ -233,7 +236,7 @@ fplot(dat=forplotdata, lwidths=lwidths,lheights=lheights,
         xtitle=xtitle, ref=list(x=0,col=1,extend=2), xlim=c(-1,0.5),
     shift_xaxis=0.3, xlab_line=-0.8,
         headline=2,bottomline=1,
-        bpdat=forplotdata_bp)
+        bpdat=forplotdata_bp, bpopt = list(col = c(rgb(1,0,0,0.3),rgb(0,0,1,0.3))))
         
 ```
 
@@ -247,8 +250,8 @@ been recommended.
 
 A scatterplot for the proportions can be added if variables *prop1* and
 *prop2* are included in the dataset. The points can be controlled via
-*prps*, the additional via *plab*, *plab_text* and *plim*, lines at the
-side of the plot via *sideline*.
+*prps*, the additional x-axis via *plim*, *plab* and *plab_text*; lines
+at the side of the plot can be added via *sideline*.
 
 For example:
 
