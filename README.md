@@ -22,7 +22,7 @@ column names.
 - *vlabel*: a *chr* column with the variable labels.
 - *nx*: any number of *chr* or *num* columns numbered sequentially
   (i.e. *n1*, *n2*, *n3*, …). Could contain the number of observations
-  and/or summary per group.
+  and/or summary per arm.
 - *beta*, *beta_lci*, *beta_uci*: three *num* columns with point
   estimates and confidence interval to be plotted as forest.
 - *beta_format*: optional *chr* column with formatted text to be printed
@@ -56,8 +56,7 @@ forplotdata
 ```
 
 The *nx* columns include the number of observations and descriptives
-(mean (sd)) for each group, *beta* is a mean difference, *p1* the
-p-value.
+(mean (sd)) for each arm, *beta* is a mean difference, *p1* the p-value.
 
 The minimal plot only includes a label and the forest and needs columns
 *vlabel*, *beta*, *beta_lci*, *beta_uci*.
@@ -96,7 +95,7 @@ A header can be given using a character vector the same length as the
 number of columns of the input data:
 
 ``` r
-header<-c("","Group1\nN","Group0\nmean (sd)","Group2\nN","Group2\nmean (sd)",
+header<-c("","Group1\nN","Group1\nmean (sd)","Group2\nN","Group2\nmean (sd)",
     "Mean difference\n95% CI","","P-value")
 
 fplot(dat=forplotdata,lwidths=lwidths,lheights=lheights,header=header)
@@ -192,6 +191,57 @@ fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
 
 ![](man/figures/README-unnamed-chunk-13-1.png)<!-- -->
 
+## Boxplot for continous variables
+
+For a more in-depth presentation of the raw data in each group, a
+boxplot can be added. It depends on the input of the raw data as a data
+frame in a long format with columns:
+
+- *out*: the outcome value (numerical),
+- *var*: the outcome variable, safest as a factor to preserve the order
+  in the plot, and
+- *arm*: the treatment arm, safest as a factor to preserve the order in
+  the plot.
+
+Boxplot layout can be controlled via *bpopt* (currenlty just colour and
+width), the additional x-axis via *bplim*, *bplab* and *bplab_text*;
+lines at the side of the plot can be added via *sideline*.
+
+``` r
+data(forplotdata_bp)
+
+head(forplotdata_bp)
+#>        out  var arm
+#> 1 4.373546 var1   1
+#> 2 5.183643 var1   1
+#> 3 4.164371 var1   1
+#> 4 6.595281 var1   1
+#> 5 5.329508 var1   1
+#> 6 4.179532 var1   1
+
+lwidths<-c(0.05,0.5,0.3,0.6,0.3,0.6,0.8,1.2,1.2,0.5,0.05)
+
+lheights<-c(0.14,1,0.08)
+
+header<-list(list(y=0.7,
+    text=c("Group1","Group2","Mean difference (95% CI)","P-value"),
+    x=c(0.09,0.28,0.7,0.98),col=c("red","blue","black","black")),
+    list(y=0.3,text=c("N","mean (sd)","N","mean (sd)"),
+    x=c(0.07,0.15,0.25,0.32)))
+    
+xtitle<-list(x=0.88,y=0.3,textl="Group 1 better  ",textr="  Group 2 better")
+
+fplot(dat=forplotdata, lwidths=lwidths,lheights=lheights,
+    header=header,
+        xtitle=xtitle, ref=list(x=0,col=1,extend=2), xlim=c(-1,0.5),
+    shift_xaxis=0.3, xlab_line=-0.8,
+        headline=2,bottomline=1,
+        bpdat=forplotdata_bp, bpopt = list(col = c(rgb(1,0,0,0.3),rgb(0,0,1,0.3))))
+        
+```
+
+![](man/figures/README-unnamed-chunk-14-1.png)<!-- -->
+
 ## Scatterplot for proportions
 
 For binary outcomes and in particular for serious adverse event
@@ -200,8 +250,8 @@ been recommended.
 
 A scatterplot for the proportions can be added if variables *prop1* and
 *prop2* are included in the dataset. The points can be controlled via
-*prps*, the additional via *plab*, *plab_text* and *plim*, lines at the
-side of the plot via *sideline*.
+*prps*, the additional x-axis via *plim*, *plab* and *plab_text*; lines
+at the side of the plot can be added via *sideline*.
 
 For example:
 
@@ -225,15 +275,16 @@ xtitle<-list(x=0.83,y=0.6,textl="Group 1 better  ",textr="  Group 2 better")
 prps<-list(list(pch=16,cex=1.5,col=rgb(1,0,0,0.5)),
           list(pch=16,cex=1.5,col=rgb(0,0,1,0.5)))
 
-fplot(dat=forplotdata_prop,lwidths=lwidths,lheights=lheights,
+fplot(dat=forplotdata_prop, lwidths=lwidths, lheights=lheights,
   header=header,
   prps=prps,
-  xtitle=xtitle,ref=list(x=0),shift_xaxis=0.3,xlab_line=-0.8,
+  xtitle=xtitle, ref=list(x=0),
+  shift_xaxis=0.3, xlab_line=-0.8,
   xlab=c(-0.2,0,0.2,0.4), xlab_text=c(-20,0,20,40),
-  headline=2,bottomline=1,sideline=TRUE)
+  headline=2, bottomline=1, sideline=TRUE)
 ```
 
-![](man/figures/README-unnamed-chunk-14-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-15-1.png)<!-- -->
 
 ## Under development
 
@@ -261,4 +312,4 @@ fplot(dat=forplotdata2, beta2 = TRUE,
       headline=2,bottomline=1)
 ```
 
-![](man/figures/README-unnamed-chunk-15-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-16-1.png)<!-- -->

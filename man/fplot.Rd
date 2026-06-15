@@ -22,12 +22,12 @@ fplot(
   shift_textbeta_col = 0,
   shift_ymax = 0,
   shift_ymin = 0,
+  xlim = NA,
   xlab = NA,
   xlab_text = NA,
-  xlim = NA,
+  plim = NA,
   plab = NA,
   plab_text = NA,
-  plim = NA,
   xlab_cex = 0.6,
   xlab_line = 0,
   tck = -0.04,
@@ -44,6 +44,11 @@ fplot(
   headline = NA,
   headline_pos = c(0, 1),
   sideline = FALSE,
+  bpdat = NULL,
+  bpopt = NA,
+  bplim = NA,
+  bplab = NA,
+  bplab_text = NA,
   beta2 = NULL,
   xlab2 = NA,
   xlab_text2 = NA,
@@ -93,17 +98,17 @@ propx with x=1,2,.. (num columns with proportion in the groups, generates simple
 
 \item{shift_ymin}{up-shift of minimal y-value, smaller space to bottom}
 
+\item{xlim}{limits for x-axis in forest plots, derived from beta by default}
+
 \item{xlab}{position of labels for x-axis, derived from beta by default}
 
 \item{xlab_text}{text at the labels, derived from beta by default}
 
-\item{xlim}{limits for x-axis in forest plots, derived from beta by default}
+\item{plim}{limits for x-axis of the proportion scatterplot (if any), c(0,1) by default}
 
 \item{plab}{position of labels for x-axis of the proportion scatterplot (if any), pretty(plim) by default}
 
 \item{plab_text}{text at the labels, 100*plab by default (percentages from proportion)}
-
-\item{plim}{limits for x-axis of the proportion scatterplot (if any), c(0,1) by default}
 
 \item{xlab_cex}{size of x-axis labels (not title)}
 
@@ -139,6 +144,18 @@ the list can be >1 to define more than one header line}
 \item{headline_pos}{vector with position of lower and upper headline (if applicable), default c(0,1)}
 
 \item{sideline}{logical, whether to show lines at the side of the proportion scatterplot}
+
+\item{bpdat}{Optional data frame in a long format used to generate boxplots, must have columns
+out (the outcome value), var (the outcome variable, safest as a factor to preserve the order in the plot), and
+arm (the treatment arm, safest as a factor to preserve the order in the plot)}
+
+\item{bpopt}{List of options to pass to boxplot, with elements "col" and "boxwex"}
+
+\item{bplim}{limits for x-axis of the boxplot (if any), c(min,max) by default}
+
+\item{bplab}{position of labels for x-axis of the boxplot (if any), pretty(bplim) by default}
+
+\item{bplab_text}{text at the labels, bplab by default}
 
 \item{beta2}{if not NULL a second forest is generated, needs variables beta2, beta_lci2 and beta_uci2 in dat}
 
@@ -205,6 +222,24 @@ fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
  	ref=list(x=0,col=2,extend=2),
 	xtitle=xtitle,xlim=c(-1,0.5),shift_xaxis=0.3,xlab_line=-0.8,
 	headline=2,bottomline=1)
+
+#Add boxplot for continuous outcomes 
+lwidths<-c(0.05,0.5,0.3,0.6,0.3,0.6,0.8,1.2,1.2,0.5,0.05)
+lheights<-c(0.08,1,0.04)
+
+header<-list(list(y=0.7,
+	text=c("Group1","Group2","Mean difference (95\% CI)","P-value"),
+	x=c(0.10,0.3,0.7,0.98),col=c("red","blue","black","black")),
+	list(y=0.3,text=c("N","mean (sd)","N","mean (sd)"),
+	x=c(0.07,0.15,0.25,0.32)))
+	
+xtitle<-list(x=0.88,y=0.3,textl="Group 1 better  ",textr="  Group 2 better")
+
+fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
+  	ref=list(x=0,col=2,extend=2),
+	xtitle=xtitle,xlim=c(-1,0.5),shift_ymin=0.5, shift_xaxis=0.5,xlab_line=-1,
+	headline=2,bottomline=1,
+	bpdat=forplotdata_bp)
 
 #Add a scatterplot for proportions 
 data(forplotdata)

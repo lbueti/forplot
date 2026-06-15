@@ -6,4 +6,3 @@ README.Rmd
 ^\.github$
 ^\.positai$
 ^\.claude$
-^man\figures

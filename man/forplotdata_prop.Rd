@@ -3,7 +3,7 @@
 \docType{data}
 \name{forplotdata_prop}
 \alias{forplotdata_prop}
-\title{Demonstration data set with binary outcome}
+\title{Demonstration data set with binary outcomes}
 \format{
 A data frame with 12 columns: \code{vlabel}, \code{n1}, \code{n2}, \code{n3}, \code{n4},
 \code{prop1}, \code{prop2}, \code{beta}, \code{beta_lci}, \code{beta_uci}, \code{beta_format} and \code{p1}.
