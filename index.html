@@ -76,7 +76,7 @@
 <p><code>forplot</code> can be installed from github:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"dcr-unibe-ch/forplot"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"dcr-unibe-ch/forplot"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
@@ -86,7 +86,7 @@
 <li>
 <em>vlabel</em>: a <em>chr</em> column with the variable labels.</li>
 <li>
-<em>nx</em>: any number of <em>chr</em> or <em>num</em> columns numbered sequentially (i.e. <em>n1</em>, <em>n2</em>, <em>n3</em>, …). Could contain the number of observations and/or summary per group.</li>
+<em>nx</em>: any number of <em>chr</em> or <em>num</em> columns numbered sequentially (i.e. <em>n1</em>, <em>n2</em>, <em>n3</em>, …). Could contain the number of observations and/or summary per arm.</li>
 <li>
 <em>beta</em>, <em>beta_lci</em>, <em>beta_uci</em>: three <em>num</em> columns with point estimates and confidence interval to be plotted as forest.</li>
 <li>
@@ -115,7 +115,7 @@
 <span><span class="co">#&gt; 8    out8 100 5.1 (1.0) 100 5.5 (1.1) -0.40311974 -0.6955442 -0.110695309 0.007</span></span>
 <span><span class="co">#&gt; 9    out9 100 4.9 (1.0) 100 5.4 (1.2) -0.50709366 -0.8110643 -0.203123036 0.001</span></span>
 <span><span class="co">#&gt; 10  out10 100 5.1 (1.1) 100 5.4 (1.1) -0.28700316 -0.5822050  0.008198722 0.057</span></span></code></pre></div>
-<p>The <em>nx</em> columns include the number of observations and descriptives (mean (sd)) for each group, <em>beta</em> is a mean difference, <em>p1</em> the p-value.</p>
+<p>The <em>nx</em> columns include the number of observations and descriptives (mean (sd)) for each arm, <em>beta</em> is a mean difference, <em>p1</em> the p-value.</p>
 <p>The minimal plot only includes a label and the forest and needs columns <em>vlabel</em>, <em>beta</em>, <em>beta_lci</em>, <em>beta_uci</em>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/fplot.html">fplot</a></span><span class="op">(</span>dat<span class="op">=</span><span class="va">forplotdata</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"vlabel"</span>,<span class="st">"beta"</span>,<span class="st">"beta_lci"</span>,<span class="st">"beta_uci"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
@@ -138,7 +138,7 @@
 <p><img src="reference/figures/README-unnamed-chunk-6-1.png"><!-- --></p>
 <p>A header can be given using a character vector the same length as the number of columns of the input data:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">header</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">""</span>,<span class="st">"Group1\nN"</span>,<span class="st">"Group0\nmean (sd)"</span>,<span class="st">"Group2\nN"</span>,<span class="st">"Group2\nmean (sd)"</span>,</span>
+<code class="sourceCode R"><span><span class="va">header</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">""</span>,<span class="st">"Group1\nN"</span>,<span class="st">"Group1\nmean (sd)"</span>,<span class="st">"Group2\nN"</span>,<span class="st">"Group2\nmean (sd)"</span>,</span>
 <span>    <span class="st">"Mean difference\n95% CI"</span>,<span class="st">""</span>,<span class="st">"P-value"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/fplot.html">fplot</a></span><span class="op">(</span>dat<span class="op">=</span><span class="va">forplotdata</span>,lwidths<span class="op">=</span><span class="va">lwidths</span>,lheights<span class="op">=</span><span class="va">lheights</span>,header<span class="op">=</span><span class="va">header</span><span class="op">)</span></span></code></pre></div>
@@ -209,12 +209,16 @@
 <div class="section level2">
 <h2 id="boxplot-for-continous-variables">Boxplot for continous variables<a class="anchor" aria-label="anchor" href="#boxplot-for-continous-variables"></a>
 </h2>
-<p>For a more in-depth presentation of the raw data in each group, a boxplot can be added. However, it needs the input of the raw data as a data frame in a long format with columns:</p>
+<p>For a more in-depth presentation of the raw data in each group, a boxplot can be added. It depends on the input of the raw data as a data frame in a long format with columns:</p>
 <ul>
-<li>out: the outcome value (numerical),</li>
-<li>var: the outcome variable, safest as a factor to preserve the order in the plot, and</li>
-<li>arm: the treatment arm, safest as a factor to preserve the order in the plot.</li>
+<li>
+<em>out</em>: the outcome value (numerical),</li>
+<li>
+<em>var</em>: the outcome variable, safest as a factor to preserve the order in the plot, and</li>
+<li>
+<em>arm</em>: the treatment arm, safest as a factor to preserve the order in the plot.</li>
 </ul>
+<p>Boxplot layout can be controlled via <em>bpopt</em> (currenlty just colour and width), the additional x-axis via <em>bplim</em>, <em>bplab</em> and <em>bplab_text</em>; lines at the side of the plot can be added via <em>sideline</em>.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">forplotdata_bp</span><span class="op">)</span></span>
 <span></span>
@@ -244,7 +248,7 @@
 <span>        xtitle<span class="op">=</span><span class="va">xtitle</span>, ref<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x<span class="op">=</span><span class="fl">0</span>,col<span class="op">=</span><span class="fl">1</span>,extend<span class="op">=</span><span class="fl">2</span><span class="op">)</span>, xlim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>,<span class="fl">0.5</span><span class="op">)</span>,</span>
 <span>    shift_xaxis<span class="op">=</span><span class="fl">0.3</span>, xlab_line<span class="op">=</span><span class="op">-</span><span class="fl">0.8</span>,</span>
 <span>        headline<span class="op">=</span><span class="fl">2</span>,bottomline<span class="op">=</span><span class="fl">1</span>,</span>
-<span>        bpdat<span class="op">=</span><span class="va">forplotdata_bp</span><span class="op">)</span></span>
+<span>        bpdat<span class="op">=</span><span class="va">forplotdata_bp</span>, bpopt <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/grDevices/rgb.html" class="external-link">rgb</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">0</span>,<span class="fl">0</span>,<span class="fl">0.3</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/grDevices/rgb.html" class="external-link">rgb</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span>,<span class="fl">1</span>,<span class="fl">0.3</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span>        </span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-14-1.png"><!-- --></p>
 </div>
@@ -252,7 +256,7 @@
 <h2 id="scatterplot-for-proportions">Scatterplot for proportions<a class="anchor" aria-label="anchor" href="#scatterplot-for-proportions"></a>
 </h2>
 <p>For binary outcomes and in particular for serious adverse event reporting a graphical representation of the proportion in both arms has been recommended.</p>
-<p>A scatterplot for the proportions can be added if variables <em>prop1</em> and <em>prop2</em> are included in the dataset. The points can be controlled via <em>prps</em>, the additional via <em>plab</em>, <em>plab_text</em> and <em>plim</em>, lines at the side of the plot via <em>sideline</em>.</p>
+<p>A scatterplot for the proportions can be added if variables <em>prop1</em> and <em>prop2</em> are included in the dataset. The points can be controlled via <em>prps</em>, the additional x-axis via <em>plim</em>, <em>plab</em> and <em>plab_text</em>; lines at the side of the plot can be added via <em>sideline</em>.</p>
 <p>For example:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
