@@ -7,13 +7,7 @@ A package to generate forest plots.
 
 ## Installation
 
-`forplot` can be installed via the R universe:
-
-``` r
-install.packages('forplot', repos = c('https://dcr-unibe-ch.r-universe.dev', 'https://cloud.r-project.org'))
-```
-
-or from github:
+`forplot` can be installed from github:
 
 ``` r
 # install.packages("remotes")
@@ -72,7 +66,7 @@ The minimal plot only includes a label and the forest and needs columns
 fplot(dat=forplotdata[,c("vlabel","beta","beta_lci","beta_uci")])
 ```
 
-![](man/figures/README-unnamed-chunk-3-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-4-1.png)<!-- -->
 
 Adding *nx* and *px* columns:
 
@@ -80,7 +74,7 @@ Adding *nx* and *px* columns:
 fplot(dat=forplotdata)
 ```
 
-![](man/figures/README-unnamed-chunk-4-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-5-1.png)<!-- -->
 
 Set more sensible widths and heights:
 
@@ -96,7 +90,7 @@ lheights<-c(0.14,1,0.08)
 fplot(dat=forplotdata,lwidths=lwidths,lheights=lheights)
 ```
 
-![](man/figures/README-unnamed-chunk-5-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-6-1.png)<!-- -->
 
 A header can be given using a character vector the same length as the
 number of columns of the input data:
@@ -108,7 +102,7 @@ header<-c("","Group1\nN","Group0\nmean (sd)","Group2\nN","Group2\nmean (sd)",
 fplot(dat=forplotdata,lwidths=lwidths,lheights=lheights,header=header)
 ```
 
-![](man/figures/README-unnamed-chunk-6-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-7-1.png)<!-- -->
 
 The header can also be placed at any x/y position using a list with one
 element per header line:
@@ -121,7 +115,7 @@ header<-list(
 fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights)
 ```
 
-![](man/figures/README-unnamed-chunk-7-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-8-1.png)<!-- -->
 
 Further formatting options for the forest plot include:
 
@@ -136,7 +130,7 @@ fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
     xtitle=xtitle,ref=list(x=0),xlim=c(-1,0.5))
 ```
 
-![](man/figures/README-unnamed-chunk-8-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-9-1.png)<!-- -->
 
 Note that arrows are shown if the limits of the confidence intervals are
 not included within *xlim*.
@@ -152,7 +146,7 @@ fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
     xtitle=xtitle,xlim=c(-1,0.5),shift_xaxis=0.3,xlab_line=-0.8)
 ```
 
-![](man/figures/README-unnamed-chunk-9-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-10-1.png)<!-- -->
 
 The points of the forest plots can also be formatted:
 
@@ -166,7 +160,7 @@ fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
     ps=ps)
 ```
 
-![](man/figures/README-unnamed-chunk-10-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-11-1.png)<!-- -->
 
 Lines at the top and bottom can be added:
 
@@ -177,7 +171,7 @@ fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
     headline=2,bottomline=1)
 ```
 
-![](man/figures/README-unnamed-chunk-11-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-12-1.png)<!-- -->
 
 If effect measures are on the log-scale (e.g. for odds ratios), option
 *lscale* can be used to indicate that the text should contain the
@@ -196,7 +190,50 @@ fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
     headline=2,bottomline=1)
 ```
 
-![](man/figures/README-unnamed-chunk-12-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-13-1.png)<!-- -->
+
+## Scatterplot for proportions
+
+For binary outcomes and in particular for serious adverse event
+reporting a graphical representation of the proportion in both arms has
+been recommended.
+
+A scatterplot for the proportions can be added if variables *prop1* and
+*prop2* are included in the dataset. The points can be controlled via
+*prps*, the additional via *plab*, *plab_text* and *plim*, lines at the
+side of the plot via *sideline*.
+
+For example:
+
+``` r
+
+data(forplotdata_prop)
+
+lwidths<-c(0.05,0.5,0.2,0.6,0.2,0.6,1.0,1.2,1.0,0.5,0.05)
+
+lheights<-c(0.14,1,0.08)
+
+header<-list(
+  list(y=0.7,text=c("Group1","Group2","Proportions (%)","Risk difference in %","P-value"),
+    x=c(0.10,0.25,0.45,0.7,0.98)),
+  list(y=0.3,text=c("N","n (%)","N","n (%)","Group 1","Group 2", "(95% CI)"),
+    x=c(0.07,0.15,0.22,0.30,0.41,0.49,0.7),
+    col=c(rep("black",4),rgb(1,0,0,1),rgb(0,0,1,1),"black")))
+
+xtitle<-list(x=0.83,y=0.6,textl="Group 1 better  ",textr="  Group 2 better")
+
+prps<-list(list(pch=16,cex=1.5,col=rgb(1,0,0,0.5)),
+          list(pch=16,cex=1.5,col=rgb(0,0,1,0.5)))
+
+fplot(dat=forplotdata_prop,lwidths=lwidths,lheights=lheights,
+  header=header,
+  prps=prps,
+  xtitle=xtitle,ref=list(x=0),shift_xaxis=0.3,xlab_line=-0.8,
+  xlab=c(-0.2,0,0.2,0.4), xlab_text=c(-20,0,20,40),
+  headline=2,bottomline=1,sideline=TRUE)
+```
+
+![](man/figures/README-unnamed-chunk-14-1.png)<!-- -->
 
 ## Under development
 
@@ -224,4 +261,4 @@ fplot(dat=forplotdata2, beta2 = TRUE,
       headline=2,bottomline=1)
 ```
 
-![](man/figures/README-unnamed-chunk-13-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-15-1.png)<!-- -->

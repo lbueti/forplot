@@ -25,6 +25,9 @@ fplot(
   xlab = NA,
   xlab_text = NA,
   xlim = NA,
+  plab = NA,
+  plab_text = NA,
+  plim = NA,
   xlab_cex = 0.6,
   xlab_line = 0,
   tck = -0.04,
@@ -34,16 +37,19 @@ fplot(
   pcol = rgb(0.1, 0.1, 0.1, 0.2),
   lscale = FALSE,
   ps = NA,
+  prps = NA,
   header = NA,
   ref = list(x = NA, extend = 0, lty = 2, col = "grey50", lwd = lwd),
   bottomline = NA,
   headline = NA,
   headline_pos = c(0, 1),
+  sideline = FALSE,
   beta2 = NULL,
   xlab2 = NA,
   xlab_text2 = NA,
   xlim2 = NA,
   xtitle2 = NA,
+  sorder = FALSE,
   ...
 )
 }
@@ -52,7 +58,8 @@ fplot(
 vlabel (labels), nx with x=1,2,... (num or chr columns with strings, e.g. number of observations or descriptives),
 beta, beta_lci, beta_uci (num columns with point estimates and confidence interval)
 optionally beta_format (num or chr column with formatted text to be printed along forest, generated from beta if not given)
-px with x=1,2,.. (num or chr columns with p-value(s))}
+px with x=1,2,.. (num or chr columns with p-value(s))
+propx with x=1,2,.. (num columns with proportion in the groups, generates simple scatter plot)}
 
 \item{nrows}{number of rows, setting for layout, default is 1}
 
@@ -92,6 +99,12 @@ px with x=1,2,.. (num or chr columns with p-value(s))}
 
 \item{xlim}{limits for x-axis in forest plots, derived from beta by default}
 
+\item{plab}{position of labels for x-axis of the proportion scatterplot (if any), pretty(plim) by default}
+
+\item{plab_text}{text at the labels, 100*plab by default (percentages from proportion)}
+
+\item{plim}{limits for x-axis of the proportion scatterplot (if any), c(0,1) by default}
+
 \item{xlab_cex}{size of x-axis labels (not title)}
 
 \item{xlab_line}{position of x-axis label (not title)}
@@ -111,8 +124,10 @@ list with x (xpos), y (ypos), textr and textl (text at the right/left side), cex
 
 \item{ps}{points for plot, list with pch, cex, and col}
 
+\item{prps}{points for proportion scatterplot, list with pch, cex, and col}
+
 \item{header}{for table, either a character vector or a list with any of
-x (vector with xpos), y (single y-position), text (character vector with labels), cex (text size),
+x (vector with xpos), y (single y-position), text (character vector with labels), cex (text size), col (text colour),
 the list can be >1 to define more than one header line}
 
 \item{ref}{reference line, list with x (xposition), extend (extension on top), lty (line type), col (line color), lwd (line width)}
@@ -123,6 +138,8 @@ the list can be >1 to define more than one header line}
 
 \item{headline_pos}{vector with position of lower and upper headline (if applicable), default c(0,1)}
 
+\item{sideline}{logical, whether to show lines at the side of the proportion scatterplot}
+
 \item{beta2}{if not NULL a second forest is generated, needs variables beta2, beta_lci2 and beta_uci2 in dat}
 
 \item{xlab2}{see xlab for 2nd forest}
@@ -132,6 +149,8 @@ the list can be >1 to define more than one header line}
 \item{xlim2}{see xlim for 2nd forest}
 
 \item{xtitle2}{see xtitle for 2nd forest}
+
+\item{sorder}{logical, whether standard ordering of columns  should  be used}
 
 \item{...}{options passed to ff_ci for formatting the effects (if beta_format not given)}
 }
@@ -159,7 +178,7 @@ fplot(dat=forplotdata,lwidths=lwidths,lheights=lheights)
 
 
 # Include header:
-header<-c("","Group1\nN","Group0\nmean (sd)","Group2\nN","Group2\nmean (sd)",
+header<-c("","Group1\nN","Group1\nmean (sd)","Group2\nN","Group2\nmean (sd)",
 "Mean difference\n95\% CI","","P-value")
 fplot(dat=forplotdata,lwidths=lwidths,lheights=lheights,header=header)
 
@@ -187,5 +206,26 @@ fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
 	xtitle=xtitle,xlim=c(-1,0.5),shift_xaxis=0.3,xlab_line=-0.8,
 	headline=2,bottomline=1)
 
+#Add a scatterplot for proportions 
+data(forplotdata)
+lwidths<-c(0.05,0.5,0.2,0.6,0.2,0.6,1.0,1.2,1.0,0.5,0.05)
+lheights<-c(0.08,1,0.04)
+header<-list(list(y=0.7,
+	text=c("Group1","Group2","Proportions (\%)","Risk difference in \%","P-value"),
+	x=c(0.10,0.25,0.45,0.7,0.98)),
+	list(y=0.3,text=c("N","n (\%)","N","n (\%)","(1: red, 2: blue)", "(95\% CI)"),
+	x=c(0.07,0.15,0.22,0.30,0.45,0.7)))
+ xtitle<-list(x=0.83,y=0.4,textl="Group 1 better  ",textr="  Group 2 better")
+
+prps<-list(list(pch=16,cex=1.5,col=rgb(1,0,0,0.5)),
+            list(pch=16,cex=1.5,col=rgb(0,0,1,0.5)))
+		
+fplot(dat=forplotdata_prop,lwidths=lwidths,lheights=lheights,
+	header=header,
+	prps=prps,
+	xtitle=xtitle,ref=list(x=0),
+	xlab_line=-1.0,xlab=c(-0.2,0,0.2,0.4), xlab_text=c(-20,0,20,40),
+	headline=2,bottomline=1,sideline=TRUE,
+	shift_ymin=0.5, shift_xaxis=0.5)
 
 }

@@ -3,7 +3,7 @@
 \docType{data}
 \name{forplotdata}
 \alias{forplotdata}
-\title{Demonstration data set}
+\title{Demonstration data set with continous outcome}
 \format{
 A data frame with 9 columns: \code{vlabel}, \code{n1}, \code{n2}, \code{n3}, \code{n4},
 \code{beta}, \code{beta_lci}, \code{beta_uci} and \code{p1}.
@@ -12,7 +12,7 @@ A data frame with 9 columns: \code{vlabel}, \code{n1}, \code{n2}, \code{n3}, \co
 forplotdata
 }
 \description{
-Simulated summary data from 10 outcomes to be presented in a forst plot.
+Simulated summary data from 10 outcomes to be presented in a forest plot.
 Each row represents the summary of one outcome variable for two treatment groups with
 columns for the variable name (vlabel),
 number of observations and mean (sd) for each group (n1, n2, n3 and n4),
