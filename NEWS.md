@@ -24,6 +24,10 @@ forplot 0.1.1
 ------------------
 color option for header
 
-forplot 0.1.1
+forplot 0.1.2
 ------------------
 option to include a boxplot
+
+forplot 0.1.3
+------------------
+remove sorder option
