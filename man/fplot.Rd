@@ -54,7 +54,6 @@ fplot(
   xlab_text2 = NA,
   xlim2 = NA,
   xtitle2 = NA,
-  sorder = FALSE,
   ...
 )
 }
@@ -166,8 +165,6 @@ arm (the treatment arm, safest as a factor to preserve the order in the plot)}
 \item{xlim2}{see xlim for 2nd forest}
 
 \item{xtitle2}{see xtitle for 2nd forest}
-
-\item{sorder}{logical, whether standard ordering of columns  should  be used}
 
 \item{...}{options passed to ff_ci for formatting the effects (if beta_format not given)}
 }

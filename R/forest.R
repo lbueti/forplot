@@ -70,7 +70,6 @@
 #' @param xlab_text2 see xlab_text for 2nd forest
 #' @param xlim2 see xlim for 2nd forest
 #' @param xtitle2 see xtitle for 2nd forest
-#' @param sorder logical, whether standard ordering of columns  should  be used
 #' @param ... options passed to ff_ci for formatting the effects (if beta_format not given)
 #'
 #' @return forest plot
@@ -187,7 +186,6 @@ fplot<-function(dat,
                 bottomline=NA,headline=NA,headline_pos=c(0,1),sideline=FALSE,
 				bpdat=NULL,bpopt=NA,bplim=NA,bplab=NA,bplab_text=NA,
 				beta2=NULL, xlab2=NA,xlab_text2=NA,xlim2=NA,xtitle2=NA,
-				sorder=FALSE,
 				...) {
 
   #%%%%%%%%%%%
@@ -275,9 +273,6 @@ fplot<-function(dat,
 	  }
   }
   
-  #boxplot option
-  
-  
   #pval
   np<-sum(regexpr("^p",colnames(dat))==1 &  regexpr("^prop",colnames(dat))==(-1))
 
@@ -291,42 +286,43 @@ fplot<-function(dat,
   }
 	
   #standard column ordering 
-  if (sorder==TRUE) {
-	  seq<-colnames(dat)  
-	  npl<-which(seq=="vlabel")
-	  if (nns!=0) {
-		for (ni in 1:nns) {
-			npl<-c(npl,which(seq==paste0("n",ni)))
-		}
-	  }
-	  if (nprops!=0) {
-		npl<-c(npl,min(which(grepl("^prop",seq))))
-	  }	
-	  if (sum(grepl("beta_format",colnames(dat)))==0) {
-		 npl<-c(npl,which(seq=="beta"))
-		 npl<-c(npl,npl[length(npl)]+1)
-	  } else {
-		npl<-c(npl,which(seq=="beta"))
-		npl<-c(npl,which(seq=="beta_format"))
-	  }
-	  if (!is.null(beta2)) {
-		if (sum(grepl("beta_format2",colnames(dat)))==0) {
-		 npl<-c(npl,which(seq=="beta2"))
-		 npl<-c(npl,npl[length(npl)]+1)
-		} else {
-		  npl<-c(npl,which(seq=="beta2"))
-		  npl<-c(npl,which(seq=="beta_format2"))
-		}
-	  }
-	  if (np!=0) {
-		for (pi in 1:np) {
-		  npl<-c(npl,which(seq==paste0("p",pi)))
-		}
-	  }	
-	  npl2<-(1:ncols)[order(npl)]	
-  }	else {
-	  npl2<-(1:ncols)
+  seq<-colnames(dat)  
+  npl<-which(seq=="vlabel")
+  if (nns!=0) {
+	for (ni in 1:nns) {
+		npl<-c(npl,which(seq==paste0("n",ni)))
+	}
   }
+  #boxplot, after n by default 
+  if (!is.null(bpdat)) {
+	npl<-c(npl,max(npl+0.5))
+  }
+  
+  if (nprops!=0) {
+	npl<-c(npl,min(which(grepl("^prop",seq))))
+  }	
+  if (sum(grepl("beta_format",colnames(dat)))==0) {
+    npl<-c(npl,which(seq=="beta"))
+    npl<-c(npl,npl[length(npl)]+1)
+  } else {
+	npl<-c(npl,which(seq=="beta"))
+	npl<-c(npl,which(seq=="beta_format"))
+  }
+  if (!is.null(beta2)) {
+	if (sum(grepl("beta_format2",colnames(dat)))==0) {
+		npl<-c(npl,which(seq=="beta2"))
+		npl<-c(npl,npl[length(npl)]+1)
+	} else {
+		npl<-c(npl,which(seq=="beta2"))
+		npl<-c(npl,which(seq=="beta_format2"))
+	}
+  }
+  if (np!=0) {
+	for (pi in 1:np) {
+		npl<-c(npl,which(seq==paste0("p",pi)))
+	}
+  }	
+  npl2<-(1:ncols)[order(npl)]	
   
   #%%%%%%%%%%%
   #plot
