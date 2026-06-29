@@ -21,152 +21,249 @@ A package to generate forest plots.
 `forplot` can be installed from github:
 
 ```{r gh-installation, eval = FALSE}
-# install.packages("remotes")
+
+#install package using remotes
 remotes::install_github("dcr-unibe-ch/forplot")
+
+# load package
+library(forplot)
+
 ```
 
 ```{r, echo=FALSE, results="hide", warning=FALSE, message=FALSE}
 devtools::load_all()
+
+library(forplot)
+
 ```
 
 
 ## Usage
-`forplot` and its main function `fplot` needs a data frame with specific column names. 
+`forplot` contains two main functions to build a forest plot.
 
-- *vlabel*: a *chr* column with the variable labels.
-- *nx*: any number of *chr* or *num* columns numbered sequentially (i.e. *n1*, *n2*, *n3*, ...). Could contain the number of observations and/or summary per arm.
-- *beta*, *beta_lci*, *beta_uci*: three *num* columns with point estimates and confidence interval to be plotted as forest.
-- *beta_format*: optional *chr* column with formatted text to be printed along forest, generated from betas if not given.
-- *px*: any number of *chr* or *num* columns numbered sequentially (i.e. *p1*, *p2*, *p3*, ...). Could contain p-values.
+`genfobj` requires a *layout*, specifying the elements to be plotted and a data frame (*dat*) with the data to be plotted and 
+produces a list of class **fobj**.
 
-The order of the columns is kept for the plot.
+The **fobj** can then be modified using a series of helper functions or directly by changing the list.
 
-The package includes an example dataset with 10 variables:
+`plotfobj` then produces the forest plot from the **fobj**
+
+## Example data 
+
+The package includes two example datasets one with continous (*forplotdata*) and one with binary variables  (*forplotdata_prop*).
 
 ```{r}
-# load package
-library(forplot)
 
-# demonstration data
 data(forplotdata)
-
 forplotdata
 ```
 
-The *nx* columns include the number of observations and descriptives (mean (sd)) for each arm, *beta* is a mean difference, *p1* the p-value.
 
-The minimal plot only includes a label and the forest and needs columns *vlabel*, *beta*, *beta_lci*, *beta_uci*.
+```{r}
+data(forplotdata)
+forplotdata_prop
 
-```{r, fig.height=3.5, fig.width=5}
-fplot(dat=forplotdata[,c("vlabel","beta","beta_lci","beta_uci")])
 ```
 
-Adding *nx* and *px* columns:
-```{r, fig.height=3.5, fig.width=8}
-fplot(dat=forplotdata)
-```
-
-Set more sensible widths and heights:
-
-- lwidths has to be the same length as the number of columns for the input 
-	data plus two for the left and right margin
-- lheight is usually of length three, for header, body and footer	
-
-```{r, fig.height=3.5, fig.width=8}
-lwidths<-c(0.05,0.5,0.2,0.8,0.2,0.8,1.2,1.2,0.5,0.05)
-
-lheights<-c(0.14,1,0.08)
-
-fplot(dat=forplotdata,lwidths=lwidths,lheights=lheights)
-```
-
-A header can be given using a character vector the same 
-	length as the number of columns of the input data:
-
-```{r, fig.height=3.5, fig.width=8}
-header<-c("","Group1\nN","Group1\nmean (sd)","Group2\nN","Group2\nmean (sd)",
-	"Mean difference\n95% CI","","P-value")
-
-fplot(dat=forplotdata,lwidths=lwidths,lheights=lheights,header=header)
-```
-
-The header can also be placed at any x/y position using a list 
-	with one element per header line:
-
-```{r, fig.height=3.5, fig.width=8}
-header<-list(
-  list(y=0.7,text=c("Group1","Group2","Mean difference (95% CI)","P-value"),x=c(0.10,0.32,0.7,0.98)),
-  list(y=0.3,text=c("N","mean (sd)","N","mean (sd)"),x=c(0.07,0.18,0.28,0.38)))
-
-fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights)
-```
-
-Further formatting options for the forest plot include:
-  
-  - *xtitle*: a label below the x-axis
-  - *ref*: adds a vertical reference line
-  - *xlim*: limits for the x-axis
-
-
-```{r, fig.height=3.5, fig.width=8}
-xtitle<-list(x=0.86,y=0.2,textl="Group 1 better  ",textr="  Group 2 better")
-
-fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
-	xtitle=xtitle,ref=list(x=0),xlim=c(-1,0.5))
-```
-
-Note that arrows are shown if the limits of the confidence intervals are not included within *xlim*.
-
-There are further options for the reference line and we can shift the x-axis
-  if the gap at the bottom is too large:
+There are text columns *n[1-4]* with the number of observations and descriptives for each arm (either mean (sd) or n(%)),
+  the fomratted treatment effect (*beta_format*) and the p-value (*p1*), and
+	three numeric columns with to draw the forest (*beta*, *beta_lci* and *beta_uci*).
 	
-```{r, fig.height=3.5, fig.width=8}
-xtitle<-list(x=0.86,y=0.6,textl="Group 1 better  ",textr="  Group 2 better")
+In the *forplotdata_prop* there are two further numeric columns with the proportion in each arm (*prop1*, *prop2*) to draw a srip plot.	
 
-fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
-	ref=list(x=0,col=2,extend=2),
-	xtitle=xtitle,xlim=c(-1,0.5),shift_xaxis=0.3,xlab_line=-0.8)
+
+## Generating the **fobj** with `genfobj`
+
+`genfobj' requires the input of a *layout* and a data frame *dat*.
+
+*layout* must be a character vector with elements *t* (text), *f* (forest), *s[1-9]* (strip), or *b* (boxplot).
+
+For each *t* element, *dat* must contain a single column, 
+for each *f* element three columns (point estimate, lower confidence limit, upper confidence limit, in that order), and,
+for each *s[1-9]* the number of columns indicated in []. 
+
+The order of the columns must correspond to the layout.
+
+A *b* element does not need a column in *dat* but the specifcation of *bpdat*, a 
+	data frame in a long format with columns
+	*out* (the outcome value), *var* (the outcome variable, safest as a factor to preserve the order in the plot), 
+	and *arm* (the treatment arm, safest as a factor to preserve the order in the plot)
+
+
+We want to use *forplotdata* and generate a plot with a text columns with the label, the descriptives, the formatted effect and the p-value, and a forest for the beta.
+
+```{r}
+fobj<-genfobj(dat = forplotdata,
+  layout = c("t","t","t","t","t","t","f","t"))
+```
+
+The prodcued **fobj** is a list of length 6 with class *fobj*.
+It includes those elements:
+
+- *dat* and *bpdat*: the data 
+- *setup*: the options from `genfobj` which has been given or assumed by default (i.e. *layout*, *lheights*, *lwidths*, *y.at*, *ylim*)
+- *items*: a list of length from *layout* with the options for each item
+- *header*: a list with the options for the header
+
+
+```{r}
+class(fobj)
+names(fobj)
+fobj$setup
+length(fobj$items)
+```
+By default, text items include these options:
+
+```{r}
+names(fobj$item[[1]])
+
+fobj$item[[1]]
 
 ```
 
-The points of the forest plots can also be formatted:
+*type* is the item type, *vname* is the variable in *dat* the item corresponds to, *plot* and *text* are the options used for plotting with base r.
+
+The *f* items are more complex, including options for *axis*, *points* and *arrows* of the fores plots.
+
+```{r}
+names(fobj$items[[which(fobj$setup$layout=="f")]])
+fobj$items[[which(fobj$setup$layout=="f")]]$type
+fobj$items[[which(fobj$setup$layout=="f")]]$vname
+```
+
+For the variable name, the first of the three variables used to specify the forest is used.
+Options for axis, point and arrows can be changed using helper functions (or directly in the list).
+Examples or shown below.
+
+## Plot the **fobj**
+
+The **fobj** can be plotted using `plotfobj`
 
 ```{r, fig.height=3.5, fig.width=8}
-set.seed(1345)
-ps<-list(pch=16,cex=rnorm(10,2,0.2),col=1)
+plotfobj(fobj)
+```
 
-fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
-	ref=list(x=0,col=2,extend=2),
-	xtitle=xtitle,xlim=c(-1,0.5),shift_xaxis=0.3,xlab_line=-0.8,
-	ps=ps)
+And with a bit nicer widths, which can be given as options in `genfobj` or just be changing the **fobj**:
+
+```{r, fig.height=3.5, fig.width=8}
+fobj$setup$lwidths <- c(0.8,0.4,0.6,0.4,0.6,1,1,0.5)
+plotfobj(fobj)
+```
+
+Gridlines and stripes can be added with helper functions *gridlines* and *stripes*, which generate further elements in the fobj:
+
+```{r}
+fobj<-gridlines(fobj)
+fobj<-stripes(fobj)
+names(fobj)
+```
+
+```{r, fig.height=3.5, fig.width=8}
+plotfobj(fobj)
+```
+
+## Modify the items
+
+All items, gridlines and stripes can be modified using helper functions or within the list directly.
+
+For *t* items helper function *t_options* allows to use all options used in R `?graphics::text` function.
+That can be done for a specific t item by using the number or column name of the item, or for all (by keeping item=NULL):
+
+
+```{r, fig.height=3.5, fig.width=8}
+fobj<-t_options(fobj=fobj, item=c("vlabel"), cex=1.2, font=2, col="red")
+plotfobj(fobj)
+```
+
+For *f* items there are several helper function to modify the options for the different elements:
+*f_axis*, *f_points*, *f_arrows*. Also here, all options from `?graphics::axis`, `?graphics::points` and `?graphics::arrows` can be used.
+As we do only have one forest item, we do not have specify the *item*.
+
+```{r, fig.height=3.5, fig.width=8}
+fobj<-f_axis(fobj=fobj, at=seq(-1,0.2, by=0.4), labels=seq(-1,0.2, by=0.4), tck=-0.03, mgp = c(2,0.5,0))
+fobj<-f_points(fobj=fobj, pch=16, cex=1.5)
+plotfobj(fobj)
+```
+
+With *f_refline*, a reference line can be added and with *f_direction* a label for the direction below the axis.
+Note that the footer height has to be increased to fit the direction label.
+
+```{r, fig.height=3.5, fig.width=8}
+fobj<-f_refline(fobj, x = c(0, 0))
+fobj<-f_direction(fobj, text = "A better    B better", line=1.6)
+fobj$setup$lheights[3]<-0.15
+plotfobj(fobj)
+```
+
+To remove an added item, it can be set to NULL (or a new **fobj** could be generated):
+
+```{r, fig.height=3.5, fig.width=8}
+fobj$items[[which(fobj$setup$layout=="f")]]$refline<-NULL
+plotfobj(fobj)
+```
+
+## The header
+
+By default a header with the columns names is used and stored in the *header* element of **fobj**,
+which is a list of length 1 with these elements.
+
+```{r}
+fobj$header
+```
+
+The *header* function can be used to modify the options using all options from `?graphics::text`.
+As an extra element, the *hlayout* can be used to merge columns, i.e. to print a label over more than one column.
+And more than one header row can be specified using *headernr*, leading to a list of length > 1.
+
+Let's first just use different names, also including a line separator. 
+Note that an empty character has to be included to leave column 1 and 8 empty.
+And the y is also modified to place the label it a bit higher.
+
+```{r, fig.height=3.5, fig.width=8}
+
+fobj<-header(fobj=fobj,
+  labels = c("","Arm A\nN","Arm A\nmean (sd)","Arm B\nN","Arm B\nmean (sd)",
+	"Mean difference\n95% CI","","P-value"),
+  y=0.6)
+
+plotfobj(fobj)
+```
+
+We could also merge the label for the effect over the format and forest columns.
+  We would then change the layout to include one label twice. And remove the empty label for the forest column.
+
+```{r, fig.height=3.5, fig.width=8}
+
+fobj<-header(fobj=fobj, hlayout=c(1,2,3,4,5,6,6,7),
+  labels = c("","Arm A\nN","Arm A\nmean (sd)","Arm B\nN","Arm B\nmean (sd)",
+	"Mean difference 95% CI","P-value"))
+
+plotfobj(fobj)
+```
+
+In order to also merge to arm labels, we would need to header rows using option *headernr*, leading to a header list with length 2:
+As before we can use further `?graphics::text` options.
+
+```{r}
+
+fobj<-header(fobj=fobj, hlayout = c(1,2,2,3,3,4,4,5),  headernr = 1,
+	labels=c("","Arm A","Arm B","Mean diff (95% CI)","P-value"),
+	y=0.9)
+
+fobj<-header(fobj=fobj, hlayout = c(1,2,3,4,5,6,7,8), headernr = 2,
+	labels=c("","N","Mean (sd)","N","Mean (sd)","","",""),y=0.3)
+
+
+fobj$header	
+```
+
+```{r, fig.height=3.5, fig.width=8}
+
+plotfobj(fobj)
 
 ```
 
-Lines at the top and bottom can be added:
-
-```{r, fig.height=3.5, fig.width=8}
-fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
-  ref=list(x=0,col=2,extend=2),
-	xtitle=xtitle,xlim=c(-1,0.5),shift_xaxis=0.3,xlab_line=-0.8,
-	headline=2,bottomline=1)
-```
-
-If effect measures are on the log-scale (e.g. for odds ratios), option *lscale* can be used to indicate that the text should contain the exponentiated values. Axis ticks and labels have to be adapted by hand.
-
-```{r, fig.height=3.5, fig.width=8}
-xlab_text<-c(0.3,0.5,0.8,1.0,1.5)
-xlab<-log(xlab_text)
-xlim<-log(c(min(xlab_text),max(xlab_text)))
-
-fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
-  ref=list(x=0,col=2,extend=2),
-  lscale=TRUE,
-	xtitle=xtitle,shift_xaxis=0.3,xlab_line=-0.8,
-  xlim=xlim,xlab=xlab, xlab_text=xlab_text,
-	headline=2,bottomline=1)
-```
-
-## Boxplot for continous variables 
+## Boxplots
 
 For a more in-depth presentation of the raw data in each group, a boxplot can be added.
 It depends on the input of the raw data as a data frame in a long format with 
@@ -176,103 +273,81 @@ columns:
 - *var*: the outcome variable, safest as a factor to preserve the order in the plot, and 
 - *arm*: the treatment arm, safest as a factor to preserve the order in the plot.
 
-Boxplot layout can be controlled via *bpopt* (currenlty just colour and width),
-	the additional x-axis via *bplim*, *bplab* and *bplab_text*;
-	lines at the side of the plot can be added via *sideline*.
+Boxplot layout can be controled via helper functions *b_plot* and *b_axis* using all options available for `?graphics::plot` and `?graphics::axis`.
 
 ```{r, fig.height=3.5, fig.width=8}
-data(forplotdata_bp)
 
-head(forplotdata_bp)
+fobj<-genfobj(dat = forplotdata, bpdat = forplotdata_bp,
+  layout = c("t","t","t","t","t","b","t","f","t"),
+  lwidths = c(0.6,0.4,0.6,0.4,0.6,1,1,1,0.5))
 
-lwidths<-c(0.05,0.5,0.3,0.6,0.3,0.6,0.8,1.2,1.2,0.5,0.05)
+plotfobj(fobj)
 
-lheights<-c(0.14,1,0.08)
-
-header<-list(list(y=0.7,
-	text=c("Group1","Group2","Mean difference (95% CI)","P-value"),
-	x=c(0.09,0.28,0.7,0.98),col=c("red","blue","black","black")),
-	list(y=0.3,text=c("N","mean (sd)","N","mean (sd)"),
-	x=c(0.07,0.15,0.25,0.32)))
-	
-xtitle<-list(x=0.88,y=0.3,textl="Group 1 better  ",textr="  Group 2 better")
-
-fplot(dat=forplotdata, lwidths=lwidths,lheights=lheights,
-    header=header,
-		xtitle=xtitle, ref=list(x=0,col=1,extend=2), xlim=c(-1,0.5),
-  	shift_xaxis=0.3, xlab_line=-0.8,
-		headline=2,bottomline=1,
-		bpdat=forplotdata_bp, bpopt = list(col = c(rgb(1,0,0,0.3),rgb(0,0,1,0.3))))
 		
 ```
 
-## Scatterplot for proportions
+Adding header gridlines and stripes:
+
+```{r, fig.height=3.5, fig.width=8}
+
+fobj<-gridlines(fobj)
+fobj<-stripes(fobj)
+
+fobj<-header(fobj=fobj, hlayout = c(1,2,2,3,3,4,5,5,6),  headernr = 1,
+	labels=c("","Arm A","Arm B","","Mean diff (95% CI)","P-value"),
+	col = c(1,"red","blue",1,1),
+	y=0.9)
+fobj<-header(fobj=fobj, hlayout = c(1,2,3,4,5,6,7,8,9), headernr = 2,
+	labels=c("","N","Mean (sd)","N","Mean (sd)","","","",""),y=0.3)
+
+
+plotfobj(fobj)
+
+		
+```
+
+
+
+## Strip plot for proportions
 
 For binary outcomes and in particular for serious adverse event reporting 
 a graphical representation of the proportion in both arms has been recommended.
 
-A scatterplot for the proportions can be added if variables *prop1* and *prop2* are included in the dataset.
-The points can be controlled via *prps*, the additional x-axis via *plim*, *plab* and *plab_text*; 
-	lines at the side of the plot can be added via *sideline*.
+A strip plot for the proportions can be added via *s[1-9]*, where the number would indicate the number of points in the strip plot and the number of columns in the *dat* (usually two if there are two treatment arms).
+The "s" items then contains several *points* elements.
 
 For example:
 
-
 ```{r, fig.height=3.5, fig.width=8}
 
-data(forplotdata_prop)
-
-lwidths<-c(0.05,0.5,0.2,0.6,0.2,0.6,1.0,1.2,1.0,0.5,0.05)
-
-lheights<-c(0.14,1,0.08)
-
-header<-list(
-  list(y=0.7,text=c("Group1","Group2","Proportions (%)","Risk difference in %","P-value"),
-    x=c(0.10,0.25,0.45,0.7,0.98)),
-  list(y=0.3,text=c("N","n (%)","N","n (%)","Group 1","Group 2", "(95% CI)"),
- 	x=c(0.07,0.15,0.22,0.30,0.41,0.49,0.7),
- 	col=c(rep("black",4),rgb(1,0,0,1),rgb(0,0,1,1),"black")))
-
-xtitle<-list(x=0.83,y=0.6,textl="Group 1 better  ",textr="  Group 2 better")
-
-prps<-list(list(pch=16,cex=1.5,col=rgb(1,0,0,0.5)),
-          list(pch=16,cex=1.5,col=rgb(0,0,1,0.5)))
-
-fplot(dat=forplotdata_prop, lwidths=lwidths, lheights=lheights,
-  header=header,
-  prps=prps,
-  xtitle=xtitle, ref=list(x=0),
-  shift_xaxis=0.3, xlab_line=-0.8,
-  xlab=c(-0.2,0,0.2,0.4), xlab_text=c(-20,0,20,40),
-  headline=2, bottomline=1, sideline=TRUE)
+fobj<-genfobj(dat = forplotdata_prop,
+  layout = c("t","t","t","t","t","s2","t","f","t"),
+  lwidths = c(0.6,0.4,0.6,0.4,0.6,1.0,1.2,1,0.5))
+plotfobj(fobj)
 
 ```
 
+Options can be modified via *s_axis*, *s_hline* and *s_points* using all options available for using all options available for `?graphics::axis`, `?graphics::abline` and `?graphics::points`.
 
+Note that for points, each sub-item has can be specified separately using *pointnr* (e.g. to specify colors).
 
-## Under development
-
-A feature under development is adding a second forest plot (e.g. to show a risk difference and ratio)
-  by setting *beta2 = TRUE*.
-That needs columns *beta2*, *beta_lci2* and *beta_uci2* in the dataset (just copied over in the example below).
-Options *xlab2*, *xlab_text2*, *xlim2* and *xtitle2* are available to format the second plot.
+Left and right borders can be added via *s_borders*.
 
 ```{r, fig.height=3.5, fig.width=8}
 
-forplotdata2<-forplotdata
-forplotdata2$beta2<-forplotdata2$beta
-forplotdata2$beta_lci2<-forplotdata2$beta_lci
-forplotdata2$beta_uci2<-forplotdata2$beta_uci
-forplotdata2<-forplotdata2[,colnames(forplotdata2) != "p1"]
-forplotdata2$p1<-forplotdata$p1
-  
-lwidths<-c(0.05,0.5,0.2,0.8,0.2,0.8,1.2,1.2,1.2,1.2,0.5,0.05)
-lheights<-c(0.14,1,0.08)
+fobj<-s_axis(fobj=fobj, xlim = c(0,1), 
+  at = seq(0,1,by=0.25), labels = seq(0,100,by=25))
 
-fplot(dat=forplotdata2, beta2 = TRUE,
-      lwidths=lwidths,lheights=lheights,
-      xlim=c(-1,0.5),xlim2=c(-1,0.5),
-      headline=2,bottomline=1)
+fobj<-s_points(fobj=fobj, pch = 16, cex=1.5)
+fobj<-s_points(fobj=fobj, pointnr = 1, col = "red")
+fobj<-s_points(fobj=fobj, pointnr = 2, col = "blue")
+
+fobj<-s_borders(fobj)
+
+fobj<-gridlines(fobj)
+
+plotfobj(fobj)
+
 
 ```
 
