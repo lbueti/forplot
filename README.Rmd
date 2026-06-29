@@ -74,12 +74,12 @@ In the *forplotdata_prop* there are two further numeric columns with the proport
 
 ## Generating the **fobj** with `genfobj`
 
-`genfobj' requires the input of a *layout* and a data frame *dat*.
+`genfobj` requires the input of a *layout* and a data frame *dat*.
 
 *layout* must be a character vector with elements *t* (text), *f* (forest), *s[1-9]* (strip), or *b* (boxplot).
 
 For each *t* element, *dat* must contain a single column, 
-for each *f* element three columns (point estimate, lower confidence limit, upper confidence limit, in that order), and,
+for each *f* element three columns (point estimate, lower confidence limit, upper confidence limit, in that order), and
 for each *s[1-9]* the number of columns indicated in []. 
 
 The order of the columns must correspond to the layout.
@@ -93,8 +93,7 @@ A *b* element does not need a column in *dat* but the specifcation of *bpdat*, a
 We want to use *forplotdata* and generate a plot with a text columns with the label, the descriptives, the formatted effect and the p-value, and a forest for the beta.
 
 ```{r}
-fobj<-genfobj(dat = forplotdata,
-  layout = c("t","t","t","t","t","t","f","t"))
+fobj<-genfobj(dat = forplotdata, layout = c("t","t","t","t","t","t","f","t"))
 ```
 
 The prodcued **fobj** is a list of length 6 with class *fobj*.
@@ -127,7 +126,9 @@ The *f* items are more complex, including options for *axis*, *points* and *arro
 
 ```{r}
 names(fobj$items[[which(fobj$setup$layout=="f")]])
+
 fobj$items[[which(fobj$setup$layout=="f")]]$type
+
 fobj$items[[which(fobj$setup$layout=="f")]]$vname
 ```
 
@@ -147,6 +148,7 @@ And with a bit nicer widths, which can be given as options in `genfobj` or just 
 
 ```{r, fig.height=3.5, fig.width=8}
 fobj$setup$lwidths <- c(0.8,0.4,0.6,0.4,0.6,1,1,0.5)
+
 plotfobj(fobj)
 ```
 
@@ -154,7 +156,9 @@ Gridlines and stripes can be added with helper functions *gridlines* and *stripe
 
 ```{r}
 fobj<-gridlines(fobj)
+
 fobj<-stripes(fobj)
+
 names(fobj)
 ```
 
@@ -172,6 +176,7 @@ That can be done for a specific t item by using the number or column name of the
 
 ```{r, fig.height=3.5, fig.width=8}
 fobj<-t_options(fobj=fobj, item=c("vlabel"), cex=1.2, font=2, col="red")
+
 plotfobj(fobj)
 ```
 
@@ -180,8 +185,11 @@ For *f* items there are several helper function to modify the options for the di
 As we do only have one forest item, we do not have specify the *item*.
 
 ```{r, fig.height=3.5, fig.width=8}
-fobj<-f_axis(fobj=fobj, at=seq(-1,0.2, by=0.4), labels=seq(-1,0.2, by=0.4), tck=-0.03, mgp = c(2,0.5,0))
+fobj<-f_axis(fobj=fobj, at=seq(-1,0.2, by=0.4), labels=seq(-1,0.2, by=0.4), 
+  tck=-0.03, mgp = c(2,0.5,0))
+
 fobj<-f_points(fobj=fobj, pch=16, cex=1.5)
+
 plotfobj(fobj)
 ```
 
@@ -190,8 +198,11 @@ Note that the footer height has to be increased to fit the direction label.
 
 ```{r, fig.height=3.5, fig.width=8}
 fobj<-f_refline(fobj, x = c(0, 0))
+
 fobj<-f_direction(fobj, text = "A better    B better", line=1.6)
+
 fobj$setup$lheights[3]<-0.15
+
 plotfobj(fobj)
 ```
 
@@ -199,6 +210,7 @@ To remove an added item, it can be set to NULL (or a new **fobj** could be gener
 
 ```{r, fig.height=3.5, fig.width=8}
 fobj$items[[which(fobj$setup$layout=="f")]]$refline<-NULL
+
 plotfobj(fobj)
 ```
 
@@ -291,6 +303,7 @@ Adding header gridlines and stripes:
 ```{r, fig.height=3.5, fig.width=8}
 
 fobj<-gridlines(fobj)
+
 fobj<-stripes(fobj)
 
 fobj<-header(fobj=fobj, hlayout = c(1,2,2,3,3,4,5,5,6),  headernr = 1,
@@ -300,10 +313,7 @@ fobj<-header(fobj=fobj, hlayout = c(1,2,2,3,3,4,5,5,6),  headernr = 1,
 fobj<-header(fobj=fobj, hlayout = c(1,2,3,4,5,6,7,8,9), headernr = 2,
 	labels=c("","N","Mean (sd)","N","Mean (sd)","","","",""),y=0.3)
 
-
 plotfobj(fobj)
-
-		
 ```
 
 
@@ -323,8 +333,8 @@ For example:
 fobj<-genfobj(dat = forplotdata_prop,
   layout = c("t","t","t","t","t","s2","t","f","t"),
   lwidths = c(0.6,0.4,0.6,0.4,0.6,1.0,1.2,1,0.5))
-plotfobj(fobj)
 
+plotfobj(fobj)
 ```
 
 Options can be modified via *s_axis*, *s_hline* and *s_points* using all options available for using all options available for `?graphics::axis`, `?graphics::abline` and `?graphics::points`.
@@ -339,7 +349,9 @@ fobj<-s_axis(fobj=fobj, xlim = c(0,1),
   at = seq(0,1,by=0.25), labels = seq(0,100,by=25))
 
 fobj<-s_points(fobj=fobj, pch = 16, cex=1.5)
+
 fobj<-s_points(fobj=fobj, pointnr = 1, col = "red")
+
 fobj<-s_points(fobj=fobj, pointnr = 2, col = "blue")
 
 fobj<-s_borders(fobj)
@@ -347,7 +359,5 @@ fobj<-s_borders(fobj)
 fobj<-gridlines(fobj)
 
 plotfobj(fobj)
-
-
 ```
 

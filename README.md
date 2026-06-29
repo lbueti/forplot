@@ -102,14 +102,14 @@ proportion in each arm (*prop1*, *prop2*) to draw a srip plot.
 
 ## Generating the **fobj** with `genfobj`
 
-\`genfobj’ requires the input of a *layout* and a data frame *dat*.
+`genfobj` requires the input of a *layout* and a data frame *dat*.
 
 *layout* must be a character vector with elements *t* (text), *f*
 (forest), *s\[1-9\]* (strip), or *b* (boxplot).
 
 For each *t* element, *dat* must contain a single column, for each *f*
 element three columns (point estimate, lower confidence limit, upper
-confidence limit, in that order), and, for each *s\[1-9\]* the number of
+confidence limit, in that order), and for each *s\[1-9\]* the number of
 columns indicated in \[\].
 
 The order of the columns must correspond to the layout.
@@ -125,8 +125,7 @@ with the label, the descriptives, the formatted effect and the p-value,
 and a forest for the beta.
 
 ``` r
-fobj<-genfobj(dat = forplotdata,
-  layout = c("t","t","t","t","t","t","f","t"))
+fobj<-genfobj(dat = forplotdata, layout = c("t","t","t","t","t","t","f","t"))
 ```
 
 The prodcued **fobj** is a list of length 6 with class *fobj*. It
@@ -232,8 +231,10 @@ and *arrows* of the fores plots.
 ``` r
 names(fobj$items[[which(fobj$setup$layout=="f")]])
 #> [1] "type"   "vname"  "plot"   "axis"   "points" "arrows"
+
 fobj$items[[which(fobj$setup$layout=="f")]]$type
 #> [1] "f"
+
 fobj$items[[which(fobj$setup$layout=="f")]]$vname
 #> [1] "beta"
 ```
@@ -258,6 +259,7 @@ or just be changing the **fobj**:
 
 ``` r
 fobj$setup$lwidths <- c(0.8,0.4,0.6,0.4,0.6,1,1,0.5)
+
 plotfobj(fobj)
 ```
 
@@ -268,7 +270,9 @@ Gridlines and stripes can be added with helper functions *gridlines* and
 
 ``` r
 fobj<-gridlines(fobj)
+
 fobj<-stripes(fobj)
+
 names(fobj)
 #> [1] "dat"       "bpdat"     "setup"     "items"     "header"    "gridlines"
 #> [7] "stripes"
@@ -292,6 +296,7 @@ item=NULL):
 
 ``` r
 fobj<-t_options(fobj=fobj, item=c("vlabel"), cex=1.2, font=2, col="red")
+
 plotfobj(fobj)
 ```
 
@@ -304,8 +309,11 @@ all options from `?graphics::axis`, `?graphics::points` and
 do not have specify the *item*.
 
 ``` r
-fobj<-f_axis(fobj=fobj, at=seq(-1,0.2, by=0.4), labels=seq(-1,0.2, by=0.4), tck=-0.03, mgp = c(2,0.5,0))
+fobj<-f_axis(fobj=fobj, at=seq(-1,0.2, by=0.4), labels=seq(-1,0.2, by=0.4), 
+  tck=-0.03, mgp = c(2,0.5,0))
+
 fobj<-f_points(fobj=fobj, pch=16, cex=1.5)
+
 plotfobj(fobj)
 ```
 
@@ -317,8 +325,11 @@ to be increased to fit the direction label.
 
 ``` r
 fobj<-f_refline(fobj, x = c(0, 0))
+
 fobj<-f_direction(fobj, text = "A better    B better", line=1.6)
+
 fobj$setup$lheights[3]<-0.15
+
 plotfobj(fobj)
 ```
 
@@ -329,6 +340,7 @@ be generated):
 
 ``` r
 fobj$items[[which(fobj$setup$layout=="f")]]$refline<-NULL
+
 plotfobj(fobj)
 ```
 
@@ -493,6 +505,7 @@ Adding header gridlines and stripes:
 ``` r
 
 fobj<-gridlines(fobj)
+
 fobj<-stripes(fobj)
 
 fobj<-header(fobj=fobj, hlayout = c(1,2,2,3,3,4,5,5,6),  headernr = 1,
@@ -502,10 +515,7 @@ fobj<-header(fobj=fobj, hlayout = c(1,2,2,3,3,4,5,5,6),  headernr = 1,
 fobj<-header(fobj=fobj, hlayout = c(1,2,3,4,5,6,7,8,9), headernr = 2,
     labels=c("","N","Mean (sd)","N","Mean (sd)","","","",""),y=0.3)
 
-
 plotfobj(fobj)
-
-        
 ```
 
 ![](man/figures/README-unnamed-chunk-23-1.png)<!-- -->
@@ -528,6 +538,7 @@ For example:
 fobj<-genfobj(dat = forplotdata_prop,
   layout = c("t","t","t","t","t","s2","t","f","t"),
   lwidths = c(0.6,0.4,0.6,0.4,0.6,1.0,1.2,1,0.5))
+
 plotfobj(fobj)
 ```
 
@@ -548,7 +559,9 @@ fobj<-s_axis(fobj=fobj, xlim = c(0,1),
   at = seq(0,1,by=0.25), labels = seq(0,100,by=25))
 
 fobj<-s_points(fobj=fobj, pch = 16, cex=1.5)
+
 fobj<-s_points(fobj=fobj, pointnr = 1, col = "red")
+
 fobj<-s_points(fobj=fobj, pointnr = 2, col = "blue")
 
 fobj<-s_borders(fobj)
