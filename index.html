@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">forplot</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
       </span>
     </div>
 
@@ -95,8 +95,7 @@
 </h2>
 <p>The package includes two example data sets, one with continuous (<em>forplotdata</em>) and one with binary variables (<em>forplotdata_prop</em>).</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">forplotdata</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">forplotdata</span><span class="op">)</span></span>
 <span><span class="va">forplotdata</span></span>
 <span><span class="co">#&gt;    vlabel  n1        n2  n3        n4            beta_format        beta</span></span>
 <span><span class="co">#&gt; 1    out1 100 5.1 (0.9) 100 5.5 (1.0) -0.35 (-0.61 to -0.09) -0.35330456</span></span>
@@ -121,7 +120,7 @@
 <span><span class="co">#&gt; 9  -0.8110643 -0.203123036 0.001</span></span>
 <span><span class="co">#&gt; 10 -0.5822050  0.008198722 0.057</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">forplotdata</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">forplotdata_prop</span><span class="op">)</span></span>
 <span><span class="va">forplotdata_prop</span></span>
 <span><span class="co">#&gt;    vlabel  n1       n2  n3       n4 prop1 prop2            beta_format  beta</span></span>
 <span><span class="co">#&gt; 1    out1 100 48 (48%) 100 40 (40%)  0.48  0.40   8.0% (-6.7 to 22.7%)  0.08</span></span>
@@ -156,14 +155,14 @@
 <p><em>layout</em> must be a character vector with elements <em>t</em> (text), <em>f</em> (forest), <em>s[1-9]</em> (strip), or <em>b</em> (boxplot).</p>
 <p>For each <em>t</em> element, <em>dat</em> must contain a single column, for each <em>f</em> element three columns (point estimate, lower confidence limit, upper confidence limit, in that order), and for each <em>s[1-9]</em> the number of columns indicated in [].</p>
 <p>The order of the columns must correspond to the layout.</p>
-<p>A <em>b</em> element does not need a column in <em>dat</em> but the specifcation of <em>bpdat</em>, a data frame in a long format with columns <em>out</em> (the outcome value), <em>var</em> (the outcome variable, safest as a factor to preserve the order in the plot), and <em>arm</em> (the treatment arm, safest as a factor to preserve the order in the plot)</p>
+<p>A <em>b</em> element does not need a column in <em>dat</em> but the specifcation of <em>obs</em>, a data frame in a long format with columns <em>out</em> (the outcome value), <em>var</em> (the outcome variable, safest as a factor to preserve the order in the plot), and <em>arm</em> (the treatment arm, safest as a factor to preserve the order in the plot)</p>
 <p>We want to use <em>forplotdata</em> and generate a plot with a text columns with the label, the descriptives, the formatted effect and the p-value, and a forest for the beta.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fobj</span><span class="op">&lt;-</span><span class="fu"><a href="reference/genfobj.html">genfobj</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">forplotdata</span>, layout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"t"</span>,<span class="st">"t"</span>,<span class="st">"t"</span>,<span class="st">"t"</span>,<span class="st">"t"</span>,<span class="st">"t"</span>,<span class="st">"f"</span>,<span class="st">"t"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>The produced <strong>fobj</strong> is a list of length 5 with class <em>fobj</em>. It includes those elements:</p>
 <ul>
 <li>
-<em>dat</em> and <em>bpdat</em>: the data</li>
+<em>dat</em> and <em>obs</em>: the data</li>
 <li>
 <em>setup</em>: the options from <code>genfobj</code> which has been given or assumed by default (i.e. <em>layout</em>, <em>lheights</em>, <em>lwidths</em>, <em>y.at</em>, <em>ylim</em>)</li>
 <li>
@@ -175,7 +174,7 @@
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">fobj</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "fobj" "list"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">fobj</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "dat"    "bpdat"  "setup"  "items"  "header"</span></span>
+<span><span class="co">#&gt; [1] "dat"    "obs"    "setup"  "items"  "header"</span></span>
 <span><span class="va">fobj</span><span class="op">$</span><span class="va">setup</span></span>
 <span><span class="co">#&gt; $layout</span></span>
 <span><span class="co">#&gt; [1] "t" "t" "t" "t" "t" "t" "f" "t"</span></span>
@@ -284,7 +283,7 @@
 <span><span class="va">fobj</span><span class="op">&lt;-</span><span class="fu"><a href="reference/stripes.html">stripes</a></span><span class="op">(</span><span class="va">fobj</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">fobj</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "dat"       "bpdat"     "setup"     "items"     "header"    "gridlines"</span></span>
+<span><span class="co">#&gt; [1] "dat"       "obs"       "setup"     "items"     "header"    "gridlines"</span></span>
 <span><span class="co">#&gt; [7] "stripes"</span></span></code></pre></div>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/plotfobj.html">plotfobj</a></span><span class="op">(</span><span class="va">fobj</span><span class="op">)</span></span></code></pre></div>
@@ -438,7 +437,7 @@
 <p>Boxplot layout can be controled via helper functions <em>b_boxplot</em> and <em>b_axis</em> using all options available for <code><a href="https://rdrr.io/r/graphics/boxplot.html" class="external-link">?graphics::boxplot</a></code> and <code><a href="https://rdrr.io/r/graphics/axis.html" class="external-link">?graphics::axis</a></code>.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
-<span><span class="va">fobj</span><span class="op">&lt;-</span><span class="fu"><a href="reference/genfobj.html">genfobj</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">forplotdata</span>, bpdat <span class="op">=</span> <span class="va">forplotdata_bp</span>,</span>
+<span><span class="va">fobj</span><span class="op">&lt;-</span><span class="fu"><a href="reference/genfobj.html">genfobj</a></span><span class="op">(</span>dat <span class="op">=</span> <span class="va">forplotdata</span>, obs <span class="op">=</span> <span class="va">forplotdata_bp</span>,</span>
 <span>  layout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"t"</span>,<span class="st">"t"</span>,<span class="st">"t"</span>,<span class="st">"t"</span>,<span class="st">"t"</span>,<span class="st">"b"</span>,<span class="st">"t"</span>,<span class="st">"f"</span>,<span class="st">"t"</span><span class="op">)</span>,</span>
 <span>  lwidths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.6</span>,<span class="fl">0.4</span>,<span class="fl">0.6</span>,<span class="fl">0.4</span>,<span class="fl">0.6</span>,<span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
