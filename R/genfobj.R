@@ -950,11 +950,13 @@ stripes<-function(fobj, ...)	{
 	input<-list(...)
 
 	if (is.null(fobj$stripes)) {
-		lb<-c(fobj$setup$ylim[1],fobj$setup$ylim[1] + fobj$setup$y.at[-length(fobj$setup$y.at)])
-		ub<-c(fobj$setup$ylim[1] + fobj$setup$y.at)
+		lb<-c(fobj$setup$ylim[1],
+			fobj$setup$ylim[1] + sort(fobj$setup$y.at)[-length(fobj$setup$y.at)])
+		ub<-c(fobj$setup$ylim[1] + sort(fobj$setup$y.at))
 		ys<-cbind(lb,ub)[seq(1,length(lb),by=2),]
 
-		fobj$stripes<-list(xleft = NA, ybottom = ys[,1], xright = NA, ytop = ys[,2], col = rgb(.1,.1,.1,.1), border = NA)
+		fobj$stripes<-list(xleft = NA, ybottom = ys[,1], xright = NA, ytop = ys[,2], 
+			col = rgb(.1,.1,.1,.1), border = NA)
 	}
 
 	fobj$stripes<-modifyList(fobj$stripes, input)
