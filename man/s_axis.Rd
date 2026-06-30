@@ -25,7 +25,7 @@ s_axis
 fobj<-genfobj(layout = c("t","t","t","t","t","s2","t","f","t"),
 dat = forplotdata_prop,
 lwidths = c(0.6,0.4,0.6,0.4,0.6,1.0,1.2,1,0.5))
-fobj<-s_axis(fobj=fobj, xlim = c(0,1), 
+fobj<-s_axis(fobj=fobj, xlim = c(0,1),
  at = seq(0,1,by=0.25), labels = seq(0,100,by=25))
 plotfobj(fobj)
 }

@@ -33,7 +33,7 @@ directly by changing the list.
 
 ## Example data
 
-The package includes two example datasets one with continous
+The package includes two example data sets, one with continuous
 (*forplotdata*) and one with binary variables (*forplotdata_prop*).
 
 ``` r
@@ -128,7 +128,7 @@ and a forest for the beta.
 fobj<-genfobj(dat = forplotdata, layout = c("t","t","t","t","t","t","f","t"))
 ```
 
-The prodcued **fobj** is a list of length 6 with class *fobj*. It
+The produced **fobj** is a list of length 5 with class *fobj*. It
 includes those elements:
 
 - *dat* and *bpdat*: the data
@@ -295,7 +295,7 @@ by using the number or column name of the item, or for all (by keeping
 item=NULL):
 
 ``` r
-fobj<-t_options(fobj=fobj, item=c("vlabel"), cex=1.2, font=2, col="red")
+fobj<-t_options(fobj = fobj, item = c("vlabel"), cex = 1.2, font = 2, col = "red")
 
 plotfobj(fobj)
 ```
@@ -309,10 +309,10 @@ all options from `?graphics::axis`, `?graphics::points` and
 do not have specify the *item*.
 
 ``` r
-fobj<-f_axis(fobj=fobj, at=seq(-1,0.2, by=0.4), labels=seq(-1,0.2, by=0.4), 
-  tck=-0.03, mgp = c(2,0.5,0))
+fobj<-f_axis(fobj = fobj, at = seq(-1,0.2, by=0.4), labels = seq(-1,0.2, by=0.4), 
+  tck = -0.03, mgp = c(2,0.5,0))
 
-fobj<-f_points(fobj=fobj, pch=16, cex=1.5)
+fobj<-f_points(fobj = fobj, pch = 16, cex = 1.5)
 
 plotfobj(fobj)
 ```
@@ -326,7 +326,7 @@ to be increased to fit the direction label.
 ``` r
 fobj<-f_refline(fobj, x = c(0, 0))
 
-fobj<-f_direction(fobj, text = "A better    B better", line=1.6)
+fobj<-f_direction(fobj, text = "A better    B better", line = 1.6)
 
 fobj$setup$lheights[3]<-0.15
 
@@ -385,10 +385,10 @@ empty. And the y is also modified to place the label it a bit higher.
 
 ``` r
 
-fobj<-header(fobj=fobj,
+fobj<-header(fobj = fobj,
   labels = c("","Arm A\nN","Arm A\nmean (sd)","Arm B\nN","Arm B\nmean (sd)",
     "Mean difference\n95% CI","","P-value"),
-  y=0.6)
+  y = 0.6)
 
 plotfobj(fobj)
 ```
@@ -401,7 +401,7 @@ remove the empty label for the forest column.
 
 ``` r
 
-fobj<-header(fobj=fobj, hlayout=c(1,2,3,4,5,6,6,7),
+fobj<-header(fobj = fobj, hlayout = c(1,2,3,4,5,6,6,7),
   labels = c("","Arm A\nN","Arm A\nmean (sd)","Arm B\nN","Arm B\nmean (sd)",
     "Mean difference 95% CI","P-value"))
 
@@ -483,8 +483,8 @@ frame in a long format with columns:
 - *arm*: the treatment arm, safest as a factor to preserve the order in
   the plot.
 
-Boxplot layout can be controled via helper functions *b_plot* and
-*b_axis* using all options available for `?graphics::plot` and
+Boxplot layout can be controled via helper functions *b_boxplot* and
+*b_axis* using all options available for `?graphics::boxplot` and
 `?graphics::axis`.
 
 ``` r
@@ -494,8 +494,6 @@ fobj<-genfobj(dat = forplotdata, bpdat = forplotdata_bp,
   lwidths = c(0.6,0.4,0.6,0.4,0.6,1,1,1,0.5))
 
 plotfobj(fobj)
-
-        
 ```
 
 ![](man/figures/README-unnamed-chunk-22-1.png)<!-- -->

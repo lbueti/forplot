@@ -22,7 +22,7 @@ f_direction
 }
 \examples{
 
-fobj<-genfobj(layout = c("t","t","t","t","t","t","f","t"), 
+fobj<-genfobj(layout = c("t","t","t","t","t","t","f","t"),
 	dat = forplotdata, lwidths = c(0.8,0.4,0.6,0.4,0.6,1,1,0.5))
 fobj<-f_direction(fobj = fobj, text = "A better    B better",
 	line = 1.6)

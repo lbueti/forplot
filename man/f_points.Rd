@@ -22,7 +22,7 @@ f_points
 }
 \examples{
 
-fobj<-genfobj(layout = c("t","t","t","t","t","t","f","t"), 
+fobj<-genfobj(layout = c("t","t","t","t","t","t","f","t"),
 	dat = forplotdata, lwidths = c(0.8,0.4,0.6,0.4,0.6,1,1,0.5))
 fobj<-f_points(fobj = fobj, pch = 16, cex = 1.5)
 plotfobj(fobj)

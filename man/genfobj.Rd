@@ -37,7 +37,7 @@ First step to generate a forest plot. Generates a fobj that can be plotted.
 }
 \examples{
 
-fobj<-genfobj(layout = c("t","t","t","t","t","t","f","t"), 
+fobj<-genfobj(layout = c("t","t","t","t","t","t","f","t"),
 	dat = forplotdata,
 lwidths = c(0.8,0.4,0.6,0.4,0.6,1,1,0.5))
 plotfobj(fobj)

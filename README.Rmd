@@ -50,7 +50,7 @@ The **fobj** can then be modified using a series of helper functions or directly
 
 ## Example data 
 
-The package includes two example datasets one with continous (*forplotdata*) and one with binary variables  (*forplotdata_prop*).
+The package includes two example data sets, one with continuous (*forplotdata*) and one with binary variables  (*forplotdata_prop*).
 
 ```{r}
 
@@ -96,7 +96,7 @@ We want to use *forplotdata* and generate a plot with a text columns with the la
 fobj<-genfobj(dat = forplotdata, layout = c("t","t","t","t","t","t","f","t"))
 ```
 
-The prodcued **fobj** is a list of length 6 with class *fobj*.
+The produced **fobj** is a list of length 5 with class *fobj*.
 It includes those elements:
 
 - *dat* and *bpdat*: the data 
@@ -175,7 +175,7 @@ That can be done for a specific t item by using the number or column name of the
 
 
 ```{r, fig.height=3.5, fig.width=8}
-fobj<-t_options(fobj=fobj, item=c("vlabel"), cex=1.2, font=2, col="red")
+fobj<-t_options(fobj = fobj, item = c("vlabel"), cex = 1.2, font = 2, col = "red")
 
 plotfobj(fobj)
 ```
@@ -185,10 +185,10 @@ For *f* items there are several helper function to modify the options for the di
 As we do only have one forest item, we do not have specify the *item*.
 
 ```{r, fig.height=3.5, fig.width=8}
-fobj<-f_axis(fobj=fobj, at=seq(-1,0.2, by=0.4), labels=seq(-1,0.2, by=0.4), 
-  tck=-0.03, mgp = c(2,0.5,0))
+fobj<-f_axis(fobj = fobj, at = seq(-1,0.2, by=0.4), labels = seq(-1,0.2, by=0.4), 
+  tck = -0.03, mgp = c(2,0.5,0))
 
-fobj<-f_points(fobj=fobj, pch=16, cex=1.5)
+fobj<-f_points(fobj = fobj, pch = 16, cex = 1.5)
 
 plotfobj(fobj)
 ```
@@ -199,7 +199,7 @@ Note that the footer height has to be increased to fit the direction label.
 ```{r, fig.height=3.5, fig.width=8}
 fobj<-f_refline(fobj, x = c(0, 0))
 
-fobj<-f_direction(fobj, text = "A better    B better", line=1.6)
+fobj<-f_direction(fobj, text = "A better    B better", line = 1.6)
 
 fobj$setup$lheights[3]<-0.15
 
@@ -233,10 +233,10 @@ And the y is also modified to place the label it a bit higher.
 
 ```{r, fig.height=3.5, fig.width=8}
 
-fobj<-header(fobj=fobj,
+fobj<-header(fobj = fobj,
   labels = c("","Arm A\nN","Arm A\nmean (sd)","Arm B\nN","Arm B\nmean (sd)",
 	"Mean difference\n95% CI","","P-value"),
-  y=0.6)
+  y = 0.6)
 
 plotfobj(fobj)
 ```
@@ -246,7 +246,7 @@ We could also merge the label for the effect over the format and forest columns.
 
 ```{r, fig.height=3.5, fig.width=8}
 
-fobj<-header(fobj=fobj, hlayout=c(1,2,3,4,5,6,6,7),
+fobj<-header(fobj = fobj, hlayout = c(1,2,3,4,5,6,6,7),
   labels = c("","Arm A\nN","Arm A\nmean (sd)","Arm B\nN","Arm B\nmean (sd)",
 	"Mean difference 95% CI","P-value"))
 
@@ -285,7 +285,7 @@ columns:
 - *var*: the outcome variable, safest as a factor to preserve the order in the plot, and 
 - *arm*: the treatment arm, safest as a factor to preserve the order in the plot.
 
-Boxplot layout can be controled via helper functions *b_plot* and *b_axis* using all options available for `?graphics::plot` and `?graphics::axis`.
+Boxplot layout can be controled via helper functions *b_boxplot* and *b_axis* using all options available for `?graphics::boxplot` and `?graphics::axis`.
 
 ```{r, fig.height=3.5, fig.width=8}
 
@@ -294,8 +294,6 @@ fobj<-genfobj(dat = forplotdata, bpdat = forplotdata_bp,
   lwidths = c(0.6,0.4,0.6,0.4,0.6,1,1,1,0.5))
 
 plotfobj(fobj)
-
-		
 ```
 
 Adding header gridlines and stripes:

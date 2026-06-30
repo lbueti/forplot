@@ -17,7 +17,7 @@
 #'
 #' @examples
 #'
-#' fobj<-genfobj(layout = c("t","t","t","t","t","t","f","t"), 
+#' fobj<-genfobj(layout = c("t","t","t","t","t","t","f","t"),
 #' 	dat = forplotdata,
 #'	lwidths = c(0.8,0.4,0.6,0.4,0.6,1,1,0.5))
 #' plotfobj(fobj)
@@ -222,7 +222,7 @@ genfobj<-function(layout, dat, bpdat = NULL,
 #'
 #' @examples
 #'
-#' fobj<-genfobj(layout = c("t","t","t","t","t","t","f","t"), 
+#' fobj<-genfobj(layout = c("t","t","t","t","t","t","f","t"),
 #' 	dat = forplotdata, lwidths = c(0.8,0.4,0.6,0.4,0.6,1,1,0.5))
 #' fobj<-t_options(fobj = fobj, item = 1, col = 2)
 #' plotfobj(fobj)
@@ -264,9 +264,9 @@ t_options<-function(fobj, item = NULL, ...)	{
 #'
 #' @examples
 #'
-#' fobj<-genfobj(layout = c("t","t","t","t","t","t","f","t"), 
+#' fobj<-genfobj(layout = c("t","t","t","t","t","t","f","t"),
 #' 	dat = forplotdata, lwidths = c(0.8,0.4,0.6,0.4,0.6,1,1,0.5))
-#' fobj<-f_axis(fobj = fobj, at = seq(-1,0.2, by=0.4), 
+#' fobj<-f_axis(fobj = fobj, at = seq(-1,0.2, by=0.4),
 #'	labels=seq(-1,0.2, by=0.4), tck=-0.03, mgp = c(2,0.5,0))
 #' plotfobj(fobj)
 f_axis<-function(fobj, item = NULL, ...) {
@@ -307,7 +307,7 @@ f_axis<-function(fobj, item = NULL, ...) {
 #'
 #' @examples
 #'
-#' fobj<-genfobj(layout = c("t","t","t","t","t","t","f","t"), 
+#' fobj<-genfobj(layout = c("t","t","t","t","t","t","f","t"),
 #' 	dat = forplotdata, lwidths = c(0.8,0.4,0.6,0.4,0.6,1,1,0.5))
 #' fobj<-f_points(fobj = fobj, pch = 16, cex = 1.5)
 #' plotfobj(fobj)
@@ -340,7 +340,7 @@ f_points<-function(fobj, item = NULL, ...) {
 #'
 #' @examples
 #'
-#' fobj<-genfobj(layout = c("t","t","t","t","t","t","f","t"), 
+#' fobj<-genfobj(layout = c("t","t","t","t","t","t","f","t"),
 #' 	dat = forplotdata, lwidths = c(0.8,0.4,0.6,0.4,0.6,1,1,0.5))
 #' fobj<-f_arrows(fobj = fobj, col = 2)
 #' plotfobj(fobj)
@@ -374,7 +374,7 @@ f_arrows<-function(fobj, item = NULL, ...) {
 #'
 #' @examples
 #'
-#' fobj<-genfobj(layout = c("t","t","t","t","t","t","f","t"), 
+#' fobj<-genfobj(layout = c("t","t","t","t","t","t","f","t"),
 #' 	dat = forplotdata, lwidths = c(0.8,0.4,0.6,0.4,0.6,1,1,0.5))
 #' fobj<-f_refline(fobj = fobj, x = c(0,0))
 #' plotfobj(fobj)
@@ -412,7 +412,7 @@ f_refline<-function(fobj, item = NULL, ...) {
 #'
 #' @examples
 #'
-#' fobj<-genfobj(layout = c("t","t","t","t","t","t","f","t"), 
+#' fobj<-genfobj(layout = c("t","t","t","t","t","t","f","t"),
 #' 	dat = forplotdata, lwidths = c(0.8,0.4,0.6,0.4,0.6,1,1,0.5))
 #' fobj<-f_direction(fobj = fobj, text = "A better    B better",
 #' 	line = 1.6)
@@ -460,7 +460,7 @@ f_direction<-function(fobj, item= NULL, ...) {
 #'fobj<-genfobj(layout = c("t","t","t","t","t","s2","t","f","t"),
 #'	dat = forplotdata_prop,
 #'	lwidths = c(0.6,0.4,0.6,0.4,0.6,1.0,1.2,1,0.5))
-#'fobj<-s_axis(fobj=fobj, xlim = c(0,1), 
+#'fobj<-s_axis(fobj=fobj, xlim = c(0,1),
 #'  at = seq(0,1,by=0.25), labels = seq(0,100,by=25))
 #'plotfobj(fobj)
 s_axis<-function(fobj, item = NULL, ...) {
@@ -527,7 +527,7 @@ s_hline<-function(fobj, item = NULL, ...) {
 #' @param fobj a forest plot object of class 'fobj'
 #' @param item item to be modified, either a number or the name of the column in fobj$dat.
 #' 	If NULL (the default), all items of type 's' are affected
-#' @param pointnr points to be modified. If NULL (the default), all points are affected. 
+#' @param pointnr points to be modified. If NULL (the default), all points are affected.
 #' @param ... options to be passed to `graphics::points`
 #'
 #' @returns a forest plot object of class 'fobj'
@@ -580,7 +580,7 @@ s_points<-function(fobj, item = NULL, pointnr = NULL, ...) {
 #' @param fobj a forest plot object of class 'fobj'
 #' @param item item to be modified, either a number or the name of the column in fobj$dat.
 #' 	If NULL (the default), all items of type 's' are affected
-#' @param bordernr border to be modified, 1 (left) or 2 (right). 
+#' @param bordernr border to be modified, 1 (left) or 2 (right).
 #'	If NULL (the default), all borders are affected.
 #' @param ... options to be passed to `graphics::abline`
 #'
@@ -638,7 +638,7 @@ s_borders<-function(fobj, item = NULL, bordernr = NULL, ...) {
 # boxplot (b)
 #---------------------
 
-#' b_plot
+#' b_boxplot
 #'
 #' @param fobj a forest plot object of class 'fobj'
 #' @param item item to be modified, either a number or the name of the column in fobj$dat.
@@ -656,10 +656,10 @@ s_borders<-function(fobj, item = NULL, bordernr = NULL, ...) {
 #'fobj<-genfobj(layout = c("t","t","t","t","t","b","t","f","t"),
 #'	dat = forplotdata, bpdat = forplotdata_bp,
 #'  lwidths = c(0.6,0.4,0.6,0.4,0.6,1,1,1,0.5))
-#'fobj<-b_plot(fobj, boxwex = 0.2)
+#'fobj<-b_boxplot(fobj, boxwex = 0.2)
 #'plotfobj(fobj)
 #'
-b_plot<-function(fobj, item = NULL, ...) {
+b_boxplot<-function(fobj, item = NULL, ...) {
 
 	itemnr<-check_convert(fobj = fobj, item = item, lay = "b")
 
@@ -705,7 +705,7 @@ b_plot<-function(fobj, item = NULL, ...) {
 b_axis<-function(fobj, item = NULL, ...) {
 
 	itemnr<-check_convert(fobj = fobj, item = item, lay = "b")
-	
+
 	input<-list(...)
 
 	for (itn in itemnr) {
@@ -732,7 +732,7 @@ b_axis<-function(fobj, item = NULL, ...) {
 #'
 #' @param fobj a forest plot object of class 'fobj'
 #' @param hlayout layout of header columns. Numeric vector with the same length as the labels.
-#' @param headernr header row to be modified. 
+#' @param headernr header row to be modified.
 #'	If NULL (the default), all header rows are affected
 #' @param ... options to be passed to `graphics::text`
 #'
@@ -744,7 +744,7 @@ b_axis<-function(fobj, item = NULL, ...) {
 #'
 #' @examples
 #'
-#' fobj<-genfobj(layout = c("t","t","t","t","t","t","f","t"), 
+#' fobj<-genfobj(layout = c("t","t","t","t","t","t","f","t"),
 #' 	dat = forplotdata,
 #'	lwidths = c(0.8,0.4,0.6,0.4,0.6,1,1,0.5))
 #' #Custom names
@@ -813,7 +813,7 @@ header<-function(fobj, hlayout = NULL, headernr = NULL, ...)	{
 #' gridlines
 #'
 #' @param fobj a forest plot object of class 'fobj'
-#' @param gridnr grid line to be modified. 
+#' @param gridnr grid line to be modified.
 #'	If NULL (the default), all grid lines are affected
 #' @param ... options to be passed to `graphics::abline`
 #'
@@ -825,7 +825,7 @@ header<-function(fobj, hlayout = NULL, headernr = NULL, ...)	{
 #'
 #' @examples
 #'
-#' fobj<-genfobj(layout = c("t","t","t","t","t","t","f","t"), 
+#' fobj<-genfobj(layout = c("t","t","t","t","t","t","f","t"),
 #' 	dat = forplotdata,
 #'	lwidths = c(0.8,0.4,0.6,0.4,0.6,1,1,0.5))
 #' fobj<-gridlines(fobj = fobj)
@@ -878,7 +878,7 @@ gridlines<-function(fobj, gridnr = NULL, ...)	{
 #'
 #' @examples
 #'
-#' fobj<-genfobj(layout = c("t","t","t","t","t","t","f","t"), 
+#' fobj<-genfobj(layout = c("t","t","t","t","t","t","f","t"),
 #' 	dat = forplotdata,
 #'	lwidths = c(0.8,0.4,0.6,0.4,0.6,1,1,0.5))
 #' fobj<-stripes(fobj = fobj)
