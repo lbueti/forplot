@@ -152,7 +152,7 @@ fobj$setup$lwidths <- c(0.8,0.4,0.6,0.4,0.6,1,1,0.5)
 plotfobj(fobj)
 ```
 
-Gridlines and stripes can be added with helper functions *gridlines* and *stripes*, which generate further elements in the fobj:
+Horizontal gridlines and stripes can be added with helper functions *gridlines* and *stripes*, which generate further elements in the fobj:
 
 ```{r}
 fobj<-gridlines(fobj)
@@ -168,7 +168,7 @@ plotfobj(fobj)
 
 ## Modify the items
 
-All items, gridlines and stripes can be modified using helper functions or within the list directly.
+All items, grid lines and stripes can be modified using helper functions or within the list directly.
 
 For *t* items helper function *t_options* allows to use all options used in R `?graphics::text` function.
 That can be done for a specific t item by using the number or column name of the item, or for all (by keeping item=NULL):

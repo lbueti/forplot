@@ -153,7 +153,7 @@ fobj$setup
 #> [1] 0.1 1.0 0.1
 #> 
 #> $y.at
-#>  [1]  1  2  3  4  5  6  7  8  9 10
+#>  [1] 10  9  8  7  6  5  4  3  2  1
 #> 
 #> $ylim
 #> [1]  0.55 10.45
@@ -211,7 +211,7 @@ fobj$item[[1]]
 #> [1] 0.5
 #> 
 #> $text$y
-#>  [1]  1  2  3  4  5  6  7  8  9 10
+#>  [1] 10  9  8  7  6  5  4  3  2  1
 #> 
 #> $text$labels
 #>  [1] "out1"  "out2"  "out3"  "out4"  "out5"  "out6"  "out7"  "out8"  "out9" 
@@ -265,8 +265,8 @@ plotfobj(fobj)
 
 ![](man/figures/README-unnamed-chunk-10-1.png)<!-- -->
 
-Gridlines and stripes can be added with helper functions *gridlines* and
-*stripes*, which generate further elements in the fobj:
+Horizontal gridlines and stripes can be added with helper functions
+*gridlines* and *stripes*, which generate further elements in the fobj:
 
 ``` r
 fobj<-gridlines(fobj)
@@ -286,7 +286,7 @@ plotfobj(fobj)
 
 ## Modify the items
 
-All items, gridlines and stripes can be modified using helper functions
+All items, grid lines and stripes can be modified using helper functions
 or within the list directly.
 
 For *t* items helper function *t_options* allows to use all options used
@@ -507,11 +507,12 @@ fobj<-gridlines(fobj)
 fobj<-stripes(fobj)
 
 fobj<-header(fobj=fobj, hlayout = c(1,2,2,3,3,4,5,5,6),  headernr = 1,
-    labels=c("","Arm A","Arm B","","Mean diff (95% CI)","P-value"),
+    labels=c("","Arm A","Arm B","","Mean difference (95% CI)","P-value"),
     col = c(1,"red","blue",1,1),
     y=0.9)
 fobj<-header(fobj=fobj, hlayout = c(1,2,3,4,5,6,7,8,9), headernr = 2,
-    labels=c("","N","Mean (sd)","N","Mean (sd)","","","",""),y=0.3)
+    labels=c("","N","Mean (sd)","N","Mean (sd)","","","",""),
+    col=1, y=0.3)
 
 plotfobj(fobj)
 ```

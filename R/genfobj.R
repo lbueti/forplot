@@ -7,7 +7,7 @@
 #' @param dat data frame that should be plotted
 #' @param bpdat Optional raw data for the boxplot. Required of layout includes 'b'.
 #' @param lwidths Optional numeric vector with the relative widths of the columns. Must have the same length as layout.
-#' @param lheights	Optional numeric vectotr of length 3 with the relative heights of header, main panel and footer.
+#' @param lheights Optional numeric vectotr of length 3 with the relative heights of header, main panel and footer.
 #' @param y.at Optional numeric vector with the position of the rows. Usually not required.
 #' @param ylim Optional limits of the rows. Usually not required.
 #'
@@ -23,11 +23,11 @@
 #' plotfobj(fobj)
 #'
 genfobj<-function(layout, dat, bpdat = NULL,
-	lwidths = NA, lheights = c(0.1,1,0.1),
+	lwidths = NA, lheights = NA,
 	y.at = NA, ylim = NA) {
-
+	
 	if (sum(!is.na(y.at))==0) {
-		y.at<-1:nrow(dat)
+		y.at<-nrow(dat):1
 	} else {
 		if (length(y.at)!=nrow(dat)) {
 			warning("Length of y.at does not match number of rows of dat, default used")
@@ -41,6 +41,12 @@ genfobj<-function(layout, dat, bpdat = NULL,
 		ylim<-c(min(y.at)-yspace, max(y.at)+yspace)
 	}
 
+	if (is.na(lheights)) {	
+		hf<-(3 * nrow(dat)) / (10 * nrow(dat) + 200)
+		lheights<-c(hf,1,hf)
+	}
+	
+	
 	if (sum(!is.na(lwidths))==0) {
 		lwidths<-rep(1,length(layout))
 	} else {
