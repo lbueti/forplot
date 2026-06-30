@@ -14,13 +14,14 @@ If NULL (the default), all items of type 's' are affected}
 
 \item{pointnr}{points to be modified. If NULL (the default), all points are affected.}
 
-\item{...}{options to be passed to \code{graphics::points}}
+\item{...}{options to be passed to \code{\link[graphics]{points}}}
 }
 \value{
 a forest plot object of class 'fobj'
 }
 \description{
-s_points
+Modify points in stripe (s) items of a forest plot object (fobj).
+Passed to \code{\link[graphics]{points}}.
 }
 \examples{
 

@@ -36,3 +36,8 @@ forplot 1.0.0
 ------------------
 complete makeover
 add functions genfobj and plotfobj to first generate a fobj and then plot it 
+
+forplot 1.0.1
+------------------
+rename bpdat to obs
+change default for lheights

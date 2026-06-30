@@ -12,13 +12,14 @@ s_hline(fobj, item = NULL, ...)
 \item{item}{item to be modified, either a number or the name of the column in fobj$dat.
 If NULL (the default), all items of type 's' are affected}
 
-\item{...}{options to be passed to \code{graphics::abline}}
+\item{...}{options to be passed to \code{\link[graphics]{abline}}}
 }
 \value{
 a forest plot object of class 'fobj'
 }
 \description{
-s_hline
+Modify the hiorzontal line in stripe (s) items of forest plot object (fobj).
+Passed to \code{\link[graphics]{abline}}.
 }
 \examples{
 

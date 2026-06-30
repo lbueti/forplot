@@ -7,18 +7,19 @@
 t_options(fobj, item = NULL, ...)
 }
 \arguments{
-\item{fobj}{a forest plot object of class 'fobj'}
+\item{fobj}{a forest plot object of class fobj}
 
 \item{item}{item to be modified, either a number or the name of the column in fobj$dat.
 If NULL (the default), all items of type 't' are affected}
 
-\item{...}{options to be passed to \code{graphics::axis}}
+\item{...}{options to be passed to \code{\link[graphics]{text}}}
 }
 \value{
 a forest plot object of class 'fobj'
 }
 \description{
-t_options
+Modify text (t) items of a forest plot object (fobj).
+Passed to \code{\link[graphics]{text}}.
 }
 \examples{
 

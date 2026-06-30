@@ -9,13 +9,14 @@ stripes(fobj, ...)
 \arguments{
 \item{fobj}{a forest plot object of class 'fobj'}
 
-\item{...}{options to be passed to \code{graphics::rect}}
+\item{...}{options to be passed to \code{\link[graphics]{rect}}}
 }
 \value{
 a forest plot object of class 'fobj'
 }
 \description{
-stripes
+Add or modify stripes in a forest plot object (fobj).
+Passed to \code{\link[graphics]{rect}}.
 }
 \examples{
 

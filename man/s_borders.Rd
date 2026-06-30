@@ -15,13 +15,14 @@ If NULL (the default), all items of type 's' are affected}
 \item{bordernr}{border to be modified, 1 (left) or 2 (right).
 If NULL (the default), all borders are affected.}
 
-\item{...}{options to be passed to \code{graphics::abline}}
+\item{...}{options to be passed to \code{\link[graphics]{abline}}}
 }
 \value{
 a forest plot object of class 'fobj'
 }
 \description{
-s_borders
+Add and modify borders of a sripe (s) item of a forest plot object (fobj).
+Passed to \code{\link[graphics]{abline}}.
 }
 \examples{
 

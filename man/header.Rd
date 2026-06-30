@@ -14,13 +14,14 @@ header(fobj, hlayout = NULL, headernr = NULL, ...)
 \item{headernr}{header row to be modified.
 If NULL (the default), all header rows are affected}
 
-\item{...}{options to be passed to \code{graphics::text}}
+\item{...}{options to be passed to \code{\link[graphics]{text}}}
 }
 \value{
 a forest plot object of class 'fobj'
 }
 \description{
-header
+Modify the header of a forest plot object (fobj).
+Passed to \code{\link[graphics]{text}}.
 }
 \examples{
 

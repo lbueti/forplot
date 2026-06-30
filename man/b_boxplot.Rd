@@ -12,18 +12,19 @@ b_boxplot(fobj, item = NULL, ...)
 \item{item}{item to be modified, either a number or the name of the column in fobj$dat.
 If NULL (the default), all items of type 'b' are affected}
 
-\item{...}{options to be passed to \code{graphics::boxplot}}
+\item{...}{options to be passed to \code{\link[graphics]{boxplot}}}
 }
 \value{
 a forest plot object of class 'fobj'
 }
 \description{
-b_boxplot
+Modify boxplot (b) items of a forest plot object (fobj).
+Passed to \code{\link[graphics]{boxplot}}.
 }
 \examples{
 
 fobj<-genfobj(layout = c("t","t","t","t","t","b","t","f","t"),
-dat = forplotdata, bpdat = forplotdata_bp,
+dat = forplotdata, obs = forplotdata_bp,
  lwidths = c(0.6,0.4,0.6,0.4,0.6,1,1,1,0.5))
 fobj<-b_boxplot(fobj, boxwex = 0.2)
 plotfobj(fobj)
