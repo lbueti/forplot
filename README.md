@@ -507,11 +507,12 @@ fobj<-gridlines(fobj)
 fobj<-stripes(fobj)
 
 fobj<-header(fobj=fobj, hlayout = c(1,2,2,3,3,4,5,5,6),  headernr = 1,
-    labels=c("","Arm A","Arm B","","Mean diff (95% CI)","P-value"),
+    labels=c("","Arm A","Arm B","","Mean difference (95% CI)","P-value"),
     col = c(1,"red","blue",1,1),
     y=0.9)
 fobj<-header(fobj=fobj, hlayout = c(1,2,3,4,5,6,7,8,9), headernr = 2,
-    labels=c("","N","Mean (sd)","N","Mean (sd)","","","",""),y=0.3)
+    labels=c("","N","Mean (sd)","N","Mean (sd)","","","",""),
+    col=1, y=0.3)
 
 plotfobj(fobj)
 ```
