@@ -5,7 +5,8 @@
 #'
 #' @param layout layout of the plot, character vector with 't' (text), 'f' (forest), 's' (strip), or 'b' (boxplot).
 #' @param dat data frame that should be plotted
-#' @param bpdat Optional raw data for the boxplot. Required of layout includes 'b'.
+#' @param obs Optional data frame with the observations for the boxplot.
+#'	Required of layout includes 'b'.
 #' @param lwidths Optional numeric vector with the relative widths of the columns. Must have the same length as layout.
 #' @param lheights Optional numeric vectotr of length 3 with the relative heights of header, main panel and footer.
 #' @param y.at Optional numeric vector with the position of the rows. Usually not required.
@@ -22,10 +23,10 @@
 #'	lwidths = c(0.8,0.4,0.6,0.4,0.6,1,1,0.5))
 #' plotfobj(fobj)
 #'
-genfobj<-function(layout, dat, bpdat = NULL,
+genfobj<-function(layout, dat, obs = NULL,
 	lwidths = NA, lheights = NA,
 	y.at = NA, ylim = NA) {
-	
+
 	if (sum(!is.na(y.at))==0) {
 		y.at<-nrow(dat):1
 	} else {
@@ -41,17 +42,23 @@ genfobj<-function(layout, dat, bpdat = NULL,
 		ylim<-c(min(y.at)-yspace, max(y.at)+yspace)
 	}
 
-	if (is.na(lheights)) {	
+	if  (sum(!is.na(lheights))==0) {
 		hf<-(3 * nrow(dat)) / (10 * nrow(dat) + 200)
 		lheights<-c(hf,1,hf)
+	} else {
+		if (length(lheights)!=length(layout)) {
+			stop("'lheights' must be a numeric vector of length 3
+				with the relative heights of header, main panel and footer.")
+		}
 	}
-	
-	
+
+
 	if (sum(!is.na(lwidths))==0) {
 		lwidths<-rep(1,length(layout))
 	} else {
 		if (length(lwidths)!=length(layout)) {
-			stop("Length of 'lwidths' must match length of 'layout'.")
+			stop("'lwidths' must be a numeric vector of length of 'layout'
+				with the relative widths of each column in the final plot.")
 		}
 	}
 
@@ -137,15 +144,15 @@ genfobj<-function(layout, dat, bpdat = NULL,
 
 		if (layout[i]=="b") {
 
-			if (is.null(bpdat)) {
-				stop("The boxplot ('b' in layout) requires an extra dataset given in 'bpdat'.")
+			if (is.null(obs)) {
+				stop("The boxplot ('b' in layout) requires an extra dataset given in 'obs'.")
 			} else {
-				if (!all(c("out","var","arm") %in% names(bpdat))) {
-					stop("'bpdat' must be a data frame with columns 'out', 'var' and 'arm'.")
+				if (!all(c("out","var","arm") %in% names(obs))) {
+					stop("'obs' must be a data frame with columns 'out', 'var' and 'arm'.")
 				}
 			}
 
-			xlim<-c(min(bpdat$out),max(bpdat$out))
+			xlim<-c(min(obs$out),max(obs$out))
 			xlab<-pretty(xlim)
 			xlim<-c(min(xlab,xlim),max(xlab,xlim))
 			xlab_text<-xlab
@@ -160,7 +167,7 @@ genfobj<-function(layout, dat, bpdat = NULL,
 				vname = hnames[i],
 				plot = list(x=0, type="n", xlim = xlim, ylim = ylim,
 					yaxt="n" ,ylab="", xlab="", axes=FALSE, xaxs = "i", yaxs = "i"),
-				boxplot = list(formula = out ~ rev(arm)*rev(var), data=bpdat,
+				boxplot = list(formula = out ~ rev(arm)*rev(var), data=obs,
 					at=bp.at, boxwex = bwidth, horizontal=TRUE, axes=FALSE, col=cols, add=TRUE),
 				axis = list(side = 1, at = xlab, labels = xlab_text, line = 0,
 					pos = ylim[1], las = 1))
@@ -173,7 +180,7 @@ genfobj<-function(layout, dat, bpdat = NULL,
 	}
 
 	#collect
-	fobj<-list(dat = dat, bpdat = bpdat,
+	fobj<-list(dat = dat, obs = obs,
 		setup=list(layout = layout, lwidths = lwidths, lheights = lheights, y.at = y.at, ylim = ylim),
 		items = items)
 
@@ -306,7 +313,7 @@ f_axis<-function(fobj, item = NULL, ...) {
 
 #' f_points
 #'
-#' Modify points in forest (f) items of a forest plot object (fobj). 
+#' Modify points in forest (f) items of a forest plot object (fobj).
 #'	Passed to \code{\link[graphics]{points}}.
 #'
 #' @param fobj a forest plot object of class 'fobj'
@@ -420,7 +427,7 @@ f_refline<-function(fobj, item = NULL, ...) {
 
 #' f_direction
 #'
-#' Add and modify direction indicator in forest (f) items of a forest plot object (fobj). 
+#' Add and modify direction indicator in forest (f) items of a forest plot object (fobj).
 #'	Passed to \code{\link[graphics]{mtext}}.
 #'
 #' @param fobj a forest plot object of class 'fobj'
@@ -468,7 +475,7 @@ f_direction<-function(fobj, item= NULL, ...) {
 
 #' s_axis
 #'
-#' Modify axis of stripe (s) items of a forest plot object (fobj). 
+#' Modify axis of stripe (s) items of a forest plot object (fobj).
 #' Passed to \code{\link[graphics]{axis}}.
 #'
 #' @param fobj a forest plot object of class 'fobj'
@@ -514,7 +521,7 @@ s_axis<-function(fobj, item = NULL, ...) {
 
 #' s_hline
 #'
-#' Modify the hiorzontal line in stripe (s) items of forest plot object (fobj). 
+#' Modify the hiorzontal line in stripe (s) items of forest plot object (fobj).
 #' Passed to \code{\link[graphics]{abline}}.
 #'
 #' @param fobj a forest plot object of class 'fobj'
@@ -554,7 +561,7 @@ s_hline<-function(fobj, item = NULL, ...) {
 
 #' s_points
 #'
-#' Modify points in stripe (s) items of a forest plot object (fobj). 
+#' Modify points in stripe (s) items of a forest plot object (fobj).
 #' Passed to \code{\link[graphics]{points}}.
 #'
 #' @param fobj a forest plot object of class 'fobj'
@@ -610,7 +617,7 @@ s_points<-function(fobj, item = NULL, pointnr = NULL, ...) {
 
 #' s_borders
 #'
-#' Add and modify borders of a sripe (s) item of a forest plot object (fobj). 
+#' Add and modify borders of a sripe (s) item of a forest plot object (fobj).
 #' Passed to \code{\link[graphics]{abline}}.
 #'
 #' @param fobj a forest plot object of class 'fobj'
@@ -676,7 +683,7 @@ s_borders<-function(fobj, item = NULL, bordernr = NULL, ...) {
 
 #' b_boxplot
 #'
-#' Modify boxplot (b) items of a forest plot object (fobj). 
+#' Modify boxplot (b) items of a forest plot object (fobj).
 #' Passed to \code{\link[graphics]{boxplot}}.
 #'
 #' @param fobj a forest plot object of class 'fobj'
@@ -693,7 +700,7 @@ s_borders<-function(fobj, item = NULL, bordernr = NULL, ...) {
 #' @examples
 #'
 #'fobj<-genfobj(layout = c("t","t","t","t","t","b","t","f","t"),
-#'	dat = forplotdata, bpdat = forplotdata_bp,
+#'	dat = forplotdata, obs = forplotdata_bp,
 #'  lwidths = c(0.6,0.4,0.6,0.4,0.6,1,1,1,0.5))
 #'fobj<-b_boxplot(fobj, boxwex = 0.2)
 #'plotfobj(fobj)
@@ -722,7 +729,7 @@ b_boxplot<-function(fobj, item = NULL, ...) {
 
 #' b_axis
 #'
-#' Modify boxplot (b) items of a forest plot object (fobj). 
+#' Modify boxplot (b) items of a forest plot object (fobj).
 #' Passed to \code{\link[graphics]{axis}}.
 #'
 #' @param fobj a forest plot object of class 'fobj'
@@ -739,7 +746,7 @@ b_boxplot<-function(fobj, item = NULL, ...) {
 #' @examples
 #'
 #'fobj<-genfobj(layout = c("t","t","t","t","t","b","t","f","t"),
-#'	dat = forplotdata, bpdat = forplotdata_bp,
+#'	dat = forplotdata, obs = forplotdata_bp,
 #'  lwidths = c(0.6,0.4,0.6,0.4,0.6,1,1,1,0.5))
 #'fobj<-b_axis(fobj, at = seq(2,10,by=2), labels = seq(2,10,by=2))
 #'plotfobj(fobj)
@@ -772,7 +779,7 @@ b_axis<-function(fobj, item = NULL, ...) {
 
 #' header
 #'
-#' Modify the header of a forest plot object (fobj). 
+#' Modify the header of a forest plot object (fobj).
 #'	Passed to \code{\link[graphics]{text}}.
 #'
 #' @param fobj a forest plot object of class 'fobj'

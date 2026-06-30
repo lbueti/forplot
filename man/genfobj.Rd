@@ -7,9 +7,9 @@
 genfobj(
   layout,
   dat,
-  bpdat = NULL,
+  obs = NULL,
   lwidths = NA,
-  lheights = c(0.1, 1, 0.1),
+  lheights = NA,
   y.at = NA,
   ylim = NA
 )
@@ -19,7 +19,8 @@ genfobj(
 
 \item{dat}{data frame that should be plotted}
 
-\item{bpdat}{Optional raw data for the boxplot. Required of layout includes 'b'.}
+\item{obs}{Optional data frame with the observations for the boxplot.
+Required of layout includes 'b'.}
 
 \item{lwidths}{Optional numeric vector with the relative widths of the columns. Must have the same length as layout.}
 

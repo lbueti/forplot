@@ -37,7 +37,6 @@ The package includes two example data sets, one with continuous
 (*forplotdata*) and one with binary variables (*forplotdata_prop*).
 
 ``` r
-
 data(forplotdata)
 forplotdata
 #>    vlabel  n1        n2  n3        n4            beta_format        beta
@@ -65,7 +64,7 @@ forplotdata
 ```
 
 ``` r
-data(forplotdata)
+data(forplotdata_prop)
 forplotdata_prop
 #>    vlabel  n1       n2  n3       n4 prop1 prop2            beta_format  beta
 #> 1    out1 100 48 (48%) 100 40 (40%)  0.48  0.40   8.0% (-6.7 to 22.7%)  0.08
@@ -115,7 +114,7 @@ columns indicated in \[\].
 The order of the columns must correspond to the layout.
 
 A *b* element does not need a column in *dat* but the specifcation of
-*bpdat*, a data frame in a long format with columns *out* (the outcome
+*obs*, a data frame in a long format with columns *out* (the outcome
 value), *var* (the outcome variable, safest as a factor to preserve the
 order in the plot), and *arm* (the treatment arm, safest as a factor to
 preserve the order in the plot)
@@ -131,7 +130,7 @@ fobj<-genfobj(dat = forplotdata, layout = c("t","t","t","t","t","t","f","t"))
 The produced **fobj** is a list of length 5 with class *fobj*. It
 includes those elements:
 
-- *dat* and *bpdat*: the data
+- *dat* and *obs*: the data
 - *setup*: the options from `genfobj` which has been given or assumed by
   default (i.e. *layout*, *lheights*, *lwidths*, *y.at*, *ylim*)
 - *items*: a list of length from *layout* with the options for each item
@@ -141,7 +140,7 @@ includes those elements:
 class(fobj)
 #> [1] "fobj" "list"
 names(fobj)
-#> [1] "dat"    "bpdat"  "setup"  "items"  "header"
+#> [1] "dat"    "obs"    "setup"  "items"  "header"
 fobj$setup
 #> $layout
 #> [1] "t" "t" "t" "t" "t" "t" "f" "t"
@@ -274,7 +273,7 @@ fobj<-gridlines(fobj)
 fobj<-stripes(fobj)
 
 names(fobj)
-#> [1] "dat"       "bpdat"     "setup"     "items"     "header"    "gridlines"
+#> [1] "dat"       "obs"       "setup"     "items"     "header"    "gridlines"
 #> [7] "stripes"
 ```
 
@@ -489,7 +488,7 @@ Boxplot layout can be controled via helper functions *b_boxplot* and
 
 ``` r
 
-fobj<-genfobj(dat = forplotdata, bpdat = forplotdata_bp,
+fobj<-genfobj(dat = forplotdata, obs = forplotdata_bp,
   layout = c("t","t","t","t","t","b","t","f","t"),
   lwidths = c(0.6,0.4,0.6,0.4,0.6,1,1,1,0.5))
 

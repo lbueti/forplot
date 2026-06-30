@@ -24,7 +24,7 @@ Passed to \code{\link[graphics]{boxplot}}.
 \examples{
 
 fobj<-genfobj(layout = c("t","t","t","t","t","b","t","f","t"),
-dat = forplotdata, bpdat = forplotdata_bp,
+dat = forplotdata, obs = forplotdata_bp,
  lwidths = c(0.6,0.4,0.6,0.4,0.6,1,1,1,0.5))
 fobj<-b_boxplot(fobj, boxwex = 0.2)
 plotfobj(fobj)
