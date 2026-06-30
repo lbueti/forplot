@@ -12,13 +12,14 @@ f_refline(fobj, item = NULL, ...)
 \item{item}{item to be modified, either a number or the name of the column in fobj$dat.
 If NULL (the default), all items of type 'f' are affected}
 
-\item{...}{options to be passed to \code{graphics::lines}}
+\item{...}{options to be passed to \code{\link[graphics]{lines}}}
 }
 \value{
 a forest plot object of class 'fobj'
 }
 \description{
-f_refline
+Add and modify the reference line in forest (f) items of a forest plot object (fobj).
+Passed to \code{\link[graphics]{lines}}.
 }
 \examples{
 

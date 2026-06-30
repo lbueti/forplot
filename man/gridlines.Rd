@@ -12,13 +12,14 @@ gridlines(fobj, gridnr = NULL, ...)
 \item{gridnr}{grid line to be modified.
 If NULL (the default), all grid lines are affected}
 
-\item{...}{options to be passed to \code{graphics::abline}}
+\item{...}{options to be passed to Passed to \code{\link[graphics]{abline}}.}
 }
 \value{
 a forest plot object of class 'fobj'
 }
 \description{
-gridlines
+Add or modify horizontal lines to a forest plot object (fobj).
+Passed to \code{\link[graphics]{abline}}.
 }
 \examples{
 

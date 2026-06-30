@@ -209,10 +209,13 @@ genfobj<-function(layout, dat, bpdat = NULL,
 
 #' t_options
 #'
-#' @param fobj a forest plot object of class 'fobj'
+#' Modify text (t) items of a forest plot object (fobj).
+#'	Passed to \code{\link[graphics]{text}}.
+#'
+#' @param fobj a forest plot object of class fobj
 #' @param item item to be modified, either a number or the name of the column in fobj$dat.
 #' 	If NULL (the default), all items of type 't' are affected
-#' @param ... options to be passed to `graphics::axis`
+#' @param ... options to be passed to \code{\link[graphics]{text}}
 #'
 #' @returns a forest plot object of class 'fobj'
 #'
@@ -251,10 +254,13 @@ t_options<-function(fobj, item = NULL, ...)	{
 
 #' f_axis
 #'
+#' Modify axis in forest (f) items of a forest plot object (fobj).
+#'	Passed to \code{\link[graphics]{axis}}.
+#'
 #' @param fobj a forest plot object of class 'fobj'
 #' @param item item to be modified, either a number or the name of the column in fobj$dat.
 #' 	If NULL (the default), all items of type 'f' are affected
-#' @param ... options to be passed to `graphics::axis`
+#' @param ... options to be passed to  \code{\link[graphics]{axis}}
 #'
 #' @returns a forest plot object of class 'fobj'
 #'
@@ -294,10 +300,13 @@ f_axis<-function(fobj, item = NULL, ...) {
 
 #' f_points
 #'
+#' Modify points in forest (f) items of a forest plot object (fobj). 
+#'	Passed to \code{\link[graphics]{points}}.
+#'
 #' @param fobj a forest plot object of class 'fobj'
 #' @param item item to be modified, either a number or the name of the column in fobj$dat.
 #' 	If NULL (the default), all items of type 'f' are affected
-#' @param ... options to be passed to `graphics::points`
+#' @param ... options to be passed to \code{\link[graphics]{points}}
 #'
 #' @returns a forest plot object of class 'fobj'
 #'
@@ -327,10 +336,13 @@ f_points<-function(fobj, item = NULL, ...) {
 
 #' f_arrows
 #'
+#' Modify arrows (confidence intervals) in forest (f) items of a forest plot object (fobj).
+#'	Passed to \code{\link[graphics]{arrows}}.
+#'
 #' @param fobj a forest plot object of class 'fobj'
 #' @param item item to be modified, either a number or the name of the column in fobj$dat.
 #' 	If NULL (the default), all items of type 'f' are affected
-#' @param ... options to be passed to `graphics::arrows`
+#' @param ... options to be passed to \code{\link[graphics]{arrows}}
 #'
 #' @returns a forest plot object of class 'fobj'
 #'
@@ -361,10 +373,13 @@ f_arrows<-function(fobj, item = NULL, ...) {
 
 #' f_refline
 #'
+#' Add and modify the reference line in forest (f) items of a forest plot object (fobj).
+#'	Passed to \code{\link[graphics]{lines}}.
+#'
 #' @param fobj a forest plot object of class 'fobj'
 #' @param item item to be modified, either a number or the name of the column in fobj$dat.
 #' 	If NULL (the default), all items of type 'f' are affected
-#' @param ... options to be passed to `graphics::lines`
+#' @param ... options to be passed to \code{\link[graphics]{lines}}
 #'
 #' @returns a forest plot object of class 'fobj'
 #'
@@ -399,10 +414,13 @@ f_refline<-function(fobj, item = NULL, ...) {
 
 #' f_direction
 #'
+#' Add and modify direction indicator in forest (f) items of a forest plot object (fobj). 
+#'	Passed to \code{\link[graphics]{mtext}}.
+#'
 #' @param fobj a forest plot object of class 'fobj'
 #' @param item item to be modified, either a number or the name of the column in fobj$dat.
 #' 	If NULL (the default), all items of type 'f' are affected
-#' @param ... options to be passed to `graphics::mtext`
+#' @param ... options to be passed to  \code{\link[graphics]{mtext}}
 #'
 #' @returns a forest plot object of class 'fobj'
 #'
@@ -444,10 +462,13 @@ f_direction<-function(fobj, item= NULL, ...) {
 
 #' s_axis
 #'
+#' Modify axis of stripe (s) items of a forest plot object (fobj). 
+#' Passed to \code{\link[graphics]{axis}}.
+#'
 #' @param fobj a forest plot object of class 'fobj'
 #' @param item item to be modified, either a number or the name of the column in fobj$dat.
 #' 	If NULL (the default), all items of type 's' are affected
-#' @param ... options to be passed to `graphics::axis`
+#' @param ... options to be passed to \code{\link[graphics]{axis}}
 #'
 #' @returns a forest plot object of class 'fobj'
 #'
@@ -487,10 +508,13 @@ s_axis<-function(fobj, item = NULL, ...) {
 
 #' s_hline
 #'
+#' Modify the hiorzontal line in stripe (s) items of forest plot object (fobj). 
+#' Passed to \code{\link[graphics]{abline}}.
+#'
 #' @param fobj a forest plot object of class 'fobj'
 #' @param item item to be modified, either a number or the name of the column in fobj$dat.
 #' 	If NULL (the default), all items of type 's' are affected
-#' @param ... options to be passed to `graphics::abline`
+#' @param ... options to be passed to \code{\link[graphics]{abline}}
 #'
 #' @returns a forest plot object of class 'fobj'
 #'
@@ -524,11 +548,14 @@ s_hline<-function(fobj, item = NULL, ...) {
 
 #' s_points
 #'
+#' Modify points in stripe (s) items of a forest plot object (fobj). 
+#' Passed to \code{\link[graphics]{points}}.
+#'
 #' @param fobj a forest plot object of class 'fobj'
 #' @param item item to be modified, either a number or the name of the column in fobj$dat.
 #' 	If NULL (the default), all items of type 's' are affected
 #' @param pointnr points to be modified. If NULL (the default), all points are affected.
-#' @param ... options to be passed to `graphics::points`
+#' @param ... options to be passed to \code{\link[graphics]{points}}
 #'
 #' @returns a forest plot object of class 'fobj'
 #'
@@ -577,12 +604,15 @@ s_points<-function(fobj, item = NULL, pointnr = NULL, ...) {
 
 #' s_borders
 #'
+#' Add and modify borders of a sripe (s) item of a forest plot object (fobj). 
+#' Passed to \code{\link[graphics]{abline}}.
+#'
 #' @param fobj a forest plot object of class 'fobj'
 #' @param item item to be modified, either a number or the name of the column in fobj$dat.
 #' 	If NULL (the default), all items of type 's' are affected
 #' @param bordernr border to be modified, 1 (left) or 2 (right).
 #'	If NULL (the default), all borders are affected.
-#' @param ... options to be passed to `graphics::abline`
+#' @param ... options to be passed to \code{\link[graphics]{abline}}
 #'
 #' @returns a forest plot object of class 'fobj'
 #'
@@ -640,10 +670,13 @@ s_borders<-function(fobj, item = NULL, bordernr = NULL, ...) {
 
 #' b_boxplot
 #'
+#' Modify boxplot (b) items of a forest plot object (fobj). 
+#' Passed to \code{\link[graphics]{boxplot}}.
+#'
 #' @param fobj a forest plot object of class 'fobj'
 #' @param item item to be modified, either a number or the name of the column in fobj$dat.
 #' 	If NULL (the default), all items of type 'b' are affected
-#' @param ... options to be passed to `graphics::boxplot`
+#' @param ... options to be passed to \code{\link[graphics]{boxplot}}
 #'
 #' @returns a forest plot object of class 'fobj'
 #'
@@ -683,10 +716,13 @@ b_boxplot<-function(fobj, item = NULL, ...) {
 
 #' b_axis
 #'
+#' Modify boxplot (b) items of a forest plot object (fobj). 
+#' Passed to \code{\link[graphics]{axis}}.
+#'
 #' @param fobj a forest plot object of class 'fobj'
 #' @param item item to be modified, either a number or the name of the column in fobj$dat.
 #' 	If NULL (the default), all items of type 'b' are affected.
-#' @param ... options to be passed to `graphics::axis`
+#' @param ... options to be passed to  \code{\link[graphics]{axis}}.
 #'
 #' @returns a forest plot object of class 'fobj'
 #'
@@ -730,11 +766,14 @@ b_axis<-function(fobj, item = NULL, ...) {
 
 #' header
 #'
+#' Modify the header of a forest plot object (fobj). 
+#'	Passed to \code{\link[graphics]{text}}.
+#'
 #' @param fobj a forest plot object of class 'fobj'
 #' @param hlayout layout of header columns. Numeric vector with the same length as the labels.
 #' @param headernr header row to be modified.
 #'	If NULL (the default), all header rows are affected
-#' @param ... options to be passed to `graphics::text`
+#' @param ... options to be passed to \code{\link[graphics]{text}}
 #'
 #' @returns a forest plot object of class 'fobj'
 #'
@@ -812,10 +851,13 @@ header<-function(fobj, hlayout = NULL, headernr = NULL, ...)	{
 
 #' gridlines
 #'
+#' Add or modify horizontal lines to a forest plot object (fobj).
+#'	Passed to \code{\link[graphics]{abline}}.
+#'
 #' @param fobj a forest plot object of class 'fobj'
 #' @param gridnr grid line to be modified.
 #'	If NULL (the default), all grid lines are affected
-#' @param ... options to be passed to `graphics::abline`
+#' @param ... options to be passed to Passed to \code{\link[graphics]{abline}}.
 #'
 #' @returns a forest plot object of class 'fobj'
 #'
@@ -867,8 +909,11 @@ gridlines<-function(fobj, gridnr = NULL, ...)	{
 
 #' stripes
 #'
+#' Add or modify stripes in a forest plot object (fobj).
+#'	Passed to \code{\link[graphics]{rect}}.
+#'
 #' @param fobj a forest plot object of class 'fobj'
-#' @param ... options to be passed to `graphics::rect`
+#' @param ... options to be passed to \code{\link[graphics]{rect}}
 #'
 #' @returns a forest plot object of class 'fobj'
 #'
