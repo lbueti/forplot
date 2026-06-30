@@ -9,7 +9,7 @@ genfobj(
   dat,
   bpdat = NULL,
   lwidths = NA,
-  lheights = c(0.1, 1, 0.1),
+  lheights = NA,
   y.at = NA,
   ylim = NA
 )
