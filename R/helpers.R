@@ -1,7 +1,11 @@
+###################
 # helper functions
-###############
+###################
 
+
+#-------------------------------------------------------------------
 # Layout matrix for multipanel functions that can be used by layout()
+#-------------------------------------------------------------------
 
 lma<-function(rows,cols,commonx1=TRUE,commony1=TRUE,commonx2=FALSE,commony2=FALSE,byrow=TRUE) {
 
@@ -38,6 +42,12 @@ lma<-function(rows,cols,commonx1=TRUE,commony1=TRUE,commonx2=FALSE,commony2=FALS
   ma3
 }
 
+
+#-----------------------
+# Format numeric vector
+#-----------------------
+
+
 # Format numeric vector
 
 ff<-function(x,dig=2) {
@@ -67,4 +77,91 @@ ff_ci<-function(est,dig=NULL,fs="pe (lci to uci)") {
     fs
   }
 }
+
+
+#-----------------------
+# Convert forest objects
+#-----------------------
+
+check_convert<-function(fobj, item, lay) {
+
+	if (!("fobj" %in% class(fobj) )) {
+		stop("fobj has to be of class fobj - use genfobj to define it.")
+	}
+
+	if (lay=="s") {
+		if (!any((grepl("s\\d+",fobj$setup$layout)))) {
+			stop("fobj must contain a ",lay," item.")
+		}
+	} else {
+		if (!any(fobj$setup$layout==lay)) {
+			stop("fobj must contain a ",lay," item.")
+		}
+	}
+
+	if (is.null(item)) {
+
+		if (lay=="s") {
+			itemnr<-which((grepl("s\\d+",fobj$setup$layout)))
+		} else {
+			itemnr<-which(fobj$setup$layout==lay)
+		}
+
+	} else {
+		if (!is.numeric(item)) {
+
+			vnames<-unlist(lapply(fobj$items,function(x) x$vname))
+
+			if (!all(item %in% vnames)) {
+				stop("Item have to be numeric or match a columns name from 'dat'")
+			}
+
+			itemnr<-match(item,unlist(lapply(fobj$items,function(x) x$vname)))
+
+		} else {
+			itemnr<-item
+		}
+	}
+
+	if (substr(fobj$setup$layout[itemnr],1,1)!=lay) {
+		stop("'item' must be a ",lay," item.")
+	}
+
+	return(itemnr)
+}
+
+
+#----------------------------
+#header: helper to get header names
+#----------------------------
+
+headernames<-function(dat, layout) {
+
+  layoutm<-layout[layout!="b"]
+
+  colnr<-1:length(layoutm)
+
+  sf<-which(layoutm %in% "f")
+  for (sfi in sf) {
+    colnr[(sfi+1):length(colnr)]<-colnr[(sfi+1):length(colnr)]+2
+  }
+
+  sf<-which(grepl("s\\d+",layoutm))
+  for (sfi in sf) {
+    nstrip<-as.numeric(substr(layoutm[sfi],2,nchar(layoutm[sfi])))
+    colnr[(sfi+1):length(colnr)]<-colnr[(sfi+1):length(colnr)] + (nstrip-1)
+  }
+
+  h<-colnames(dat[,colnr])
+
+  if (sum(layout=="b")>0) {
+    bps<-which(layout=="b")
+    for (i in 1:length(bps)) {
+      bpi<-bps[i] + i -1
+      h<-c(h[1:(bpi-1)],"boxplot",h[bpi:length(h)])
+    }
+  }
+  return(h)
+}
+
 

@@ -31,3 +31,8 @@ option to include a boxplot
 forplot 0.1.3
 ------------------
 remove sorder option
+
+forplot 1.0.0
+------------------
+complete makeover
+add functions genfobj and plotfobj to first generate a fobj and then plot it 
