@@ -15,11 +15,11 @@
 #' Raw data for continous outcomes
 #'
 #' Simulated raw data from 10 outcomes in a long format.
-#' Includes columns for the outcome values (out), 
-#'	the outcome variable (var) as factor,
+#' Includes columns for the outcome values (value), 
+#'	the outcome variable (variable) as factor,
 #' and the treatment arm (arm) as a factor.
 #'
-#' @format A data frame with 3 columns: \code{out}, \code{var} and \code{arm}.
+#' @format A data frame with 3 columns: \code{value}, \code{variable} and \code{arm}.
 #'
 "forplotdata_bp"
 

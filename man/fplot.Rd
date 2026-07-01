@@ -145,7 +145,7 @@ the list can be >1 to define more than one header line}
 \item{sideline}{logical, whether to show lines at the side of the proportion scatterplot}
 
 \item{bpdat}{Optional data frame in a long format used to generate boxplots, must have columns
-out (the outcome value), var (the outcome variable, safest as a factor to preserve the order in the plot), and
+value (the outcome value), variable (the outcome variable, safest as a factor to preserve the order in the plot), and
 arm (the treatment arm, safest as a factor to preserve the order in the plot)}
 
 \item{bpopt}{List of options to pass to boxplot, with elements "col" and "boxwex"}
@@ -220,7 +220,7 @@ fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
 	xtitle=xtitle,xlim=c(-1,0.5),shift_xaxis=0.3,xlab_line=-0.8,
 	headline=2,bottomline=1)
 
-#Add boxplot for continuous outcomes 
+#Add boxplot for continuous outcomes
 lwidths<-c(0.05,0.5,0.3,0.6,0.3,0.6,0.8,1.2,1.2,0.5,0.05)
 lheights<-c(0.08,1,0.04)
 
@@ -229,7 +229,7 @@ header<-list(list(y=0.7,
 	x=c(0.10,0.3,0.7,0.98),col=c("red","blue","black","black")),
 	list(y=0.3,text=c("N","mean (sd)","N","mean (sd)"),
 	x=c(0.07,0.15,0.25,0.32)))
-	
+
 xtitle<-list(x=0.88,y=0.3,textl="Group 1 better  ",textr="  Group 2 better")
 
 fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
@@ -238,7 +238,7 @@ fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
 	headline=2,bottomline=1,
 	bpdat=forplotdata_bp)
 
-#Add a scatterplot for proportions 
+#Add a scatterplot for proportions
 data(forplotdata)
 lwidths<-c(0.05,0.5,0.2,0.6,0.2,0.6,1.0,1.2,1.0,0.5,0.05)
 lheights<-c(0.08,1,0.04)
@@ -251,7 +251,7 @@ header<-list(list(y=0.7,
 
 prps<-list(list(pch=16,cex=1.5,col=rgb(1,0,0,0.5)),
             list(pch=16,cex=1.5,col=rgb(0,0,1,0.5)))
-		
+
 fplot(dat=forplotdata_prop,lwidths=lwidths,lheights=lheights,
 	header=header,
 	prps=prps,

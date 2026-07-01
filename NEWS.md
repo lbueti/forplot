@@ -41,3 +41,8 @@ forplot 1.0.1
 ------------------
 rename bpdat to obs
 change default for lheights
+
+forplot 1.0.2
+------------------
+fix sequence of variables in boxplot
+change column names in forplotdata_bp

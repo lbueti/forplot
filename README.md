@@ -26,15 +26,19 @@ library(forplot)
 a data frame (*dat*) with the data to be plotted and produces a list of
 class **fobj**.
 
-The **fobj** can then be modified using a series of helper functions or
-directly by changing the list.
+The **fobj** can be modified using a set of helper functions or directly
+by changing the list.
 
-`plotfobj` then produces the forest plot from the **fobj**
+`plotfobj` produces the plot from the **fobj**.
 
 ## Example data
 
-The package includes two example data sets, one with continuous
-(*forplotdata*) and one with binary variables (*forplotdata_prop*).
+The package includes three data sets:
+
+- *forplotdata*: summary data with a 10 continuous variables
+- *forplotdata_prop*: summary data with 10 binary variables
+- *forplotdata_bp*: data with actual observation of *forplotdata* in a
+  long format
 
 ``` r
 data(forplotdata)
@@ -90,14 +94,33 @@ forplotdata_prop
 #> 10  0.01364509 0.3063549 0.033
 ```
 
-There are text columns *n\[1-4\]* with the number of observations and
-descriptives for each arm (either mean (sd) or n(%)), the fomratted
-treatment effect (*beta_format*) and the p-value (*p1*), and three
-numeric columns with to draw the forest (*beta*, *beta_lci* and
-*beta_uci*).
+``` r
+data(forplotdata_bp)
+head(forplotdata_bp)
+#>      value variable arm
+#> 1 4.373546     var1   1
+#> 2 5.183643     var1   1
+#> 3 4.164371     var1   1
+#> 4 6.595281     var1   1
+#> 5 5.329508     var1   1
+#> 6 4.179532     var1   1
+```
 
-In the *forplotdata_prop* there are two further numeric columns with the
+*forplotdata* has a text column with the variable names (*vlabel*), text
+columns *n\[1-4\]* with the number of observations and descriptives for
+each arm (either mean (sd) or n(%)), the formatted treatment effect
+(*beta_format*) and the p-value (*p1*), and three numeric columns to
+draw the forest (*beta*, *beta_lci* and *beta_uci*).
+
+In *forplotdata_prop* there are two further numeric columns with the
 proportion in each arm (*prop1*, *prop2*) to draw a srip plot.
+
+*forplotdata_bp* has three columns with the actual observations of
+*forplotdata* with
+
+- *value*: the variable value (numerical),
+- *variable*: the variable name (factor), and
+- *arm*: the treatment arm (factor).
 
 ## Generating the **fobj** with `genfobj`
 
@@ -114,10 +137,10 @@ columns indicated in \[\].
 The order of the columns must correspond to the layout.
 
 A *b* element does not need a column in *dat* but the specifcation of
-*obs*, a data frame in a long format with columns *out* (the outcome
-value), *var* (the outcome variable, safest as a factor to preserve the
-order in the plot), and *arm* (the treatment arm, safest as a factor to
-preserve the order in the plot)
+*obs*, a data frame in a long format with columns *value* (the outcome
+value), *variable* (the outcome variable, safest as a factor to preserve
+the order in the plot), and *arm* (the treatment arm, safest as a factor
+to preserve the order in the plot)
 
 We want to use *forplotdata* and generate a plot with a text columns
 with the label, the descriptives, the formatted effect and the p-value,
@@ -251,7 +274,7 @@ The **fobj** can be plotted using `plotfobj`
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-9-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-10-1.png)<!-- -->
 
 And with a bit nicer widths, which can be given as options in `genfobj`
 or just be changing the **fobj**:
@@ -262,7 +285,7 @@ fobj$setup$lwidths <- c(0.8,0.4,0.6,0.4,0.6,1,1,0.5)
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-10-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-11-1.png)<!-- -->
 
 Horizontal gridlines and stripes can be added with helper functions
 *gridlines* and *stripes*, which generate further elements in the fobj:
@@ -281,7 +304,7 @@ names(fobj)
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-12-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-13-1.png)<!-- -->
 
 ## Modify the items
 
@@ -299,7 +322,7 @@ fobj<-t_options(fobj = fobj, item = c("vlabel"), cex = 1.2, font = 2, col = "red
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-13-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-14-1.png)<!-- -->
 
 For *f* items there are several helper function to modify the options
 for the different elements: *f_axis*, *f_points*, *f_arrows*. Also here,
@@ -316,7 +339,7 @@ fobj<-f_points(fobj = fobj, pch = 16, cex = 1.5)
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-14-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-15-1.png)<!-- -->
 
 With *f_refline*, a reference line can be added and with *f_direction* a
 label for the direction below the axis. Note that the footer height has
@@ -332,7 +355,7 @@ fobj$setup$lheights[3]<-0.15
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-15-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-16-1.png)<!-- -->
 
 To remove an added item, it can be set to NULL (or a new **fobj** could
 be generated):
@@ -343,7 +366,7 @@ fobj$items[[which(fobj$setup$layout=="f")]]$refline<-NULL
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-16-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-17-1.png)<!-- -->
 
 ## The header
 
@@ -392,7 +415,7 @@ fobj<-header(fobj = fobj,
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-18-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-19-1.png)<!-- -->
 
 We could also merge the label for the effect over the format and forest
 columns. We would then change the layout to include one label twice. And
@@ -407,7 +430,7 @@ fobj<-header(fobj = fobj, hlayout = c(1,2,3,4,5,6,6,7),
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-19-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-20-1.png)<!-- -->
 
 In order to also merge to arm labels, we would need to header rows using
 option *headernr*, leading to a header list with length 2: As before we
@@ -468,21 +491,21 @@ fobj$header
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-21-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-22-1.png)<!-- -->
 
 ## Boxplots
 
-For a more in-depth presentation of the raw data in each group, a
-boxplot can be added. It depends on the input of the raw data as a data
-frame in a long format with columns:
+For a more in-depth presentation of the data in each group, a boxplot
+can be added. However, it depends on the input of the actual
+observations as a data frame *obs* in a long format with the numerical
+outcome value (*value*), the variable name (*variable*, as a factor) and
+the treatment arm (*arm*, as a factor).
 
-- *out*: the outcome value (numerical),
-- *var*: the outcome variable, safest as a factor to preserve the order
-  in the plot, and
-- *arm*: the treatment arm, safest as a factor to preserve the order in
-  the plot.
+Note that the names of *variable* do not have to be the same as in the
+summary data (*dat*) but the order has to be kept (i.e. the first level
+of *variable* must correspond the first row in *dat*).
 
-Boxplot layout can be controled via helper functions *b_boxplot* and
+Boxplot layout can be controlled via helper functions *b_boxplot* and
 *b_axis* using all options available for `?graphics::boxplot` and
 `?graphics::axis`.
 
@@ -495,7 +518,7 @@ fobj<-genfobj(dat = forplotdata, obs = forplotdata_bp,
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-22-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-23-1.png)<!-- -->
 
 Adding header gridlines and stripes:
 
@@ -516,7 +539,7 @@ fobj<-header(fobj=fobj, hlayout = c(1,2,3,4,5,6,7,8,9), headernr = 2,
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-23-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-24-1.png)<!-- -->
 
 ## Strip plot for proportions
 
@@ -540,7 +563,7 @@ fobj<-genfobj(dat = forplotdata_prop,
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-24-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-25-1.png)<!-- -->
 
 Options can be modified via *s_axis*, *s_hline* and *s_points* using all
 options available for using all options available for `?graphics::axis`,
@@ -569,4 +592,4 @@ fobj<-gridlines(fobj)
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-25-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-26-1.png)<!-- -->
