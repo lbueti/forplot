@@ -44,13 +44,17 @@ library(forplot)
 `genfobj` requires a *layout*, specifying the elements to be plotted and a data frame (*dat*) with the data to be plotted and 
 produces a list of class **fobj**.
 
-The **fobj** can then be modified using a series of helper functions or directly by changing the list.
+The **fobj** can be modified using a set of helper functions or directly by changing the list.
 
-`plotfobj` then produces the forest plot from the **fobj**
+`plotfobj` produces the plot from the **fobj**.
 
 ## Example data 
 
-The package includes two example data sets, one with continuous (*forplotdata*) and one with binary variables  (*forplotdata_prop*).
+The package includes three data sets:
+
+- *forplotdata*: summary data with a 10 continuous variables
+- *forplotdata_prop*: summary data with 10 binary variables
+- *forplotdata_bp*: data with actual observation of *forplotdata* in a long format
 
 ```{r}
 data(forplotdata)
@@ -62,12 +66,21 @@ forplotdata
 data(forplotdata_prop)
 forplotdata_prop
 ```
+```{r}
+data(forplotdata_bp)
+head(forplotdata_bp)
+```
 
-There are text columns *n[1-4]* with the number of observations and descriptives for each arm (either mean (sd) or n(%)),
-  the fomratted treatment effect (*beta_format*) and the p-value (*p1*), and
-	three numeric columns with to draw the forest (*beta*, *beta_lci* and *beta_uci*).
-	
-In the *forplotdata_prop* there are two further numeric columns with the proportion in each arm (*prop1*, *prop2*) to draw a srip plot.	
+*forplotdata* has a text column with the variable names (*vlabel*), text columns *n[1-4]* with the number of observations and descriptives for each arm (either mean (sd) or n(%)), the formatted treatment effect (*beta_format*) and the p-value (*p1*), and
+	three numeric columns to draw the forest (*beta*, *beta_lci* and *beta_uci*).
+
+In *forplotdata_prop* there are two further numeric columns with the proportion in each arm (*prop1*, *prop2*) to draw a srip plot.	
+
+*forplotdata_bp* has three columns with the actual observations of *forplotdata* with
+
+- *value*: the variable value (numerical),
+- *variable*: the variable name (factor), and 
+- *arm*: the treatment arm (factor).
 
 
 ## Generating the **fobj** with `genfobj`
@@ -84,7 +97,7 @@ The order of the columns must correspond to the layout.
 
 A *b* element does not need a column in *dat* but the specifcation of *obs*, a 
 	data frame in a long format with columns
-	*out* (the outcome value), *var* (the outcome variable, safest as a factor to preserve the order in the plot), 
+	*value* (the outcome value), *variable* (the outcome variable, safest as a factor to preserve the order in the plot), 
 	and *arm* (the treatment arm, safest as a factor to preserve the order in the plot)
 
 
@@ -275,15 +288,13 @@ plotfobj(fobj)
 
 ## Boxplots
 
-For a more in-depth presentation of the raw data in each group, a boxplot can be added.
-It depends on the input of the raw data as a data frame in a long format with 
-columns:
+For a more in-depth presentation of the data in each group, a boxplot can be added.
+However, it depends on the input of the actual observations as a data frame *obs* in a long format with 
+the numerical outcome value (*value*), the variable name (*variable*, as a factor) and the treatment arm (*arm*, as a factor).
 
-- *out*: the outcome value (numerical),
-- *var*: the outcome variable, safest as a factor to preserve the order in the plot, and 
-- *arm*: the treatment arm, safest as a factor to preserve the order in the plot.
+Note that the names of *variable* do not have to be the same as in the summary data (*dat*) but the order has to be kept (i.e. the first level of *variable* must correspond the first row in *dat*).
 
-Boxplot layout can be controled via helper functions *b_boxplot* and *b_axis* using all options available for `?graphics::boxplot` and `?graphics::axis`.
+Boxplot layout can be controlled via helper functions *b_boxplot* and *b_axis* using all options available for `?graphics::boxplot` and `?graphics::axis`.
 
 ```{r, fig.height=3.5, fig.width=8}
 

@@ -59,7 +59,7 @@
 #' @param headline_pos vector with position of lower and upper headline (if applicable), default c(0,1)
 #' @param sideline logical, whether to show lines at the side of the proportion scatterplot
 #' @param bpdat Optional data frame in a long format used to generate boxplots, must have columns
-#'	out (the outcome value), var (the outcome variable, safest as a factor to preserve the order in the plot), and 
+#'	value (the outcome value), variable (the outcome variable, safest as a factor to preserve the order in the plot), and
 #'	arm (the treatment arm, safest as a factor to preserve the order in the plot)
 #' @param bpopt List of options to pass to boxplot, with elements "col" and "boxwex"
 #' @param bplim limits for x-axis of the boxplot (if any), c(min,max) by default
@@ -122,25 +122,25 @@
 #'		xtitle=xtitle,xlim=c(-1,0.5),shift_xaxis=0.3,xlab_line=-0.8,
 #'		headline=2,bottomline=1)
 #'
-#' #Add boxplot for continuous outcomes 
+#' #Add boxplot for continuous outcomes
 #' lwidths<-c(0.05,0.5,0.3,0.6,0.3,0.6,0.8,1.2,1.2,0.5,0.05)
 #' lheights<-c(0.08,1,0.04)
-#' 
+#'
 #' header<-list(list(y=0.7,
 #' 	text=c("Group1","Group2","Mean difference (95% CI)","P-value"),
 #' 	x=c(0.10,0.3,0.7,0.98),col=c("red","blue","black","black")),
 #' 	list(y=0.3,text=c("N","mean (sd)","N","mean (sd)"),
 #' 	x=c(0.07,0.15,0.25,0.32)))
-#' 	
+#'
 #' xtitle<-list(x=0.88,y=0.3,textl="Group 1 better  ",textr="  Group 2 better")
-#' 
+#'
 #' fplot(dat=forplotdata,header=header,lwidths=lwidths,lheights=lheights,
 #'   	ref=list(x=0,col=2,extend=2),
 #' 	xtitle=xtitle,xlim=c(-1,0.5),shift_ymin=0.5, shift_xaxis=0.5,xlab_line=-1,
 #' 	headline=2,bottomline=1,
 #' 	bpdat=forplotdata_bp)
 #'
-#' #Add a scatterplot for proportions 
+#' #Add a scatterplot for proportions
 #' data(forplotdata)
 #' lwidths<-c(0.05,0.5,0.2,0.6,0.2,0.6,1.0,1.2,1.0,0.5,0.05)
 #' lheights<-c(0.08,1,0.04)
@@ -150,10 +150,10 @@
 #' 	list(y=0.3,text=c("N","n (%)","N","n (%)","(1: red, 2: blue)", "(95% CI)"),
 #' 	x=c(0.07,0.15,0.22,0.30,0.45,0.7)))
 #'  xtitle<-list(x=0.83,y=0.4,textl="Group 1 better  ",textr="  Group 2 better")
-#' 
+#'
 #' prps<-list(list(pch=16,cex=1.5,col=rgb(1,0,0,0.5)),
 #'             list(pch=16,cex=1.5,col=rgb(0,0,1,0.5)))
-#' 		
+#'
 #' fplot(dat=forplotdata_prop,lwidths=lwidths,lheights=lheights,
 #' 	header=header,
 #' 	prps=prps,
@@ -191,7 +191,7 @@ fplot<-function(dat,
   #%%%%%%%%%%%
   #setup
   #%%%%%%%%%%%
-	
+
   if (is.na(ncols)) {
     if (sum(grepl("beta_format",colnames(dat)))==0) {
       ncols<-ncol(dat)-1
@@ -213,7 +213,7 @@ fplot<-function(dat,
 
   if (!is.null(bpdat)) {
     ncols<-ncols+1
-  }  
+  }
 
   if (is.na(nns)) {
     nns<-sum(regexpr("^n",colnames(dat))==1)
@@ -256,12 +256,12 @@ fplot<-function(dat,
     }
     xlim2<-c(min(xlab2,xlim2),max(xlab2,xlim2))
   }
-		
+
   #points
   if (sum(!is.na(ps))==0) {
     ps<-list(pch=15,cex=1,col=1)
   }
- 
+
  #points props
   nprops<-sum(regexpr("^prop",colnames(dat))==1)
   if (nprops>0) {
@@ -272,7 +272,7 @@ fplot<-function(dat,
 		}
 	  }
   }
-  
+
   #pval
   np<-sum(regexpr("^p",colnames(dat))==1 &  regexpr("^prop",colnames(dat))==(-1))
 
@@ -284,23 +284,23 @@ fplot<-function(dat,
       ref[[refopt[i]]]<-refdef[[i]]
     }
   }
-	
-  #standard column ordering 
-  seq<-colnames(dat)  
+
+  #standard column ordering
+  seq<-colnames(dat)
   npl<-which(seq=="vlabel")
   if (nns!=0) {
 	for (ni in 1:nns) {
 		npl<-c(npl,which(seq==paste0("n",ni)))
 	}
   }
-  #boxplot, after n by default 
+  #boxplot, after n by default
   if (!is.null(bpdat)) {
 	npl<-c(npl,max(npl+0.5))
   }
-  
+
   if (nprops!=0) {
 	npl<-c(npl,min(which(grepl("^prop",seq))))
-  }	
+  }
   if (sum(grepl("beta_format",colnames(dat)))==0) {
     npl<-c(npl,which(seq=="beta"))
     npl<-c(npl,npl[length(npl)]+1)
@@ -321,9 +321,9 @@ fplot<-function(dat,
 	for (pi in 1:np) {
 		npl<-c(npl,which(seq==paste0("p",pi)))
 	}
-  }	
-  npl2<-(1:ncols)[order(npl)]	
-  
+  }
+  npl2<-(1:ncols)[order(npl)]
+
   #%%%%%%%%%%%
   #plot
   #######
@@ -335,7 +335,7 @@ fplot<-function(dat,
   if (nrows==1) {
 	ma[2,2:(ncols+1)]<-npl2
   }
-   
+
   layout(ma,heights=lheights,widths=lwidths)
 
   par(mar=c(0,0,0,0))
@@ -377,9 +377,9 @@ fplot<-function(dat,
 
   #prop column
   #############
-  
+
   if (nprops!=0) {
-    if (sum(!is.na(plim))==0) {	
+    if (sum(!is.na(plim))==0) {
 		pmi<-min(0,min(dat[,grepl("^prop",colnames(dat))]))
 		pma<-max(1,max(dat[,grepl("^prop",colnames(dat))]))
 		plim<-c(pmi,pma)
@@ -387,7 +387,7 @@ fplot<-function(dat,
 	if (sum(!is.na(plab))==0) {
 	  plab<-pretty(plim)
 	}
-	
+
 	plot(0,type="n",xlim=plim,ylim=ylim,yaxt="n",ylab="",xlab="",axes=FALSE)
 	clabs<-numeric(0)
 	for (pi in 1:nprops) {
@@ -396,7 +396,7 @@ fplot<-function(dat,
 		  } else {
 			labs<-dat[,paste0("prop",pi)]
 		  }
-		clabs<-cbind(clabs,labs) 
+		clabs<-cbind(clabs,labs)
 		points(labs,y.at,pch=prps[[pi]][["pch"]],cex=prps[[pi]][["cex"]],col=prps[[pi]][["col"]])
 	}
 	for (i in 1:length(y.at)) {
@@ -404,31 +404,31 @@ fplot<-function(dat,
 			lines(x=plim,y=c(y.at[i],y.at[i]),lty=3)
 		}
 	}
-	
-    #axis  
+
+    #axis
     if (sum(!is.na(plab_text))==0) {
       plab_text<-100*plab
     }
     axis(side=1,pos=shift_xaxis,at=plab,labels=rep("",length(plab)),las=1,tick=TRUE,tck=tck,lwd=lwd)
     mtext(side=1,line=xlab_line,at=plab,text=plab_text,cex=xlab_cex)
-    
+
     if (!is.na(bottomline)) {
       lines(x=c(par("usr")[1],par("usr")[2]),y=c(shift_xaxis,shift_xaxis),xpd=TRUE)
     }
-    
-    #lines 
+
+    #lines
     if (sideline) {
 	  lines(x=c(plim[1],plim[1]),y=c(shift_xaxis,par("usr")[4]+shift_ymax),xpd=FALSE,col=1)
 	  lines(x=c(plim[2],plim[2]),y=c(shift_xaxis,par("usr")[4]+shift_ymax),xpd=FALSE,col=1)
     }
-  }	
-  
+  }
+
    #boxplot
   #############
-  
+
   if (!is.null(bpdat)) {
-	if (sum(!is.na(bplim))==0) {	
-	  bplim<-c(min(bpdat$out),max(bpdat$out))
+	if (sum(!is.na(bplim))==0) {
+	  bplim<-c(min(bpdat$value),max(bpdat$value))
 	}
 	if (sum(!is.na(bplab))==0) {
 	  bplab<-pretty(bplim)
@@ -437,14 +437,14 @@ fplot<-function(dat,
 	pm<-0.2
 	gap<-0.1
 	bwidth <- 2*pm - gap
-	
+
 	bp.at<-sort(c(y.at-pm,y.at+pm))
-	
-	bpoptused<-list(NA,length=2) 
+
+	bpoptused<-list(NA,length=2)
 	names(bpoptused)<-c("col","boxwex")
 	bpoptused[["col"]]<-c(rgb(1,0,0,0.3),rgb(0,0,1,0.3))
 	bpoptused[["boxwex"]]<-bwidth
-	
+
 	if (sum(!is.na(bpopt))>0) {
 		if (!is.null(bpopt[["col"]])) {
 			bpoptused[["col"]]<-bpopt[["col"]]
@@ -453,30 +453,30 @@ fplot<-function(dat,
 			bpoptused[["boxwex"]]<-bpopt[["boxwex"]]
 		}
 	}
-	
-	boxplot(out ~ rev(arm)*rev(var), data=bpdat,at=bp.at,boxwex = bpoptused[["boxwex"]], horizontal=TRUE,
+
+	boxplot(value ~ rev(arm)*variable, data=bpdat,at=bp.at,boxwex = bpoptused[["boxwex"]], horizontal=TRUE,
 		ylim=bplim,xlim=ylim,yaxt="n",ylab="",xlab="",axes=FALSE, col=rev(bpoptused[["col"]]))
-	
-	 #axis  
+
+	 #axis
 	if (sum(!is.na(bplab_text))==0) {
 	  bplab_text<-bplab
 	}
 	axis(side=1,pos=shift_xaxis,at=bplab,labels=rep("",length(bplab)),las=1,tick=TRUE,tck=tck,lwd=lwd)
 	mtext(side=1,line=xlab_line,at=bplab,text=bplab_text,cex=xlab_cex)
-	
+
 	if (!is.na(bottomline)) {
 	  lines(x=c(par("usr")[1],par("usr")[2]),y=c(shift_xaxis,shift_xaxis),xpd=TRUE)
 	}
-	
-	#lines 
+
+	#lines
 	if (sideline) {
 	  lines(x=c(bplim[1],bplim[1]),y=c(shift_xaxis,par("usr")[4]+shift_ymax),xpd=FALSE,col=1)
 	  lines(x=c(bplim[2],bplim[2]),y=c(shift_xaxis,par("usr")[4]+shift_ymax),xpd=FALSE,col=1)
 	}
   }
-		
-		
-  
+
+
+
   #beta text
   #%%%%%%%%%%%
 
@@ -502,7 +502,7 @@ fplot<-function(dat,
   #%%%%%%%%%%%
 
   plot(0,type="n",xlim=xlim,ylim=ylim,yaxt="n",ylab="",xlab="",axes=FALSE)
-  
+
   #lines and axis
   if (!is.na(ref[["x"]])) {
     lines(x=rep(ref[["x"]],2),y=c(ylim[1]-shift_ymin+shift_xaxis,ylim[2]+shift_ymax+ref[["extend"]]),
@@ -517,7 +517,7 @@ fplot<-function(dat,
   if (!is.na(bottomline)) {
     lines(x=c(par("usr")[1],par("usr")[2]),y=c(shift_xaxis,shift_xaxis),xpd=TRUE)
   }
-  
+
   #points and arrows
   #symbols(dat$beta,y.at,squares=1/dat$beta_se,add=TRUE,inches=0.15,bg=pcol,fg=NA)
   points(dat$beta,y.at,pch=ps[["pch"]],cex=ps[["cex"]],col=ps[["col"]])
@@ -552,15 +552,15 @@ fplot<-function(dat,
 	arrows(y0=y.at,y1=y.at,x0=dat$beta_lci,x1=dat$beta_uci,code=3,angle=90,length=cap_length)
   }
 
-  
+
 
   #2nd beta:
   ##########
   if (!is.null(beta2)) {
-	
+
 	#2nd beta text:
 	##########
-  
+
      plot(0,type="n",xlim=c(0,1),ylim=ylim,yaxt="n",ylab="",xlab="",axes=FALSE)
 	  if (sum(grepl("beta_format2",colnames(dat)))==0) {
 		if (lscale) {
@@ -581,7 +581,7 @@ fplot<-function(dat,
     #2nd beta
 	#######
     plot(0,type="n",xlim=xlim2,ylim=ylim,yaxt="n",ylab="",xlab="",axes=FALSE)
-	
+
 	#lines and axis
     if (!is.na(ref[["x"]])) {
       lines(x=rep(ref[["x"]],2),y=c(ylim[1]-shift_ymin+shift_xaxis,ylim[2]+shift_ymax+ref[["extend"]]),
@@ -596,7 +596,7 @@ fplot<-function(dat,
     if (!is.na(bottomline)) {
       lines(x=c(par("usr")[1],par("usr")[2]),y=c(shift_xaxis,shift_xaxis),xpd=TRUE)
     }
-	
+
 	#points and arrows
     points(dat$beta2,y.at,pch=ps[["pch"]],cex=ps[["cex"]],col=ps[["col"]])
 
@@ -630,7 +630,7 @@ fplot<-function(dat,
 	  arrows(y0=y.at,y1=y.at,x0=dat$beta_lci2,x1=dat$beta_uci2,code=3,angle=90,length=cap_length)
     }
 
-   
+
   }
 
   #p columns

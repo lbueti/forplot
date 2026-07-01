@@ -147,12 +147,12 @@ genfobj<-function(layout, dat, obs = NULL,
 			if (is.null(obs)) {
 				stop("The boxplot ('b' in layout) requires an extra dataset given in 'obs'.")
 			} else {
-				if (!all(c("out","var","arm") %in% names(obs))) {
-					stop("'obs' must be a data frame with columns 'out', 'var' and 'arm'.")
+				if (!all(c("value","variable","arm") %in% names(obs))) {
+					stop("'obs' must be a data frame with columns 'value', 'variable' and 'arm'.")
 				}
 			}
 
-			xlim<-c(min(obs$out),max(obs$out))
+			xlim<-c(min(obs$value),max(obs$value))
 			xlab<-pretty(xlim)
 			xlim<-c(min(xlab,xlim),max(xlab,xlim))
 			xlab_text<-xlab
@@ -167,7 +167,7 @@ genfobj<-function(layout, dat, obs = NULL,
 				vname = hnames[i],
 				plot = list(x=0, type="n", xlim = xlim, ylim = ylim,
 					yaxt="n" ,ylab="", xlab="", axes=FALSE, xaxs = "i", yaxs = "i"),
-				boxplot = list(formula = out ~ rev(arm)*rev(var), data=obs,
+				boxplot = list(formula = value ~ rev(arm)*variable, data=obs,
 					at=bp.at, boxwex = bwidth, horizontal=TRUE, axes=FALSE, col=cols, add=TRUE),
 				axis = list(side = 1, at = xlab, labels = xlab_text, line = 0,
 					pos = ylim[1], las = 1))

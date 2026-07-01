@@ -5,15 +5,15 @@
 \alias{forplotdata_bp}
 \title{Raw data for continous outcomes}
 \format{
-A data frame with 3 columns: \code{out}, \code{var} and \code{arm}.
+A data frame with 3 columns: \code{value}, \code{variable} and \code{arm}.
 }
 \usage{
 forplotdata_bp
 }
 \description{
 Simulated raw data from 10 outcomes in a long format.
-Includes columns for the outcome values (out),
-the outcome variable (var) as factor,
+Includes columns for the outcome values (value),
+the outcome variable (variable) as factor,
 and the treatment arm (arm) as a factor.
 }
 \keyword{datasets}
