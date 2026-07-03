@@ -143,7 +143,9 @@ headernames<-function(dat, layout) {
 
   sf<-which(layoutm %in% "f")
   for (sfi in sf) {
-    colnr[(sfi+1):length(colnr)]<-colnr[(sfi+1):length(colnr)]+2
+	if (sfi<length(colnr)){
+		colnr[(sfi+1):length(colnr)]<-colnr[(sfi+1):length(colnr)]+2
+	}	
   }
 
   sf<-which(grepl("s\\d+",layoutm))
