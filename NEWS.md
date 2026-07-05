@@ -50,3 +50,7 @@ change column names in forplotdata_bp
 forplot 1.0.3
 ------------------
 bug fix headernames
+
+forplot 1.0.4
+------------------
+warning for headernames
