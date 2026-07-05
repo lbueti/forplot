@@ -138,32 +138,80 @@ check_convert<-function(fobj, item, lay) {
 headernames<-function(dat, layout) {
 
   layoutm<-layout[layout!="b"]
-
+  
   colnr<-1:length(layoutm)
-
+  repel<-rep(1,length(layoutm))
+  
   sf<-which(layoutm %in% "f")
-  for (sfi in sf) {
-	if (sfi<length(colnr)){
-		colnr[(sfi+1):length(colnr)]<-colnr[(sfi+1):length(colnr)]+2
-	}	
+  repel[sf]<-3
+  
+  ss<-which(grepl("s\\d+",layoutm))
+  nstrip<-as.numeric(substr(layoutm[ss],2,nchar(layoutm[ss])))
+  repel[ss]<-nstrip
+  
+  hl<-rep(colnr,repel)
+  
+  if (length(hl)!=ncol(dat)) {
+	stop(paste0("The 'layout' does not match 'dat' - layout implies ",
+		length(hl)," columns, dat has " ,ncol(dat),"."))
   }
-
-  sf<-which(grepl("s\\d+",layoutm))
-  for (sfi in sf) {
-    nstrip<-as.numeric(substr(layoutm[sfi],2,nchar(layoutm[sfi])))
-    colnr[(sfi+1):length(colnr)]<-colnr[(sfi+1):length(colnr)] + (nstrip-1)
+   
+  h<-colnames(dat)[!duplicated(hl)]
+	
+  #with b
+  colnr<-1:length(layout)
+  repel<-rep(1,length(layout))
+  
+  sf<-which(layout %in% "f")
+  repel[sf]<-3
+  
+  ss<-which(grepl("s\\d+",layout))
+  nstrip<-as.numeric(substr(layout[ss],2,nchar(layout[ss])))
+  repel[ss]<-nstrip
+  
+  sb<-which(layout=="b")
+  repel[sb]<-1
+  
+  lr<-rep(layout,repel)
+  hl<-rep(colnr,repel)
+  
+  if (sum(sb)>0) {
+    cnb <- rep(NA, ncol(dat) + length(sb))
+    cnb[-which(lr %in% "b")] <- colnames(dat)
+    cnb[which(lr %in% "b")]<-"boxplot"
+  } else {
+    cnb<-colnames(dat)
   }
-
-  h<-colnames(dat[,colnr])
-
-  if (sum(layout=="b")>0) {
-    bps<-which(layout=="b")
-    for (i in 1:length(bps)) {
-      bpi<-bps[i] + i -1
-      h<-c(h[1:(bpi-1)],"boxplot",h[bpi:length(h)])
-    }
-  }
+  
+  h<-cnb[!duplicated(hl)] 
+  
   return(h)
+  
+		
+  #sf<-which(layoutm %in% "f")
+  #for (sfi in sf) {
+  #	if (sfi<length(colnr)){
+  #	  colnr[(sfi+1):length(colnr)]<-colnr[(sfi+1):length(colnr)]+2
+  #  }	
+  #}
+
+  #sf<-which(grepl("s\\d+",layoutm))
+  #for (sfi in sf) {
+  #  nstrip<-as.numeric(substr(layoutm[sfi],2,nchar(layoutm[sfi])))
+  #  colnr[(sfi+1):length(colnr)]<-colnr[(sfi+1):length(colnr)] + (nstrip-1)
+  #}
+
+  #h<-colnames(dat[,colnr])
+
+  #if (sum(layout=="b")>0) {
+  #  bps<-which(layout=="b")
+  #  for (i in 1:length(bps)) {
+  #    bpi<-bps[i] + i -1
+  #    h<-c(h[1:(bpi-1)],"boxplot",h[bpi:length(h)])
+  #  }
+  #}
+  
+  #return(h)
 }
 
 
