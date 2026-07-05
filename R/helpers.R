@@ -123,7 +123,7 @@ check_convert<-function(fobj, item, lay) {
 		}
 	}
 
-	if (substr(fobj$setup$layout[itemnr],1,1)!=lay) {
+	if (!all(substr(fobj$setup$layout[itemnr],1,1)==lay)) {
 		stop("'item' must be a ",lay," item.")
 	}
 
