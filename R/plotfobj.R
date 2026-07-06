@@ -102,7 +102,21 @@ plotfobj<- function(fobj) {
 			}
 
 		}
-
+		
+		if (fobj$setup$layout[i]=="d") {
+			
+			do.call(plot, fobj$items[[i]]$plot)
+			do.call(axis, fobj$items[[i]]$axis)
+			lapply(fobj$items[[i]]$lines, function(x) lapply(x, function(u) do.call(lines,u)))	
+			
+			lapply(fobj$gridlines, function(x) do.call(abline, x))
+			
+			if (!is.null(fobj$stripes)) {
+				fobj$stripes$xleft<-par("usr")[1]
+				fobj$stripes$xright<-par("usr")[2]
+				do.call(rect, fobj$stripes)
+			}		
+		}
 	}
 
 

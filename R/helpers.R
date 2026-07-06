@@ -137,28 +137,6 @@ check_convert<-function(fobj, item, lay) {
 
 headernames<-function(dat, layout) {
 
-  layoutm<-layout[layout!="b"]
-  
-  colnr<-1:length(layoutm)
-  repel<-rep(1,length(layoutm))
-  
-  sf<-which(layoutm %in% "f")
-  repel[sf]<-3
-  
-  ss<-which(grepl("s\\d+",layoutm))
-  nstrip<-as.numeric(substr(layoutm[ss],2,nchar(layoutm[ss])))
-  repel[ss]<-nstrip
-  
-  hl<-rep(colnr,repel)
-  
-  if (length(hl)!=ncol(dat)) {
-	stop(paste0("The 'layout' does not match 'dat' - layout implies ",
-		length(hl)," columns, dat has " ,ncol(dat),"."))
-  }
-   
-  h<-colnames(dat)[!duplicated(hl)]
-	
-  #with b
   colnr<-1:length(layout)
   repel<-rep(1,length(layout))
   
@@ -172,13 +150,24 @@ headernames<-function(dat, layout) {
   sb<-which(layout=="b")
   repel[sb]<-1
   
+  sd<-which(layout=="d")
+  repel[sd]<-1
+  
   lr<-rep(layout,repel)
   hl<-rep(colnr,repel)
   
-  if (sum(sb)>0) {
-    cnb <- rep(NA, ncol(dat) + length(sb))
-    cnb[-which(lr %in% "b")] <- colnames(dat)
+  li<-length(lr[!lr %in% c("b","d")])
+  
+  if (li!=ncol(dat)) {
+	stop(paste0("The 'layout' does not match 'dat' - layout implies ",
+		li," columns, dat has " ,ncol(dat),"."))
+  }
+  
+  if ((sum(sb) + sum(sd))>0) {
+    cnb <- rep(NA, ncol(dat) + length(sb) + length(sd))
+    cnb[- which(lr %in% c("b","d"))] <- colnames(dat)
     cnb[which(lr %in% "b")]<-"boxplot"
+	cnb[which(lr %in% "d")]<-"density"
   } else {
     cnb<-colnames(dat)
   }

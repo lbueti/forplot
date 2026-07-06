@@ -54,3 +54,7 @@ bug fix headernames
 forplot 1.0.4
 ------------------
 warning for headernames
+
+forplot 1.1.0
+------------------
+add density plots

@@ -15,12 +15,12 @@ genfobj(
 )
 }
 \arguments{
-\item{layout}{layout of the plot, character vector with 't' (text), 'f' (forest), 's' (strip), or 'b' (boxplot).}
+\item{layout}{layout of the plot, character vector with 't' (text), 'f' (forest), 's' (strip), 'b' (boxplot) or 'd' (density plot).}
 
 \item{dat}{data frame that should be plotted}
 
 \item{obs}{Optional data frame with the observations for the boxplot.
-Required of layout includes 'b'.}
+Required of layout includes 'b' or 'd'.}
 
 \item{lwidths}{Optional numeric vector with the relative widths of the columns. Must have the same length as layout.}
 

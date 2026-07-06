@@ -541,6 +541,70 @@ plotfobj(fobj)
 
 ![](man/figures/README-unnamed-chunk-24-1.png)<!-- -->
 
+## Density plots
+
+Density plots can be specified using layout item *d* and depend on the
+same data with the observations as the boxplot. Options can be change
+via *d_axis* and *d_lines*.
+
+``` r
+
+fobj<-genfobj(dat = forplotdata, obs = forplotdata_bp,
+  layout = c("t","t","t","t","t","b","d","t","f","t"),
+  lwidths = c(0.6,0.4,0.6,0.4,0.6,1,1,1,1,0.5))
+
+fobj<-b_axis(fobj, xlim=c(0,9.5))
+
+fobj<-gridlines(fobj)
+
+fobj<-stripes(fobj)
+
+fobj<-header(fobj=fobj, hlayout = c(1,2,2,3,3,4,5,6,6,7),  headernr = 1,
+    labels=c("","Arm A","Arm B","","","Mean difference (95% CI)","P-value"),
+    col = c(1,"red","blue",1,1,1),
+    y=0.9)
+fobj<-header(fobj=fobj, hlayout = c(1,2,3,4,5,6,7,8,9,10), headernr = 2,
+    labels=c("","N","Mean (sd)","N","Mean (sd)","","","","",""),
+    col=1, y=0.3)
+
+plotfobj(fobj)
+```
+
+![](man/figures/README-unnamed-chunk-25-1.png)<!-- -->
+
+Note that the lines element of the *d* items is a nested list with
+*variable* and *arm*. Using *d_lines*, line options can be accessed all
+at once, over all variables for one arm, for all arms and one variable,
+or for a specific variable*arm combination using options* linenr\*, a
+vector of length two where the first element specifies the variable and
+the second the arm.
+
+``` r
+fobj<-genfobj(dat = forplotdata, obs = forplotdata_bp,
+  layout = c("t","t","t","t","t","d","t","f","t"),
+  lwidths = c(0.6,0.4,0.6,0.4,0.6,1,1,1,0.5))
+
+#all lines:
+
+fobj<-d_lines(fobj=fobj, lw=1.5)
+plotfobj(fobj)
+```
+
+![](man/figures/README-unnamed-chunk-26-1.png)<!-- -->
+
+``` r
+#only one arm:
+
+fobj<-d_lines(fobj=fobj, linenr=c(NA,2), col=1)
+plotfobj(fobj)
+```
+
+![](man/figures/README-unnamed-chunk-27-1.png)<!-- -->
+
+Different density curves could be added by using *x* and *y* options in
+*d_lines* (or the *lines* list in the **fobj**). Note that the
+y-position has to be shifted by *y.at* for each variable.
+
 ## Strip plot for proportions
 
 For binary outcomes and in particular for serious adverse event
@@ -563,7 +627,7 @@ fobj<-genfobj(dat = forplotdata_prop,
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-25-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-28-1.png)<!-- -->
 
 Options can be modified via *s_axis*, *s_hline* and *s_points* using all
 options available for using all options available for `?graphics::axis`,
@@ -592,4 +656,4 @@ fobj<-gridlines(fobj)
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-26-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-29-1.png)<!-- -->
