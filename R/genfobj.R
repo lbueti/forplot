@@ -3,10 +3,10 @@
 #'
 #' First step to generate a forest plot. Generates a fobj that can be plotted.
 #'
-#' @param layout layout of the plot, character vector with 't' (text), 'f' (forest), 's' (strip), or 'b' (boxplot).
+#' @param layout layout of the plot, character vector with 't' (text), 'f' (forest), 's' (strip), 'b' (boxplot) or 'd' (density plot).
 #' @param dat data frame that should be plotted
 #' @param obs Optional data frame with the observations for the boxplot.
-#'	Required of layout includes 'b'.
+#'	Required of layout includes 'b' or 'd'.
 #' @param lwidths Optional numeric vector with the relative widths of the columns. Must have the same length as layout.
 #' @param lheights Optional numeric vectotr of length 3 with the relative heights of header, main panel and footer.
 #' @param y.at Optional numeric vector with the position of the rows. Usually not required.
@@ -16,6 +16,8 @@
 #'
 #' @export
 #'
+#' @importFrom stats density
+#' 
 #' @examples
 #'
 #' fobj<-genfobj(layout = c("t","t","t","t","t","t","f","t"),
@@ -167,14 +169,56 @@ genfobj<-function(layout, dat, obs = NULL,
 				vname = hnames[i],
 				plot = list(x=0, type="n", xlim = xlim, ylim = ylim,
 					yaxt="n" ,ylab="", xlab="", axes=FALSE, xaxs = "i", yaxs = "i"),
-				boxplot = list(formula = value ~ rev(arm)*variable, data=obs,
-					at=bp.at, boxwex = bwidth, horizontal=TRUE, axes=FALSE, col=cols, add=TRUE),
+				boxplot = list(formula = value ~ arm*variable, data=obs,
+					at=rev(bp.at), boxwex = bwidth, horizontal=TRUE, axes=FALSE, col=cols, add=TRUE),
 				axis = list(side = 1, at = xlab, labels = xlab_text, line = 0,
 					pos = ylim[1], las = 1))
 
 		}
 
+		if (layout[i]=="d") {
 
+			if (is.null(obs)) {
+				stop("The density ('d' in layout) requires an extra dataset given in 'obs'.")
+			} else {
+				if (!all(c("value","variable","arm") %in% names(obs))) {
+					stop("'obs' must be a data frame with columns 'value', 'variable' and 'arm'.")
+				}
+			}
+
+			xlim<-c(min(obs$value),max(obs$value))
+			xlab<-pretty(xlim)
+			xlim<-c(min(xlab,xlim),max(xlab,xlim))
+			xlab_text<-xlab
+			
+			las<-levels(obs$arm)
+			lvs<-levels(obs$variable)
+			liv<-vector(length=length(lvs),mode="list")
+			
+			cols<-c(rgb(1,0,0,1),rgb(0,0,1,1))
+			
+			for (li in 1:length(liv)) {
+				liv[[li]]<-vector(length=length(las),mode="list")
+			}
+			for (lv in 1:length(lvs)) {
+				for (la in 1:length(las)) {			
+					sel<-obs$arm==las[la] & obs$variable==lvs[lv]
+					de<-density(obs$value[sel])
+					liv[[lv]][[la]]<-list(x=de$x,y=de$y + y.at[lv],col=cols[la])
+				}
+			}
+	
+			addi<-list(
+				type = layout[i],
+				vname = hnames[i],
+				plot = list(x=0, type="n", xlim = xlim, ylim = ylim,
+					yaxt="n" ,ylab="", xlab="", axes=FALSE, xaxs = "i", yaxs = "i"),
+				axis = list(side = 1, at = xlab, labels = xlab_text, line = 0,
+					pos = ylim[1], las = 1),
+				lines = liv)
+	
+		}
+		
 		items[[i]]<-addi
 
 	}
@@ -772,6 +816,126 @@ b_axis<-function(fobj, item = NULL, ...) {
 
 	return(fobj)
 }
+
+
+
+# density plot (d)
+#---------------------
+
+#' d_axis
+#'
+#' Modify density (d) items of a forest plot object (fobj).
+#' Passed to \code{\link[graphics]{axis}}.
+#'
+#' @param fobj a forest plot object of class 'fobj'
+#' @param item item to be modified, either a number or the name of the column in fobj$dat.
+#' 	If NULL (the default), all items of type 'b' are affected.
+#' @param ... options to be passed to  \code{\link[graphics]{axis}}.
+#'
+#' @returns a forest plot object of class 'fobj'
+#'
+#' @export
+#'
+#' @importFrom utils modifyList
+#'
+#' @examples
+#'
+#'fobj<-genfobj(layout = c("t","t","t","t","t","d","t","f","t"),
+#'	dat = forplotdata, obs = forplotdata_bp,
+#'  lwidths = c(0.6,0.4,0.6,0.4,0.6,1,1,1,0.5))
+#'fobj<-d_axis(fobj, at = seq(2,10,by=2), labels = seq(2,10,by=2))
+#'plotfobj(fobj)
+#'
+d_axis<-function(fobj, item = NULL, ...) {
+
+	itemnr<-check_convert(fobj = fobj, item = item, lay = "d")
+
+	input<-list(...)
+
+	for (itn in itemnr) {
+
+		if ("xlim" %in% names(input)) {
+			fobj$items[[itn]]$plot$xlim<-input$xlim
+			input<-input[names(input)!="xlim"]
+		}
+		if ("ylim" %in% names(input)) {
+			fobj$items[[itn]]$plot$ylim<-input$ylim
+		}
+
+		fobj$items[[itn]]$axis<-modifyList(fobj$items[[itn]]$axis, input)
+	}
+
+	return(fobj)
+}
+
+#' d_lines
+#'
+#' Modify lines in density (d) items of a forest plot object (fobj).
+#' Passed to \code{\link[graphics]{lines}}.
+#'
+#' @param fobj a forest plot object of class 'fobj'
+#' @param item item to be modified, either a number or the name of the column in fobj$dat.
+#' 	If NULL (the default), all items of type 's' are affected
+#' @param linenr lines to be modified. A vector of length 2 refering to the variable and the arm. 
+#'	If NULL (the default), all lines are affected. If one number is NA, all lines are affected.
+#' @param ... options to be passed to \code{\link[graphics]{lines}}
+#'
+#' @returns a forest plot object of class 'fobj'
+#'
+#' @export
+#'
+#' @importFrom utils modifyList
+#'
+#' @examples
+#'
+#'fobj<-genfobj(layout = c("t","t","t","t","t","d","t","f","t"),
+#'	dat = forplotdata, obs = forplotdata_bp,
+#'  lwidths = c(0.6,0.4,0.6,0.4,0.6,1,1,1,0.5))
+#'#all lines:
+#'fobj<-d_lines(fobj=fobj, lw=2)
+#'plotfobj(fobj)
+#'
+#'#only one arm:
+#'fobj<-d_lines(fobj=fobj, linenr=c(NA,2), col=1)
+#'plotfobj(fobj)
+#'
+d_lines<-function(fobj, item = NULL, linenr = NULL, ...) {
+
+	itemnr<-check_convert(fobj = fobj, item = item, lay = "d")
+
+	input<-list(...)
+
+	for (itn in itemnr) {
+
+		if (is.null(linenr)) {
+			lvs<-NA 
+			las<-NA 
+		} else {
+			
+			lvs<-linenr[1]
+			las<-linenr[2]
+		}
+		
+		if (is.na(lvs)) {
+			lvs<-1:length(fobj$items[[itn]]$lines)
+		}
+		
+		for (lv in lvs) {
+			if (is.na(las)) {
+				lasu<-1:length(fobj$items[[itn]]$lines[[lv]])
+			} else {
+				lasu<-las
+			}
+			for (la in lasu) {
+				fobj$items[[itn]]$lines[[lv]][[la]]<-
+					modifyList(fobj$items[[itn]]$lines[[lv]][[la]], input)
+			}
+		}
+	}
+
+	return(fobj)
+}
+
 
 #---------------------
 #header

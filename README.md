@@ -312,9 +312,10 @@ All items, grid lines and stripes can be modified using helper functions
 or within the list directly.
 
 For *t* items helper function *t_options* allows to use all options used
-in R `?graphics::text` function. That can be done for a specific t item
-by using the number or column name of the item, or for all (by keeping
-item=NULL):
+in R
+[graphics::text()](https://stat.ethz.ch/R-manual/R-devel/library/graphics/html/text.html)
+function. That can be done for a specific t item by using the number or
+column name of the item, or for all (by keeping item=NULL):
 
 ``` r
 fobj<-t_options(fobj = fobj, item = c("vlabel"), cex = 1.2, font = 2, col = "red")
@@ -326,9 +327,13 @@ plotfobj(fobj)
 
 For *f* items there are several helper function to modify the options
 for the different elements: *f_axis*, *f_points*, *f_arrows*. Also here,
-all options from `?graphics::axis`, `?graphics::points` and
-`?graphics::arrows` can be used. As we do only have one forest item, we
-do not have specify the *item*.
+all options from
+[graphics::axis()](https://stat.ethz.ch/R-manual/R-devel/library/graphics/html/axis.html),
+[graphics::points()](https://stat.ethz.ch/R-manual/R-devel/library/graphics/html/points.html)
+and
+[graphics::arrows()](https://stat.ethz.ch/R-manual/R-devel/library/graphics/html/arrows.html)
+can be used. As we do only have one forest item, we do not have specify
+the *item*.
 
 ``` r
 fobj<-f_axis(fobj = fobj, at = seq(-1,0.2, by=0.4), labels = seq(-1,0.2, by=0.4), 
@@ -396,10 +401,11 @@ fobj$header
 ```
 
 The *header* function can be used to modify the options using all
-options from `?graphics::text`. As an extra element, the *hlayout* can
-be used to merge columns, i.e. to print a label over more than one
-column. And more than one header row can be specified using *headernr*,
-leading to a list of length \> 1.
+options from
+[graphics::text()](https://stat.ethz.ch/R-manual/R-devel/library/graphics/html/text.html)
+As an extra element, the *hlayout* can be used to merge columns, i.e. to
+print a label over more than one column. And more than one header row
+can be specified using *headernr*, leading to a list of length \> 1.
 
 Let’s first just use different names, also including a line separator.
 Note that an empty character has to be included to leave column 1 and 8
@@ -434,7 +440,9 @@ plotfobj(fobj)
 
 In order to also merge to arm labels, we would need to header rows using
 option *headernr*, leading to a header list with length 2: As before we
-can use further `?graphics::text` options.
+can use further
+[graphics::text()](https://stat.ethz.ch/R-manual/R-devel/library/graphics/html/text.html)
+options.
 
 ``` r
 
@@ -506,8 +514,10 @@ summary data (*dat*) but the order has to be kept (i.e. the first level
 of *variable* must correspond the first row in *dat*).
 
 Boxplot layout can be controlled via helper functions *b_boxplot* and
-*b_axis* using all options available for `?graphics::boxplot` and
-`?graphics::axis`.
+*b_axis* using all options available for
+[graphics::boxplot()](https://stat.ethz.ch/R-manual/R-devel/library/graphics/html/boxplot.html)
+and
+[graphics::axis()](https://stat.ethz.ch/R-manual/R-devel/library/graphics/html/axis.html).
 
 ``` r
 
@@ -541,6 +551,75 @@ plotfobj(fobj)
 
 ![](man/figures/README-unnamed-chunk-24-1.png)<!-- -->
 
+## Density plots
+
+Density plots can be specified using layout item *d* and depend on the
+same data with the observations as the boxplots.
+
+``` r
+
+fobj<-genfobj(dat = forplotdata, obs = forplotdata_bp,
+  layout = c("t","t","t","t","t","b","d","t","f","t"),
+  lwidths = c(0.6,0.4,0.6,0.4,0.6,1,1,1,1,0.5))
+
+fobj<-b_axis(fobj, xlim=c(0,9.5))
+
+fobj<-gridlines(fobj)
+
+fobj<-stripes(fobj)
+
+fobj<-header(fobj=fobj, hlayout = c(1,2,2,3,3,4,5,6,6,7),  headernr = 1,
+    labels=c("","Arm A","Arm B","","","Mean difference (95% CI)","P-value"),
+    col = c(1,"red","blue",1,1,1),
+    y=0.9)
+fobj<-header(fobj=fobj, hlayout = c(1,2,3,4,5,6,7,8,9,10), headernr = 2,
+    labels=c("","N","Mean (sd)","N","Mean (sd)","","","","",""),
+    col=1, y=0.3)
+
+plotfobj(fobj)
+```
+
+![](man/figures/README-unnamed-chunk-25-1.png)<!-- -->
+
+Options can be change via *d_axis* and *d_lines* using all options
+available for
+[graphics::axis()](https://stat.ethz.ch/R-manual/R-devel/library/graphics/html/axis.html)
+and
+[graphics::lines()](https://stat.ethz.ch/R-manual/R-devel/library/graphics/html/lines.html).
+
+Note that the *lines* element of the *d* items is a nested list with
+*variable* and *arm*. Using *d_lines*, line options can be accessed all
+at once, over all variables for one arm, for all arms and one variable,
+or for a specific variable-arm combination via *linenr*. *linenr* is a
+vector of length two where the first element specifies the variable and
+the second the arm.
+
+``` r
+fobj<-genfobj(dat = forplotdata, obs = forplotdata_bp,
+  layout = c("t","t","t","t","t","d","t","f","t"),
+  lwidths = c(0.6,0.4,0.6,0.4,0.6,1,1,1,0.5))
+
+#all lines:
+
+fobj<-d_lines(fobj=fobj, lw=1.5)
+plotfobj(fobj)
+```
+
+![](man/figures/README-unnamed-chunk-26-1.png)<!-- -->
+
+``` r
+#only one arm:
+
+fobj<-d_lines(fobj=fobj, linenr=c(NA,2), col=1)
+plotfobj(fobj)
+```
+
+![](man/figures/README-unnamed-chunk-27-1.png)<!-- -->
+
+Different density curves could be added by using *x* and *y* options in
+*d_lines* (or the *lines* list in the **fobj**). Note that the
+y-position has to be shifted by *y.at* for each variable.
+
 ## Strip plot for proportions
 
 For binary outcomes and in particular for serious adverse event
@@ -563,11 +642,14 @@ fobj<-genfobj(dat = forplotdata_prop,
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-25-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-28-1.png)<!-- -->
 
 Options can be modified via *s_axis*, *s_hline* and *s_points* using all
-options available for using all options available for `?graphics::axis`,
-`?graphics::abline` and `?graphics::points`.
+options available for using all options available for
+[graphics::axis()](https://stat.ethz.ch/R-manual/R-devel/library/graphics/html/axis.html),
+[graphics::abline()](https://stat.ethz.ch/R-manual/R-devel/library/graphics/html/abline.html)
+and
+[graphics::points()](https://stat.ethz.ch/R-manual/R-devel/library/graphics/html/points.html).
 
 Note that for points, each sub-item has can be specified separately
 using *pointnr* (e.g. to specify colors).
@@ -592,4 +674,4 @@ fobj<-gridlines(fobj)
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-26-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-29-1.png)<!-- -->
