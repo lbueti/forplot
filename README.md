@@ -572,10 +572,10 @@ plotfobj(fobj)
 
 ![](man/figures/README-unnamed-chunk-25-1.png)<!-- -->
 
-Note that the lines element of the *d* items is a nested list with
+Note that the *lines* element of the *d* items is a nested list with
 *variable* and *arm*. Using *d_lines*, line options can be accessed all
 at once, over all variables for one arm, for all arms and one variable,
-or for a specific variable*arm combination using options* linenr\*, a
+or for a specific variable-arm combination via *linenr*. *linenr* is a
 vector of length two where the first element specifies the variable and
 the second the arm.
 

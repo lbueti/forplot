@@ -355,8 +355,9 @@ plotfobj(fobj)
 
 ```
 
-Note that the lines element of the *d* items is a nested list with *variable* and *arm*.
-Using *d_lines*, line options can be accessed all at once, over all variables for one arm, for all arms and one variable, or for a specific variable*arm combination using options *linenr*, a vector of length two where the first element specifies the variable and the second the arm.
+Note that the *lines* element of the *d* items is a nested list with *variable* and *arm*.
+Using *d_lines*, line options can be accessed all at once, over all variables for one arm, for all arms and one variable, or for a specific variable-arm combination via *linenr*.
+*linenr* is a vector of length two where the first element specifies the variable and the second the arm.
 
 ```{r, fig.height=3.5, fig.width=8}
 fobj<-genfobj(dat = forplotdata, obs = forplotdata_bp,
