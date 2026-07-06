@@ -312,7 +312,7 @@ All items, grid lines and stripes can be modified using helper functions
 or within the list directly.
 
 For *t* items helper function *t_options* allows to use all options used
-in R `?graphics::text` function. That can be done for a specific t item
+in R `graphics::text()` function. That can be done for a specific t item
 by using the number or column name of the item, or for all (by keeping
 item=NULL):
 
@@ -326,8 +326,8 @@ plotfobj(fobj)
 
 For *f* items there are several helper function to modify the options
 for the different elements: *f_axis*, *f_points*, *f_arrows*. Also here,
-all options from `?graphics::axis`, `?graphics::points` and
-`?graphics::arrows` can be used. As we do only have one forest item, we
+all options from `graphics::axis`, `graphics::points` and
+`graphics::arrows` can be used. As we do only have one forest item, we
 do not have specify the *item*.
 
 ``` r
@@ -396,10 +396,10 @@ fobj$header
 ```
 
 The *header* function can be used to modify the options using all
-options from `?graphics::text`. As an extra element, the *hlayout* can
-be used to merge columns, i.e. to print a label over more than one
-column. And more than one header row can be specified using *headernr*,
-leading to a list of length \> 1.
+options from `graphics::text`. As an extra element, the *hlayout* can be
+used to merge columns, i.e. to print a label over more than one column.
+And more than one header row can be specified using *headernr*, leading
+to a list of length \> 1.
 
 Let’s first just use different names, also including a line separator.
 Note that an empty character has to be included to leave column 1 and 8
@@ -434,7 +434,7 @@ plotfobj(fobj)
 
 In order to also merge to arm labels, we would need to header rows using
 option *headernr*, leading to a header list with length 2: As before we
-can use further `?graphics::text` options.
+can use further `graphics::text` options.
 
 ``` r
 
@@ -506,8 +506,8 @@ summary data (*dat*) but the order has to be kept (i.e. the first level
 of *variable* must correspond the first row in *dat*).
 
 Boxplot layout can be controlled via helper functions *b_boxplot* and
-*b_axis* using all options available for `?graphics::boxplot` and
-`?graphics::axis`.
+*b_axis* using all options available for `graphics::boxplot` and
+`graphics::axis`.
 
 ``` r
 
@@ -544,8 +544,7 @@ plotfobj(fobj)
 ## Density plots
 
 Density plots can be specified using layout item *d* and depend on the
-same data with the observations as the boxplot. Options can be change
-via *d_axis* and *d_lines*.
+same data with the observations as the boxplots.
 
 ``` r
 
@@ -571,6 +570,9 @@ plotfobj(fobj)
 ```
 
 ![](man/figures/README-unnamed-chunk-25-1.png)<!-- -->
+
+Options can be change via *d_axis* and *d_lines* using all options
+available for `graphics::axis` and `graphics::lines`.
 
 Note that the *lines* element of the *d* items is a nested list with
 *variable* and *arm*. Using *d_lines*, line options can be accessed all
@@ -630,8 +632,8 @@ plotfobj(fobj)
 ![](man/figures/README-unnamed-chunk-28-1.png)<!-- -->
 
 Options can be modified via *s_axis*, *s_hline* and *s_points* using all
-options available for using all options available for `?graphics::axis`,
-`?graphics::abline` and `?graphics::points`.
+options available for using all options available for `graphics::axis`,
+`graphics::abline` and `graphics::points`.
 
 Note that for points, each sub-item has can be specified separately
 using *pointnr* (e.g. to specify colors).
