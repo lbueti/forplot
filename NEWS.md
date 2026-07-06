@@ -58,3 +58,7 @@ warning for headernames
 forplot 1.1.0
 ------------------
 add density plots
+
+forplot 1.1.1
+------------------
+modify default spacing
