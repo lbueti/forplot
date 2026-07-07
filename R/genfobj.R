@@ -43,7 +43,7 @@ genfobj<-function(layout, dat, obs = NULL,
 		if (length(y.at)>1) {
 			yspace<-abs(mean(diff(y.at)))/2
 		} else {
-			yspace<-0.5
+			yspace<-0.25
 		}
 		ylim<-c(min(y.at)-yspace, max(y.at)+yspace)
 	}
@@ -52,9 +52,8 @@ genfobj<-function(layout, dat, obs = NULL,
 		hf<-2/(nrow(dat)+10)
 		lheights<-c(hf,1,hf)
 	} else {
-		if (length(lheights)!=length(layout)) {
-			stop("'lheights' must be a numeric vector of length 3
-				with the relative heights of header, main panel and footer.")
+		if (length(lheights)!=3) {
+			stop("'lheights' must be a numeric vector of length 3 with the relative heights of header, main panel and footer.")
 		}
 	}
 
@@ -165,7 +164,7 @@ genfobj<-function(layout, dat, obs = NULL,
 			if (length(y.at)>1) {
 				yd<-abs(mean(diff(y.at)))
 			} else {
-				yd<-0.5
+				yd<-diff(ylim)
 			}
 			pm<-yd/5
 			gap<-yd/10
@@ -200,11 +199,7 @@ genfobj<-function(layout, dat, obs = NULL,
 			xlim<-c(min(xlab,xlim),max(xlab,xlim))
 			xlab_text<-xlab
 			
-			if (length(y.at)>1) {
-				yd<-abs(mean(diff(y.at)))
-			} else {
-				yd<-0.5
-			}
+			plh<-ceiling(10*max(density(obs$value)$y))/10
 			
 			las<-levels(obs$arm)
 			lvs<-levels(obs$variable)
@@ -219,7 +214,7 @@ genfobj<-function(layout, dat, obs = NULL,
 				for (la in 1:length(las)) {			
 					sel<-obs$arm==las[la] & obs$variable==lvs[lv]
 					de<-density(obs$value[sel])
-					liv[[lv]][[la]]<-list(x=de$x,y=de$y + y.at[lv] - yd/5,col=cols[la])
+					liv[[lv]][[la]]<-list(x=de$x,y=de$y + y.at[lv] - plh/2,col=cols[la])
 				}
 			}
 	
@@ -1073,7 +1068,11 @@ gridlines<-function(fobj, gridnr = NULL, ...)	{
 	input<-list(...)
 
 	if (length(fobj$gridlines)==0) {
-		fobj$gridlines<-list(list(h = fobj$setup$ylim[1], xpd = TRUE),list(h = fobj$setup$ylim[2], xpd = TRUE))
+		if (is.null(gridnr)) {
+			fobj$gridlines<-list(list(h = fobj$setup$ylim[1], xpd = TRUE),list(h = fobj$setup$ylim[2], xpd = TRUE))
+		} else {
+			fobj$gridlines<-list(list(h = fobj$setup$ylim[2], xpd = TRUE))
+		}
 	}
 
 	if (is.null(gridnr)) {

@@ -491,9 +491,65 @@ fobj2<-header(fobj = fobj2, hlayout = c(1,2,3,4,5,6,7,8,9), headernr = 3,
 plotfobj(fobj = list(fobj1, fobj2))
 ```
 
+Combining plots can also be used to get different scaling for the plots of the individual variables.
+Assume we would like to present a number of differently scaled continuous variables with boxplots and densities:
 
+```{r, fig.height=6, fig.width=8}
+set.seed(1)
 
+fobj<-vector(10,mode="list")
 
+for (i in 1:10) {
+  
+  #modify the data
+	obs<-forplotdata_bp[forplotdata_bp$variable==paste0("var",i),]
+	obs$value<-obs$value + runif(1,-10,10)
+	obs$variable<-factor(obs$variable)
+	
+	dat<-cbind(forplotdata[i,1:5],"")
+	dat$n2<-paste0(sprintf("%1.1f",mean(obs$value[obs$arm==1]))," (",
+    sprintf("%1.1f",sd(obs$value[obs$arm==1])),")")
+	dat$n4<-paste0(sprintf("%1.1f",mean(obs$value[obs$arm==2]))," (",
+    sprintf("%1.1f",sd(obs$value[obs$arm==1])),")")
+	
+	#generate individual fplots
+	fobji<-genfobj(dat = dat, obs = obs,
+		layout = c("t","t","t","t","t","b","t","d"), 
+		lwidths = c(0.6,0.4,0.6,0.4,0.6,1,0.1,1),
+		lheights = c(0.6,1,0.6))
+	
+	fobji<-b_axis(fobji, cex.axis=0.8, mgp=c(0,0.4,0), tck=-0.1)
+	fobji<-d_axis(fobji, cex.axis=0.8, mgp=c(0,0.4,0), tck=-0.1)
+	
+	#header for first fplot only
+	if (i!=1) { 
+		fobji$header<-NULL
+	} else {
+		
+		fobji<-header(fobj = fobji,
+      hlayout = c(1,2,2,3,3,4,5,6), headernr = 1,
+			labels=c("","Arm A","Arm B","Boxplot","","Density"),
+			col = c(1,"red","blue",1,1), y = 0.9)
 
+		fobji<-header(fobj = fobji,
+      hlayout = c(1,2,3,4,5,6,7,8), headernr = 2,
+			labels=c("","N","mean (sd)","N","mean (sd)","","",""),
+			col = 1, y = 0.3)
+		
+		fobji<-gridlines(fobji,gridnr=2)
 
+		fobji$setup$lheights[1]<-fobji$setup$lheights[1]+0.3
+		fobji$setup$lheights[3]<-fobji$setup$lheights[3]-0.3
+		
+		
+	}
+	
+	#collect
+	fobj[[i]]<-fobji
+	
+}
 
+#plot the list of fobj
+plotfobj(fobj)
+
+```
