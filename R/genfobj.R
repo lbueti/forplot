@@ -40,7 +40,11 @@ genfobj<-function(layout, dat, obs = NULL,
 
 	if (sum(!is.na(ylim))==0) {
 		#yspace<-diff(range(y.at))/20
-		yspace<-abs(mean(diff(y.at)))/2
+		if (length(y.at)>1) {
+			yspace<-abs(mean(diff(y.at)))/2
+		} else {
+			yspace<-0.5
+		}
 		ylim<-c(min(y.at)-yspace, max(y.at)+yspace)
 	}
 
@@ -158,7 +162,11 @@ genfobj<-function(layout, dat, obs = NULL,
 			xlab<-pretty(xlim)
 			xlim<-c(min(xlab,xlim),max(xlab,xlim))
 			xlab_text<-xlab
-			yd<-abs(mean(diff(y.at)))
+			if (length(y.at)>1) {
+				yd<-abs(mean(diff(y.at)))
+			} else {
+				yd<-0.5
+			}
 			pm<-yd/5
 			gap<-yd/10
 			bwidth <- 2*pm - gap
@@ -192,7 +200,11 @@ genfobj<-function(layout, dat, obs = NULL,
 			xlim<-c(min(xlab,xlim),max(xlab,xlim))
 			xlab_text<-xlab
 			
-			yd<-abs(mean(diff(y.at)))
+			if (length(y.at)>1) {
+				yd<-abs(mean(diff(y.at)))
+			} else {
+				yd<-0.5
+			}
 			
 			las<-levels(obs$arm)
 			lvs<-levels(obs$variable)

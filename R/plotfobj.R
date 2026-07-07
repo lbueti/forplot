@@ -76,7 +76,12 @@ plotfobj<- function(fobj) {
 	
 			plotfobj1(fobj = fobj[[i]])
 			
-			for (j in 1:2) {
+			jmax<-2
+			if (is.null(fobj[[i]]$header)) {
+				jmax<-3
+			}
+			
+			for (j in 1:jmax) {
 				plot(0,type = "n", axes=FALSE, xlab="", ylab="")
 			}
 		}	
