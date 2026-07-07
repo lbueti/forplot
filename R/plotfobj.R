@@ -1,13 +1,13 @@
 #' plotfobj
 #'
-#' @param fobj a forest plot object
+#' @param fobj a forest plot object or a list of fobj with the same layout length
 #'
 #' @returns a plot
 #'
 #' @export
 #'
 #' @importFrom graphics abline rect
-#' @importFrom stats aggregate
+#' @importFrom stats aggregate sd
 #'
 #' @examples
 #'
@@ -17,12 +17,99 @@
 #' plotfobj(fobj)
 #'
 plotfobj<- function(fobj) {
+	
+	isfobj<-"fobj" %in% class(fobj)
+	islistfobj<-FALSE
+	
+	if (!isfobj) {
+		cc<-do.call(rbind,lapply(fobj,function(x) class(x)))
+		islistfobj<-is.list(fobj) & all(cc[,1]=="fobj")
+	}
+	
+	if (!(isfobj | islistfobj)) {
+		stop("'fobj' must have class 'fobj' (or be a list of 'fobj'). Use genfobj to generate it.")
+	}
+	
+	if (!isfobj & islistfobj) {
+		
+		#check compatability 
+		
+		le<-unlist(lapply(fobj,function(x) length(x$setup$layout)))
+		le1<-unique(le)
+		if (length(le1)!=1) {
+			stop("All elements of fobj must have a layout with the same length.")
+		}
+		
+		#combine lheights and lwidths 
+		
+		cheights<-unlist(lapply(fobj, function(x) x$setup$lheights))
+		
+		cwidthsm<-do.call(rbind,lapply(fobj, function(x) x$setup$lwidths))
+		dw<-sum(apply(cwidthsm,2,sd))
+		if (abs(dw)>10^(-5)) {
+			warning("lwidths are not the same in all fobj. The average is used.")
+		}
+		cwidths<-apply(cwidthsm,2,mean)
+		
+		#creat new layout matrix 
+		
+		ma<-lma(rows=1,cols=length(fobj[[1]]$setup$layout),
+			commonx1=TRUE,commonx2=TRUE)
 
-	ma<-lma(rows=1,cols=length(fobj$setup$layout),commonx1=TRUE,commonx2=TRUE)
+		ma[,1]<-min(ma[,1])
+		ma[,ncol(ma)]<-min(ma[,1])+1
+		
+		mac<-ma
+		
+		for (i in 2:length(fobj)) {
+			mai<-ma + max(mac)
+			mac<-rbind(mac,mai)
+		}
+		
+		layout(mac,
+			heights = cheights,
+			widths=c(0.01,cwidths,0.01))
 
-	layout(ma,heights=fobj$setup$lheights,widths=c(0.01,fobj$setup$lwidths,0.01))
+		par(mar=c(0,0,0,0))
 
-	par(mar=c(0,0,0,0))
+		for (i in 1:length(fobj)) {
+	
+			plotfobj1(fobj = fobj[[i]])
+			
+			for (j in 1:2) {
+				plot(0,type = "n", axes=FALSE, xlab="", ylab="")
+			}
+		}	
+	}
+	
+	if (isfobj) {
+	
+		ma<-lma(rows = 1, cols = length(fobj$setup$layout),
+			commonx1 = TRUE, commonx2 = TRUE)
+
+		layout(ma,
+			heights=fobj$setup$lheights,
+			widths=c(0.01,fobj$setup$lwidths,0.01))
+		
+		par(mar=c(0,0,0,0))
+		
+		plotfobj1(fobj = fobj)
+		
+	}
+}
+
+
+#' plotfobj1
+#'
+#' @param fobj a forest plot object or a list of fobj with the same layout length
+#'
+#' @returns a plot
+#'
+#' @importFrom graphics abline rect
+#' @importFrom stats aggregate
+#'
+#'
+plotfobj1<- function(fobj) {
 
 	#items
 	for (i in 1:length(fobj$setup$layout)) {

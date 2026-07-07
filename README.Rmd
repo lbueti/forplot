@@ -313,11 +313,11 @@ fobj<-gridlines(fobj)
 
 fobj<-stripes(fobj)
 
-fobj<-header(fobj=fobj, hlayout = c(1,2,2,3,3,4,5,5,6),  headernr = 1,
+fobj<-header(fobj, hlayout = c(1,2,2,3,3,4,5,5,6),  headernr = 1,
 	labels=c("","Arm A","Arm B","","Mean difference (95% CI)","P-value"),
 	col = c(1,"red","blue",1,1),
 	y=0.9)
-fobj<-header(fobj=fobj, hlayout = c(1,2,3,4,5,6,7,8,9), headernr = 2,
+fobj<-header(fobj, hlayout = c(1,2,3,4,5,6,7,8,9), headernr = 2,
 	labels=c("","N","Mean (sd)","N","Mean (sd)","","","",""),
 	col=1, y=0.3)
 
@@ -341,11 +341,11 @@ fobj<-gridlines(fobj)
 
 fobj<-stripes(fobj)
 
-fobj<-header(fobj=fobj, hlayout = c(1,2,2,3,3,4,5,6,6,7),  headernr = 1,
+fobj<-header(fobj, hlayout = c(1,2,2,3,3,4,5,6,6,7),  headernr = 1,
 	labels=c("","Arm A","Arm B","","","Mean difference (95% CI)","P-value"),
 	col = c(1,"red","blue",1,1,1),
 	y=0.9)
-fobj<-header(fobj=fobj, hlayout = c(1,2,3,4,5,6,7,8,9,10), headernr = 2,
+fobj<-header(fobj, hlayout = c(1,2,3,4,5,6,7,8,9,10), headernr = 2,
 	labels=c("","N","Mean (sd)","N","Mean (sd)","","","","",""),
 	col=1, y=0.3)
 
@@ -424,4 +424,76 @@ fobj<-gridlines(fobj)
 
 plotfobj(fobj)
 ```
+
+## Combine plots 
+
+`plotfobj` also works with a list of `fobj` as long as the layout has the same length. If the `lwdiths` vary, the average is taken.
+
+
+```{r, fig.height=6, fig.width=8}
+#define common lwidths
+commonlwidths<-c(0.6,0.4,0.6,0.4,0.6,1,1,1,0.5)
+
+#prepare first fobj
+fobj1<-genfobj(dat = forplotdata, obs = forplotdata_bp,
+  layout = c("t","t","t","t","t","b","t","f","t"),
+  lwidths = commonlwidths)
+
+fobj1$setup$lheights[1]<-0.2
+fobj1$setup$lheights[3]<-0.2
+
+fobj1<-gridlines(fobj = fobj1)
+fobj1<-stripes(fobj = fobj1)
+
+fobj1<-header(fobj = fobj1, hlayout = c(1), headernr = 1,
+	labels=c("Continuous variables"),
+	col = 1, y = 0.9, font = 2, cex=1.2)
+
+fobj1<-header(fobj = fobj1, hlayout = c(1,2,2,3,3,4,5,5,6),  headernr = 2,
+	labels=c("","Arm A","Arm B","","Mean difference (95% CI)","P-value"),
+	col = c(1,"red","blue",1,1), y = 0.45, font = 1, cex = 1)
+
+fobj1<-header(fobj = fobj1, hlayout = c(1,2,3,4,5,6,7,8,9), headernr = 3,
+	labels=c("","N","Mean (sd)","N","Mean (sd)","","","",""),
+	col = 1, y = 0.15, font = 1, cex = 1)
+
+
+#prepare second fobj
+fobj2<-genfobj(dat = forplotdata_prop,
+  layout = c("t","t","t","t","t","s2","t","f","t"),
+  lwidths = commonlwidths)
+
+fobj2$setup$lheights[1]<-0.2
+fobj2$setup$lheights[3]<-0.2
+
+fobj2<-s_axis(fobj = fobj2, xlim = c(0,1), 
+  at = seq(0,1,by=0.25), labels = seq(0,100,by=25))
+
+fobj2<-s_borders(fobj = fobj2)
+
+fobj2<-gridlines(fobj = fobj2)
+fobj2<-stripes(fobj = fobj2)
+
+fobj2<-header(fobj = fobj2, hlayout = c(1), headernr = 1,
+	labels=c("Binary variables"),
+	col = 1, y = 0.9, font = 2, cex=1.2)
+
+fobj2<-header(fobj = fobj2, hlayout = c(1,2,2,3,3,4,5,5,6),  headernr = 2,
+	labels=c("","Arm A","Arm B","Proportion (%)","Odds ratio (95% CI)","P-value"),
+	col = c(1,"red","blue",1,1), y = 0.45, font = 1, cex = 1)
+
+fobj2<-header(fobj = fobj2, hlayout = c(1,2,3,4,5,6,7,8,9), headernr = 3,
+	labels=c("","N","n (%)","N","n (%)","","","",""),
+	col = 1, y = 0.15, font = 1, cex = 1)
+
+
+#plot list:
+plotfobj(fobj = list(fobj1, fobj2))
+```
+
+
+
+
+
+
 

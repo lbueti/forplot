@@ -62,3 +62,7 @@ add density plots
 forplot 1.1.1
 ------------------
 modify default spacing
+
+forplot 1.2.0
+------------------
+combine fobj for plotting
