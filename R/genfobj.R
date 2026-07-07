@@ -39,18 +39,21 @@ genfobj<-function(layout, dat, obs = NULL,
 	}
 
 	if (sum(!is.na(ylim))==0) {
-		yspace<-diff(range(y.at))/20
-
+		#yspace<-diff(range(y.at))/20
+		if (length(y.at)>1) {
+			yspace<-abs(mean(diff(y.at)))/2
+		} else {
+			yspace<-0.25
+		}
 		ylim<-c(min(y.at)-yspace, max(y.at)+yspace)
 	}
 
 	if  (sum(!is.na(lheights))==0) {
-		hf<-(3 * nrow(dat)) / (10 * nrow(dat) + 200)
+		hf<-2/(nrow(dat)+10)
 		lheights<-c(hf,1,hf)
 	} else {
-		if (length(lheights)!=length(layout)) {
-			stop("'lheights' must be a numeric vector of length 3
-				with the relative heights of header, main panel and footer.")
+		if (length(lheights)!=3) {
+			stop("'lheights' must be a numeric vector of length 3 with the relative heights of header, main panel and footer.")
 		}
 	}
 
@@ -158,8 +161,13 @@ genfobj<-function(layout, dat, obs = NULL,
 			xlab<-pretty(xlim)
 			xlim<-c(min(xlab,xlim),max(xlab,xlim))
 			xlab_text<-xlab
-			pm<-0.2
-			gap<-0.1
+			if (length(y.at)>1) {
+				yd<-abs(mean(diff(y.at)))
+			} else {
+				yd<-diff(ylim)
+			}
+			pm<-yd/5
+			gap<-yd/10
 			bwidth <- 2*pm - gap
 			bp.at<-sort(c(y.at-pm,y.at+pm))
 			cols<-c(rgb(1,0,0,0.3),rgb(0,0,1,0.3))
@@ -191,6 +199,8 @@ genfobj<-function(layout, dat, obs = NULL,
 			xlim<-c(min(xlab,xlim),max(xlab,xlim))
 			xlab_text<-xlab
 			
+			plh<-ceiling(10*max(density(obs$value)$y))/10
+			
 			las<-levels(obs$arm)
 			lvs<-levels(obs$variable)
 			liv<-vector(length=length(lvs),mode="list")
@@ -204,7 +214,7 @@ genfobj<-function(layout, dat, obs = NULL,
 				for (la in 1:length(las)) {			
 					sel<-obs$arm==las[la] & obs$variable==lvs[lv]
 					de<-density(obs$value[sel])
-					liv[[lv]][[la]]<-list(x=de$x,y=de$y + y.at[lv],col=cols[la])
+					liv[[lv]][[la]]<-list(x=de$x,y=de$y + y.at[lv] - plh/2,col=cols[la])
 				}
 			}
 	
@@ -1058,7 +1068,11 @@ gridlines<-function(fobj, gridnr = NULL, ...)	{
 	input<-list(...)
 
 	if (length(fobj$gridlines)==0) {
-		fobj$gridlines<-list(list(h = fobj$setup$ylim[1], xpd = TRUE),list(h = fobj$setup$ylim[2], xpd = TRUE))
+		if (is.null(gridnr)) {
+			fobj$gridlines<-list(list(h = fobj$setup$ylim[1], xpd = TRUE),list(h = fobj$setup$ylim[2], xpd = TRUE))
+		} else {
+			fobj$gridlines<-list(list(h = fobj$setup$ylim[2], xpd = TRUE))
+		}
 	}
 
 	if (is.null(gridnr)) {
