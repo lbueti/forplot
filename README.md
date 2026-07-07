@@ -280,7 +280,7 @@ And with a bit nicer widths, which can be given as options in `genfobj`
 or just be changing the **fobj**:
 
 ``` r
-fobj$setup$lwidths <- c(0.8,0.4,0.6,0.4,0.6,1,1,0.5)
+fobj$setup$lwidths <- c(0.3,0.4,0.6,0.4,0.6,1,1,0.5)
 
 plotfobj(fobj)
 ```
@@ -318,7 +318,7 @@ function. That can be done for a specific t item by using the number or
 column name of the item, or for all (by keeping item=NULL):
 
 ``` r
-fobj<-t_options(fobj = fobj, item = c("vlabel"), cex = 1.2, font = 2, col = "red")
+fobj<-t_options(fobj = fobj, item = c("vlabel"), cex = 1.1, font = 2, col = "red", x=0.2, adj=0)
 
 plotfobj(fobj)
 ```
@@ -560,8 +560,8 @@ same data with the observations as the boxplots.
 
 fobj<-genfobj(dat = forplotdata, obs = forplotdata_bp,
   layout = c("t","t","t","t","t","b","d","t","f","t"),
-  lwidths = c(0.6,0.4,0.6,0.4,0.6,1,1,1,1,0.5))
-
+  lwidths = c(0.3,0.4,0.6,0.4,0.6,1,1,1,1,0.5))
+ 
 fobj<-b_axis(fobj, xlim=c(0,9.5))
 
 fobj<-gridlines(fobj)
@@ -597,7 +597,7 @@ the second the arm.
 ``` r
 fobj<-genfobj(dat = forplotdata, obs = forplotdata_bp,
   layout = c("t","t","t","t","t","d","t","f","t"),
-  lwidths = c(0.6,0.4,0.6,0.4,0.6,1,1,1,0.5))
+  lwidths = c(0.3,0.4,0.6,0.4,0.6,1,1,1,0.5))
 
 #all lines:
 
@@ -637,7 +637,7 @@ For example:
 
 fobj<-genfobj(dat = forplotdata_prop,
   layout = c("t","t","t","t","t","s2","t","f","t"),
-  lwidths = c(0.6,0.4,0.6,0.4,0.6,1.0,1.2,1,0.5))
+  lwidths = c(0.3,0.4,0.6,0.4,0.6,1.0,1.2,1,0.5))
 
 plotfobj(fobj)
 ```
@@ -683,7 +683,7 @@ the same length. If the `lwdiths` vary, the average is taken.
 
 ``` r
 #define common lwidths
-commonlwidths<-c(0.6,0.4,0.6,0.4,0.6,1,1,1,0.5)
+commonlwidths<-c(0.3,0.4,0.6,0.4,0.6,1,1,1,0.5)
 
 #prepare first fobj
 fobj1<-genfobj(dat = forplotdata, obs = forplotdata_bp,
@@ -769,11 +769,11 @@ for (i in 1:10) {
     #generate individual fplots
     fobji<-genfobj(dat = dat, obs = obs,
         layout = c("t","t","t","t","t","b","t","d"), 
-        lwidths = c(0.6,0.4,0.6,0.4,0.6,1,0.1,1),
-        lheights = c(0.6,1,0.6))
+        lwidths = c(0.3,0.4,0.6,0.4,0.6,1,0.1,1),
+        lheights = c(0.2,1,0.25))
     
-    fobji<-b_axis(fobji, cex.axis=0.8, mgp=c(0,0.4,0), tck=-0.1)
-    fobji<-d_axis(fobji, cex.axis=0.8, mgp=c(0,0.4,0), tck=-0.1)
+    fobji<-b_axis(fobji, cex.axis=0.8, mgp=c(0,0.3,0), tck=-0.1)
+    fobji<-d_axis(fobji, cex.axis=0.8, mgp=c(0,0.3,0), tck=-0.1)
     
     #header for first fplot only
     if (i!=1) { 
@@ -788,20 +788,19 @@ for (i in 1:10) {
         fobji<-header(fobj = fobji,
       hlayout = c(1,2,3,4,5,6,7,8), headernr = 2,
             labels=c("","N","mean (sd)","N","mean (sd)","","",""),
-            col = 1, y = 0.3)
+            col = 1, y = 0.35)
         
         fobji<-gridlines(fobji,gridnr=2)
-
-        fobji$setup$lheights[1]<-fobji$setup$lheights[1]+0.3
-        fobji$setup$lheights[3]<-fobji$setup$lheights[3]-0.3
-        
-        
     }
     
     #collect
     fobj[[i]]<-fobji
     
 }
+
+#adapt top header and bottom footer
+fobj[[1]]$setup$lheights[1]<-1
+fobj[[length(fobj)]]$setup$lheights[3]<-0.5
 
 #plot the list of fobj
 plotfobj(fobj)

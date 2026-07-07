@@ -66,9 +66,11 @@ plotfobj<- function(fobj) {
 			mac<-rbind(mac,mai)
 		}
 		
+		margin<-sum(cwidths)/100
+		
 		layout(mac,
 			heights = cheights,
-			widths=c(0.01,cwidths,0.01))
+			widths=c(margin,cwidths,margin))
 
 		par(mar=c(0,0,0,0))
 
@@ -91,10 +93,12 @@ plotfobj<- function(fobj) {
 	
 		ma<-lma(rows = 1, cols = length(fobj$setup$layout),
 			commonx1 = TRUE, commonx2 = TRUE)
-
+		
+		margin<-sum(fobj$setup$lwidths)/100
+		
 		layout(ma,
 			heights=fobj$setup$lheights,
-			widths=c(0.01,fobj$setup$lwidths,0.01))
+			widths=c(margin,fobj$setup$lwidths,margin))
 		
 		par(mar=c(0,0,0,0))
 		
