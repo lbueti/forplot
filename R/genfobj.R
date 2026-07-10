@@ -89,27 +89,16 @@ genfobj<-function(layout, dat, obs = NULL,
 		if (layout[i]=="f") {
 
 			xlim<-c(min(dat[,j+1],na.rm=TRUE),max(dat[,j+2],na.rm=TRUE))
-			xlab<-pretty(xlim)
-			xlim<-c(min(xlab,xlim),max(xlab,xlim))
-			xlab_text<-xlab
 
-			slow<-dat[,j+1]<min(xlim)
-			shigh<-dat[,j+2]>max(xlim)
-			sboth<-dat[,j+1]<min(xlim) & dat[,j+2]>max(xlim)
 			code<-rep(3,nrow(dat))
-			code[slow]<-1
-			code[shigh]<-2
-			code[sboth]<-3
 			angle<-rep(90,nrow(dat))
-			angle[slow | shigh | sboth]<-30
 
 			addi<-list(
 				type = layout[i],
 				vname = hnames[i],
 				plot = list(x=0, type="n", xlim = xlim, ylim = ylim,
 					yaxt="n" ,ylab="", xlab="", axes=FALSE, xaxs = "i", yaxs = "i"),
-				axis = list(side = 1, at = xlab, labels = xlab_text, line = 0,
-					pos = ylim[1], las = 1),
+				axis = list(side = 1, line = 0, pos = ylim[1], las = 1),
 				points = list(x = dat[,j], y = y.at, pch = 15),
 				arrows = list(y0 = y.at, y1 = y.at, x0 = dat[,j+1], x1 = dat[,j+2],
 					code = code, angle = angle, length = 0.05))
@@ -122,10 +111,7 @@ genfobj<-function(layout, dat, obs = NULL,
 			nstrip<-as.numeric(substr(layout[i],2,nchar(layout[i])))
 
 			xlim<-c(min(dat[,j:(j+nstrip-1)],na.rm=TRUE),max(dat[,j:(j+nstrip-1)],na.rm=TRUE))
-			xlab<-pretty(xlim)
-			xlim<-c(min(xlab,xlim),max(xlab,xlim))
-			xlab_text<-xlab
-
+			
 			cols<-1:nstrip
 
 			addi<-list(
@@ -133,8 +119,7 @@ genfobj<-function(layout, dat, obs = NULL,
 				vname = hnames[i],
 				plot = list(x=0, type="n", xlim = xlim, ylim = ylim,
 					yaxt="n" ,ylab="", xlab="", axes=FALSE, xaxs = "i", yaxs = "i"),
-				axis = list(side = 1, at = xlab, labels = xlab_text, line = 0,
-					pos = ylim[1], las = 1),
+				axis = list(side = 1, line = 0, pos = ylim[1], las = 1),
 				hline = list(h = y.at, lty = 3))
 
 			for (nsi in 1:nstrip) {
@@ -158,9 +143,7 @@ genfobj<-function(layout, dat, obs = NULL,
 			}
 
 			xlim<-c(min(obs$value),max(obs$value))
-			xlab<-pretty(xlim)
-			xlim<-c(min(xlab,xlim),max(xlab,xlim))
-			xlab_text<-xlab
+
 			if (length(y.at)>1) {
 				yd<-abs(mean(diff(y.at)))
 			} else {
@@ -179,8 +162,7 @@ genfobj<-function(layout, dat, obs = NULL,
 					yaxt="n" ,ylab="", xlab="", axes=FALSE, xaxs = "i", yaxs = "i"),
 				boxplot = list(formula = value ~ arm*variable, data=obs,
 					at=rev(bp.at), boxwex = bwidth, horizontal=TRUE, axes=FALSE, col=cols, add=TRUE),
-				axis = list(side = 1, at = xlab, labels = xlab_text, line = 0,
-					pos = ylim[1], las = 1))
+				axis = list(side = 1, line = 0, pos = ylim[1], las = 1))
 
 		}
 
@@ -195,10 +177,7 @@ genfobj<-function(layout, dat, obs = NULL,
 			}
 
 			xlim<-c(min(obs$value),max(obs$value))
-			xlab<-pretty(xlim)
-			xlim<-c(min(xlab,xlim),max(xlab,xlim))
-			xlab_text<-xlab
-			
+	
 			plh<-ceiling(10*max(density(obs$value)$y))/10
 			
 			las<-levels(obs$arm)
@@ -223,8 +202,7 @@ genfobj<-function(layout, dat, obs = NULL,
 				vname = hnames[i],
 				plot = list(x=0, type="n", xlim = xlim, ylim = ylim,
 					yaxt="n" ,ylab="", xlab="", axes=FALSE, xaxs = "i", yaxs = "i"),
-				axis = list(side = 1, at = xlab, labels = xlab_text, line = 0,
-					pos = ylim[1], las = 1),
+				axis = list(side = 1, line = 0, pos = ylim[1], las = 1),
 				lines = liv)
 	
 		}
@@ -340,7 +318,7 @@ t_options<-function(fobj, item = NULL, ...)	{
 #' fobj<-genfobj(layout = c("t","t","t","t","t","t","f","t"),
 #' 	dat = forplotdata, lwidths = c(0.8,0.4,0.6,0.4,0.6,1,1,0.5))
 #' fobj<-f_axis(fobj = fobj, at = seq(-1,0.2, by=0.4),
-#'	labels=seq(-1,0.2, by=0.4), tck=-0.03, mgp = c(2,0.5,0))
+#'	tck=-0.03, mgp = c(2,0.5,0))
 #' plotfobj(fobj)
 f_axis<-function(fobj, item = NULL, ...) {
 
@@ -436,6 +414,105 @@ f_arrows<-function(fobj, item = NULL, ...) {
 
 	return(fobj)
 }
+
+#' f_cutarrows
+#'
+#' Adds arrowheads to confidence intervals which extend beyond the x-axis limits
+#'	in forest (f) items of a forest plot object (fobj).
+#'
+#' @param fobj a forest plot object of class 'fobj'
+#' @param item item to be modified, either a number or the name of the column in fobj$dat.
+#' 	If NULL (the default), all items of type 'f' are affected
+#'
+#' @returns a forest plot object of class 'fobj'
+#'
+#' @export
+#'
+#' @examples
+#'
+#' #Modify data
+#' dat<-forplotdata
+#' dat$beta_lci[1]<-c(-3)
+#' dat$beta_uci[2]<-c(3)
+#' dat[3,c("beta_lci","beta_uci")]<-c(-3,3)
+#' dat[4,c("beta","beta_lci")]<-c(-2,-3)
+#' dat$beta_format<-paste0(sprintf("%2.2f",dat$beta),
+#'	" (",sprintf("%2.2f",dat$beta_lci)," to ",
+#'	sprintf("%2.2f",dat$beta_uci),")")
+#'
+#' #Generat fobj
+#' fobj<-genfobj(layout = c("t","t","t","t","t","t","f","t"),
+#'	dat = dat, lwidths = c(0.8,0.4,0.6,0.4,0.6,1,1,0.5))
+#'
+#' #Cut arrows
+#' fobj<-f_axis(fobj, xlim=c(-1.5,1))
+#' fobj<-f_cutarrows(fobj)
+#' plotfobj(fobj)
+#'
+f_cutarrows<-function(fobj, item = NULL) {
+
+	itemnr<-check_convert(fobj = fobj, item = item, lay = "f")
+
+	for (itn in itemnr) {
+	
+		#save initial arrow cap length, if only one value is given, reset at the end.
+		initlength<-fobj$items[[7]]$arrows$length
+		
+		#select arrows to cut:
+		outlow<-fobj$items[[itn]]$arrows$x0<fobj$items[[itn]]$plot$xlim[1]
+		outhigh<-fobj$items[[itn]]$arrows$x1>fobj$items[[itn]]$plot$xlim[2]
+
+		#left:
+		fobj$items[[itn]]$arrows$x0[outlow]<-fobj$items[[itn]]$plot$xlim[1]
+		fobj$items[[itn]]$arrows$code[outlow]<-1
+		fobj$items[[itn]]$arrows$angle[outlow]<-30
+		
+		#right
+		fobj$items[[itn]]$arrows$x1[outhigh]<-fobj$items[[itn]]$plot$xlim[2]
+		fobj$items[[itn]]$arrows$code[outhigh]<-2
+		fobj$items[[itn]]$arrows$angle[outhigh]<-30
+
+		#both
+		fobj$items[[itn]]$arrows$code[outlow & outhigh]<-3
+		
+		#one-sided:
+		onesided<-(outlow & !outhigh) | (!outlow & outhigh)
+		
+		#if only left or right: 
+		#duplicate arrows and add the normal end on the other side 
+		if (any(onesided)) {
+			narr<-length(fobj$items[[itn]]$arrows$y0)
+			
+			fobj$items[[itn]]$arrows<-
+				lapply(fobj$items[[itn]]$arrows,function(x) c(x,x[onesided]))
+				
+			newarr<-(narr+1):length(fobj$items[[itn]]$arrows$code)
+			
+			if (!all(fobj$items[[itn]]$arrows$code[newarr] %in% c(1,2))) {
+				warning("Problems with arrow code")
+			} else {
+				fobj$items[[itn]]$arrows$code[newarr]<-
+					fobj$items[[itn]]$arrows$code[newarr]*(-1)+3
+			}
+			fobj$items[[itn]]$arrows$angle[newarr]<-90		
+		}
+		
+		#reset arrow cap length (of all are the same)
+		if (length(initlength)==1) {
+			fobj$items[[itn]]$arrows$length<-initlength
+		}
+		
+		#remove point if outside 
+		#pointout<-fobj$items[[itn]]$points$x<fobj$items[[itn]]$plot$xlim[1] | 
+		#	fobj$items[[itn]]$points$x>fobj$items[[itn]]$plot$xlim[2]
+		#
+		#fobj$items[[itn]]$points$x[pointout]<-NA
+
+	}
+
+	return(fobj)
+}
+
 
 
 #' f_refline
@@ -802,7 +879,7 @@ b_boxplot<-function(fobj, item = NULL, ...) {
 #'fobj<-genfobj(layout = c("t","t","t","t","t","b","t","f","t"),
 #'	dat = forplotdata, obs = forplotdata_bp,
 #'  lwidths = c(0.6,0.4,0.6,0.4,0.6,1,1,1,0.5))
-#'fobj<-b_axis(fobj, at = seq(2,10,by=2), labels = seq(2,10,by=2))
+#'fobj<-b_axis(fobj, at = seq(2,10,by=2))
 #'plotfobj(fobj)
 #'
 b_axis<-function(fobj, item = NULL, ...) {
@@ -853,7 +930,7 @@ b_axis<-function(fobj, item = NULL, ...) {
 #'fobj<-genfobj(layout = c("t","t","t","t","t","d","t","f","t"),
 #'	dat = forplotdata, obs = forplotdata_bp,
 #'  lwidths = c(0.6,0.4,0.6,0.4,0.6,1,1,1,0.5))
-#'fobj<-d_axis(fobj, at = seq(2,10,by=2), labels = seq(2,10,by=2))
+#'fobj<-d_axis(fobj, at = seq(2,10,by=2))
 #'plotfobj(fobj)
 #'
 d_axis<-function(fobj, item = NULL, ...) {

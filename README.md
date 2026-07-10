@@ -336,7 +336,7 @@ can be used. As we do only have one forest item, we do not have specify
 the *item*.
 
 ``` r
-fobj<-f_axis(fobj = fobj, at = seq(-1,0.2, by=0.4), labels = seq(-1,0.2, by=0.4), 
+fobj<-f_axis(fobj = fobj, xlim = c(-1.1,0.2), at = c(-1,-0.6,-0.2,0.2), 
   tck = -0.03, mgp = c(2,0.5,0))
 
 fobj<-f_points(fobj = fobj, pch = 16, cex = 1.5)
@@ -372,6 +372,68 @@ plotfobj(fobj)
 ```
 
 ![](man/figures/README-unnamed-chunk-17-1.png)<!-- -->
+
+### Piping
+
+The modifying elements can be piped. For example to reproduce the
+**fobj** from above:
+
+``` r
+fobjnew<-genfobj(dat = forplotdata,
+  layout = c("t","t","t","t","t","t","f","t"),
+  lwidth = c(0.3,0.4,0.6,0.4,0.6,1,1,0.5),
+  lheight = c(0.1,1,0.15))
+
+fobjnew |>
+  gridlines() |>
+  stripes() |>
+  t_options(item = c("vlabel"), cex = 1.1, font = 2, col = "red", x=0.2, adj=0) |>
+  f_axis(xlim=c(-1.1,0.2), at = c(-1,-0.6,-0.2,0.2), tck = -0.03, mgp = c(2,0.5,0)) |>
+  f_points(pch = 16, cex = 1.5) |>
+  f_refline(x = c(0, 0)) |>
+  f_direction(text = "A better    B better", line = 1.6) |>
+  plotfobj()
+```
+
+![](man/figures/README-unnamed-chunk-18-1.png)<!-- -->
+
+### Arrowheads
+
+When using *xlim* via *f_axis*, x-axis limits that are narrower then the
+confidence limits can be set (even though that is usually not
+recommended). The cap at the end of the confidence interval is then not
+plotted (as it is outside of the plotting region). However, directional
+arrowheads can help to make the distinction more prominent. Arrowheads
+can be modified via function *f_arrows* but it is not completely
+straightforward because arrows have to be drawn twice to have different
+heads on both sides (e.g. with code 1 and 2 and angles 30 and 90). The
+helper function *f_cutarrows* does that automatically:
+
+``` r
+# Modify data to generate some very wide limits:
+dat<-forplotdata
+dat$beta_lci[1]<-c(-3)
+dat$beta_uci[2]<-c(3)
+dat[3,c("beta_lci","beta_uci")]<-c(-3,3)
+dat[4,c("beta","beta_lci")]<-c(-2,-3)
+dat$beta_format<-paste0(sprintf("%2.2f",dat$beta),
+  " (",sprintf("%2.2f",dat$beta_lci)," to ",
+  sprintf("%2.2f",dat$beta_uci),")")
+
+# Generate fobj:
+fobj2<-genfobj(layout = c("t","t","t","t","t","t","f","t"),
+    dat = dat, lwidths = c(0.8,0.4,0.6,0.4,0.6,1,1,0.5))
+
+# Limit the axis
+fobj2<-f_axis(fobj2, xlim=c(-1.5,1))
+
+# Add arowheads
+fobj2<-f_cutarrows(fobj2)
+
+plotfobj(fobj2)
+```
+
+![](man/figures/README-unnamed-chunk-19-1.png)<!-- -->
 
 ## The header
 
@@ -412,7 +474,6 @@ Note that an empty character has to be included to leave column 1 and 8
 empty. And the y is also modified to place the label it a bit higher.
 
 ``` r
-
 fobj<-header(fobj = fobj,
   labels = c("","Arm A\nN","Arm A\nmean (sd)","Arm B\nN","Arm B\nmean (sd)",
     "Mean difference\n95% CI","","P-value"),
@@ -421,14 +482,13 @@ fobj<-header(fobj = fobj,
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-19-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-21-1.png)<!-- -->
 
 We could also merge the label for the effect over the format and forest
 columns. We would then change the layout to include one label twice. And
 remove the empty label for the forest column.
 
 ``` r
-
 fobj<-header(fobj = fobj, hlayout = c(1,2,3,4,5,6,6,7),
   labels = c("","Arm A\nN","Arm A\nmean (sd)","Arm B\nN","Arm B\nmean (sd)",
     "Mean difference 95% CI","P-value"))
@@ -436,7 +496,7 @@ fobj<-header(fobj = fobj, hlayout = c(1,2,3,4,5,6,6,7),
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-20-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-22-1.png)<!-- -->
 
 In order to also merge to arm labels, we would need to header rows using
 option *headernr*, leading to a header list with length 2: As before we
@@ -445,7 +505,6 @@ can use further
 options.
 
 ``` r
-
 fobj<-header(fobj=fobj, hlayout = c(1,2,2,3,3,4,4,5),  headernr = 1,
     labels=c("","Arm A","Arm B","Mean diff (95% CI)","P-value"),
     y=0.9)
@@ -499,7 +558,7 @@ fobj$header
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-22-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-24-1.png)<!-- -->
 
 ## Boxplots
 
@@ -520,7 +579,6 @@ and
 [graphics::axis()](https://stat.ethz.ch/R-manual/R-devel/library/graphics/html/axis.html).
 
 ``` r
-
 fobj<-genfobj(dat = forplotdata, obs = forplotdata_bp,
   layout = c("t","t","t","t","t","b","t","f","t"),
   lwidths = c(0.6,0.4,0.6,0.4,0.6,1,1,1,0.5))
@@ -528,12 +586,11 @@ fobj<-genfobj(dat = forplotdata, obs = forplotdata_bp,
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-23-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-25-1.png)<!-- -->
 
 Adding header gridlines and stripes:
 
 ``` r
-
 fobj<-gridlines(fobj)
 
 fobj<-stripes(fobj)
@@ -549,7 +606,7 @@ fobj<-header(fobj, hlayout = c(1,2,3,4,5,6,7,8,9), headernr = 2,
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-24-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-26-1.png)<!-- -->
 
 ## Density plots
 
@@ -557,7 +614,6 @@ Density plots can be specified using layout item *d* and depend on the
 same data with the observations as the boxplots.
 
 ``` r
-
 fobj<-genfobj(dat = forplotdata, obs = forplotdata_bp,
   layout = c("t","t","t","t","t","b","d","t","f","t"),
   lwidths = c(0.3,0.4,0.6,0.4,0.6,1,1,1,1,0.5))
@@ -579,7 +635,7 @@ fobj<-header(fobj, hlayout = c(1,2,3,4,5,6,7,8,9,10), headernr = 2,
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-25-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-27-1.png)<!-- -->
 
 Options can be change via *d_axis* and *d_lines* using all options
 available for
@@ -605,7 +661,7 @@ fobj<-d_lines(fobj=fobj, lw=1.5)
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-26-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-28-1.png)<!-- -->
 
 ``` r
 #only one arm:
@@ -614,7 +670,7 @@ fobj<-d_lines(fobj=fobj, linenr=c(NA,2), col=1)
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-27-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-29-1.png)<!-- -->
 
 Different density curves could be added by using *x* and *y* options in
 *d_lines* (or the *lines* list in the **fobj**). Note that the
@@ -634,7 +690,6 @@ arms). The “s” items then contains several *points* elements.
 For example:
 
 ``` r
-
 fobj<-genfobj(dat = forplotdata_prop,
   layout = c("t","t","t","t","t","s2","t","f","t"),
   lwidths = c(0.3,0.4,0.6,0.4,0.6,1.0,1.2,1,0.5))
@@ -642,7 +697,7 @@ fobj<-genfobj(dat = forplotdata_prop,
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-28-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-30-1.png)<!-- -->
 
 Options can be modified via *s_axis*, *s_hline* and *s_points* using all
 options available for using all options available for
@@ -657,7 +712,6 @@ using *pointnr* (e.g. to specify colors).
 Left and right borders can be added via *s_borders*.
 
 ``` r
-
 fobj<-s_axis(fobj=fobj, xlim = c(0,1), 
   at = seq(0,1,by=0.25), labels = seq(0,100,by=25))
 
@@ -674,7 +728,7 @@ fobj<-gridlines(fobj)
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-29-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-31-1.png)<!-- -->
 
 ## Combine plots
 
@@ -742,7 +796,7 @@ fobj2<-header(fobj = fobj2, hlayout = c(1,2,3,4,5,6,7,8,9), headernr = 3,
 plotfobj(fobj = list(fobj1, fobj2))
 ```
 
-![](man/figures/README-unnamed-chunk-30-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-32-1.png)<!-- -->
 
 Combining plots can also be used to get different scaling for the plots
 of the individual variables. Assume we would like to present a number of
@@ -806,4 +860,4 @@ fobj[[length(fobj)]]$setup$lheights[3]<-0.5
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-31-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-33-1.png)<!-- -->

@@ -26,6 +26,6 @@ Passed to \code{\link[graphics]{axis}}.
 fobj<-genfobj(layout = c("t","t","t","t","t","t","f","t"),
 	dat = forplotdata, lwidths = c(0.8,0.4,0.6,0.4,0.6,1,1,0.5))
 fobj<-f_axis(fobj = fobj, at = seq(-1,0.2, by=0.4),
-labels=seq(-1,0.2, by=0.4), tck=-0.03, mgp = c(2,0.5,0))
+tck=-0.03, mgp = c(2,0.5,0))
 plotfobj(fobj)
 }
