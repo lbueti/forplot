@@ -419,17 +419,12 @@ dat$beta_format<-paste0(sprintf("%2.2f",dat$beta),
   " (",sprintf("%2.2f",dat$beta_lci)," to ",
   sprintf("%2.2f",dat$beta_uci),")")
 
-# Generate fobj:
-fobj2<-genfobj(layout = c("t","t","t","t","t","t","f","t"),
-    dat = dat, lwidths = c(0.8,0.4,0.6,0.4,0.6,1,1,0.5))
-
-# Limit the axis
-fobj2<-f_axis(fobj2, xlim=c(-1.5,1))
-
-# Add arowheads
-fobj2<-f_cutarrows(fobj2)
-
-plotfobj(fobj2)
+# Generate and plot fobj:
+genfobj(layout = c("t","t","t","t","t","t","f","t"),
+    dat = dat, lwidths = c(0.8,0.4,0.6,0.4,0.6,1,1,0.5)) |>
+  f_axis(xlim=c(-1.5,1)) |>
+  f_cutarrows() |>
+  plotfobj()
 ```
 
 ![](man/figures/README-unnamed-chunk-19-1.png)<!-- -->
