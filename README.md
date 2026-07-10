@@ -379,13 +379,12 @@ The modifying elements can be piped. For example to reproduce the
 **fobj** from above:
 
 ``` r
-
-fobj<-genfobj(dat = forplotdata,
+fobjnew<-genfobj(dat = forplotdata,
   layout = c("t","t","t","t","t","t","f","t"),
   lwidth = c(0.3,0.4,0.6,0.4,0.6,1,1,0.5),
   lheight = c(0.1,1,0.15))
 
-fobj |>
+fobjnew |>
   gridlines() |>
   stripes() |>
   t_options(item = c("vlabel"), cex = 1.1, font = 2, col = "red", x=0.2, adj=0) |>
@@ -401,13 +400,14 @@ fobj |>
 ### Arrowheads
 
 When using *xlim* via *f_axis*, x-axis limits that are narrower then the
-confidence limits can be set (which is usually not recommended as it can
-be misleading). The cap at the end of the confidence interval is then
-not plotted (as it is outside of the plotting region). However, to make
-that clearer, directional arrowheads can be added using options
-*f_arrows*. To have different heads on both sides, the arrow has to be
-drawn twice, with code 1 and 2. The helper function *f_cutarrows* helps
-with that:
+confidence limits can be set (even though that is usually not
+recommended). The cap at the end of the confidence interval is then not
+plotted (as it is outside of the plotting region). However, directional
+arrowheads can help to make the distinction more prominent. Arrowheads
+can be modified via function *f_arrows* but it is not completely
+straightforward because arrows have to be drawn twice to have different
+heads on both sides (e.g. with code 1 and 2 and angles 30 and 90). The
+helper function *f_cutarrows* does that automatically:
 
 ``` r
 # Modify data to generate some very wide limits:
@@ -474,7 +474,6 @@ Note that an empty character has to be included to leave column 1 and 8
 empty. And the y is also modified to place the label it a bit higher.
 
 ``` r
-
 fobj<-header(fobj = fobj,
   labels = c("","Arm A\nN","Arm A\nmean (sd)","Arm B\nN","Arm B\nmean (sd)",
     "Mean difference\n95% CI","","P-value"),
@@ -490,7 +489,6 @@ columns. We would then change the layout to include one label twice. And
 remove the empty label for the forest column.
 
 ``` r
-
 fobj<-header(fobj = fobj, hlayout = c(1,2,3,4,5,6,6,7),
   labels = c("","Arm A\nN","Arm A\nmean (sd)","Arm B\nN","Arm B\nmean (sd)",
     "Mean difference 95% CI","P-value"))
@@ -507,7 +505,6 @@ can use further
 options.
 
 ``` r
-
 fobj<-header(fobj=fobj, hlayout = c(1,2,2,3,3,4,4,5),  headernr = 1,
     labels=c("","Arm A","Arm B","Mean diff (95% CI)","P-value"),
     y=0.9)
@@ -582,7 +579,6 @@ and
 [graphics::axis()](https://stat.ethz.ch/R-manual/R-devel/library/graphics/html/axis.html).
 
 ``` r
-
 fobj<-genfobj(dat = forplotdata, obs = forplotdata_bp,
   layout = c("t","t","t","t","t","b","t","f","t"),
   lwidths = c(0.6,0.4,0.6,0.4,0.6,1,1,1,0.5))
@@ -595,7 +591,6 @@ plotfobj(fobj)
 Adding header gridlines and stripes:
 
 ``` r
-
 fobj<-gridlines(fobj)
 
 fobj<-stripes(fobj)
@@ -619,7 +614,6 @@ Density plots can be specified using layout item *d* and depend on the
 same data with the observations as the boxplots.
 
 ``` r
-
 fobj<-genfobj(dat = forplotdata, obs = forplotdata_bp,
   layout = c("t","t","t","t","t","b","d","t","f","t"),
   lwidths = c(0.3,0.4,0.6,0.4,0.6,1,1,1,1,0.5))
@@ -696,7 +690,6 @@ arms). The “s” items then contains several *points* elements.
 For example:
 
 ``` r
-
 fobj<-genfobj(dat = forplotdata_prop,
   layout = c("t","t","t","t","t","s2","t","f","t"),
   lwidths = c(0.3,0.4,0.6,0.4,0.6,1.0,1.2,1,0.5))
@@ -719,7 +712,6 @@ using *pointnr* (e.g. to specify colors).
 Left and right borders can be added via *s_borders*.
 
 ``` r
-
 fobj<-s_axis(fobj=fobj, xlim = c(0,1), 
   at = seq(0,1,by=0.25), labels = seq(0,100,by=25))
 
