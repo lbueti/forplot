@@ -379,12 +379,11 @@ The modifying elements can be piped. For example to reproduce the
 **fobj** from above:
 
 ``` r
-fobjnew<-genfobj(dat = forplotdata,
+
+genfobj(dat = forplotdata,
   layout = c("t","t","t","t","t","t","f","t"),
   lwidth = c(0.3,0.4,0.6,0.4,0.6,1,1,0.5),
-  lheight = c(0.1,1,0.15))
-
-fobjnew |>
+  lheight = c(0.1,1,0.15)) |>
   gridlines() |>
   stripes() |>
   t_options(item = c("vlabel"), cex = 1.1, font = 2, col = "red", x=0.2, adj=0) |>
