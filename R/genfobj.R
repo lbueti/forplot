@@ -459,8 +459,10 @@ f_cutarrows<-function(fobj, item = NULL) {
 		initlength<-fobj$items[[itn]]$arrows$length
 		
 		#select arrows to cut:
-		outlow<-fobj$items[[itn]]$arrows$x0<fobj$items[[itn]]$plot$xlim[1]
-		outhigh<-fobj$items[[itn]]$arrows$x1>fobj$items[[itn]]$plot$xlim[2]
+		outlow<-(fobj$items[[itn]]$arrows$x0<fobj$items[[itn]]$plot$xlim[1]) & 
+			!is.na(fobj$items[[itn]]$arrows$x0)
+		outhigh<-(fobj$items[[itn]]$arrows$x1>fobj$items[[itn]]$plot$xlim[2]) & 
+			!is.na(fobj$items[[itn]]$arrows$x1)
 
 		#left:
 		fobj$items[[itn]]$arrows$x0[outlow]<-fobj$items[[itn]]$plot$xlim[1]
