@@ -456,7 +456,7 @@ f_cutarrows<-function(fobj, item = NULL) {
 	for (itn in itemnr) {
 	
 		#save initial arrow cap length, if only one value is given, reset at the end.
-		initlength<-fobj$items[[7]]$arrows$length
+		initlength<-fobj$items[[itn]]$arrows$length
 		
 		#select arrows to cut:
 		outlow<-fobj$items[[itn]]$arrows$x0<fobj$items[[itn]]$plot$xlim[1]
@@ -495,11 +495,11 @@ f_cutarrows<-function(fobj, item = NULL) {
 					fobj$items[[itn]]$arrows$code[newarr]*(-1)+3
 			}
 			fobj$items[[itn]]$arrows$angle[newarr]<-90		
-		}
 		
-		#reset arrow cap length (of all are the same)
-		if (length(initlength)==1) {
-			fobj$items[[itn]]$arrows$length<-initlength
+			#reset arrow cap length (of all are the same)
+			if (length(initlength)==1) {
+				fobj$items[[itn]]$arrows$length<-initlength
+			}
 		}
 		
 		#remove point if outside 
