@@ -1,68 +1,73 @@
-forplot 0.0.1
+forplot 1.3.0
 ------------------
-add news file
+remove unnecessary defaults for axis
+function to add arrows at x-limits
 
-ordering of columns according to input
-
-forplot 0.0.2
+forplot 1.2.0
 ------------------
-bug fix in help file
+combine fobj for plotting
 
-forplot 0.0.3
+forplot 1.1.1
 ------------------
-plotting reference line before data
+modify default spacing
 
-forplot 0.0.4
+forplot 1.1.0
 ------------------
-bug fix with arrow heads
+add density plots
 
-forplot 0.1.0
+forplot 1.0.4
 ------------------
-option to include a scatterplot for proportions
+warning for headernames
 
-forplot 0.1.1
+forplot 1.0.3
 ------------------
-color option for header
-
-forplot 0.1.2
-------------------
-option to include a boxplot
-
-forplot 0.1.3
-------------------
-remove sorder option
-
-forplot 1.0.0
-------------------
-complete makeover
-add functions genfobj and plotfobj to first generate a fobj and then plot it 
-
-forplot 1.0.1
-------------------
-rename bpdat to obs
-change default for lheights
+bug fix headernames
 
 forplot 1.0.2
 ------------------
 fix sequence of variables in boxplot
 change column names in forplotdata_bp
 
-forplot 1.0.3
+forplot 1.0.1
 ------------------
-bug fix headernames
+rename bpdat to obs
+change default for lheights
 
-forplot 1.0.4
+forplot 1.0.0
 ------------------
-warning for headernames
+complete makeover
+add functions genfobj and plotfobj to first generate a fobj and then plot it 
 
-forplot 1.1.0
+forplot 0.1.3
 ------------------
-add density plots
+remove sorder option
 
-forplot 1.1.1
+forplot 0.1.2
 ------------------
-modify default spacing
+option to include a boxplot
 
-forplot 1.2.0
+forplot 0.1.1
 ------------------
-combine fobj for plotting
+color option for header
+
+forplot 0.1.0
+------------------
+option to include a scatterplot for proportions
+
+forplot 0.0.4
+------------------
+bug fix with arrow heads
+
+forplot 0.0.3
+------------------
+plotting reference line before data
+
+forplot 0.0.2
+------------------
+bug fix in help file
+
+
+forplot 0.0.1
+------------------
+add news file
+ordering of columns according to input
