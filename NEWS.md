@@ -1,3 +1,8 @@
+forplot 1.3.1
+------------------
+bug fix for stripes when data only has one row
+
+
 forplot 1.3.0
 ------------------
 remove unnecessary defaults for axis
