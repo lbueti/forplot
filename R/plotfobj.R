@@ -111,6 +111,8 @@ plotfobj<- function(fobj) {
 #' plotfobj1
 #'
 #' @param fobj a forest plot object or a list of fobj with the same layout length
+#' @param addfoot logical, whether a footer is added
+#' @param addhead logical, whether a header is added
 #'
 #' @returns a plot
 #'
@@ -118,7 +120,7 @@ plotfobj<- function(fobj) {
 #' @importFrom stats aggregate
 #'
 #'
-plotfobj1<- function(fobj) {
+plotfobj1<- function(fobj, addfoot = TRUE, addhead = TRUE) {
 
 	#items
 	for (i in 1:length(fobj$setup$layout)) {
@@ -217,40 +219,43 @@ plotfobj1<- function(fobj) {
 
 
 	#footer
-	plot(0,type="n",axes=FALSE,ylim=c(0,1),xlim=c(0,1),xlab="",ylab="")
-
+	if (addfoot) {
+		plot(0,type="n",axes=FALSE,ylim=c(0,1),xlim=c(0,1),xlab="",ylab="")
+	}
 
 	#header
-	headernr<-length(fobj$header)
+	if (addhead) {
+		headernr<-length(fobj$header)
 
-	if (headernr>0) {
+		if (headernr>0) {
 
-		plot(x = 0, type="n", xlim=c(0,1), ylim=c(0,1), yaxt="n", ylab="", xlab="", axes=FALSE)
+			plot(x = 0, type="n", xlim=c(0,1), ylim=c(0,1), yaxt="n", ylab="", xlab="", axes=FALSE)
 
-		xsize<-par("usr")[2]-par("usr")[1]
-		rwidth<-fobj$setup$lwidths
-		cwidth<-(xsize/sum(rwidth)*rwidth)
+			xsize<-par("usr")[2]-par("usr")[1]
+			rwidth<-fobj$setup$lwidths
+			cwidth<-(xsize/sum(rwidth)*rwidth)
 
-		hi<-1
-		for (hi in 1:headernr) {
+			hi<-1
+			for (hi in 1:headernr) {
 
-			if (is.null(fobj$header[[hi]]$text$x)) {
+				if (is.null(fobj$header[[hi]]$text$x)) {
 
-				wdf<-cbind(ind=fobj$header[[hi]]$hlayout,cwidth)
-				wdf<-aggregate(cwidth ~ ind, data = wdf, FUN = sum)
-				cwidthi<-wdf$cwidth
+					wdf<-cbind(ind=fobj$header[[hi]]$hlayout,cwidth)
+					wdf<-aggregate(cwidth ~ ind, data = wdf, FUN = sum)
+					cwidthi<-wdf$cwidth
 
-				if (length(cwidthi)!=length(fobj$header[[hi]]$text$labels)) {
-					stop("Length of 'labels' must match number of distinct values in 'hlayout'")
+					if (length(cwidthi)!=length(fobj$header[[hi]]$text$labels)) {
+						stop("Length of 'labels' must match number of distinct values in 'hlayout'")
+					}
+
+					lb<-c(par("usr")[1],par("usr")[1] + cumsum(cwidthi)[-length(cwidthi)])
+					ub<-par("usr")[1] + cumsum(cwidthi)
+					fobj$header[[hi]]$text$x<-(lb+ub)/2
+
 				}
 
-				lb<-c(par("usr")[1],par("usr")[1] + cumsum(cwidthi)[-length(cwidthi)])
-				ub<-par("usr")[1] + cumsum(cwidthi)
-				fobj$header[[hi]]$text$x<-(lb+ub)/2
-
+				do.call(text, fobj$header[[hi]]$text)
 			}
-
-			do.call(text, fobj$header[[hi]]$text)
 		}
 	}
 

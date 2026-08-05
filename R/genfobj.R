@@ -1211,6 +1211,10 @@ stripes<-function(fobj, ...)	{
 			fobj$setup$ylim[1] + sort(fobj$setup$y.at)[-length(fobj$setup$y.at)])
 		ub<-c(fobj$setup$ylim[1] + sort(fobj$setup$y.at))
 		ys<-cbind(lb,ub)[seq(1,length(lb),by=2),]
+		
+		if (!is.matrix(ys)) {
+			ys<-t(matrix(ys))
+		}
 
 		fobj$stripes<-list(xleft = NA, ybottom = ys[,1], xright = NA, ytop = ys[,2], 
 			col = rgb(.1,.1,.1,.1), border = NA)

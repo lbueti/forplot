@@ -4,10 +4,14 @@
 \alias{plotfobj1}
 \title{plotfobj1}
 \usage{
-plotfobj1(fobj)
+plotfobj1(fobj, addfoot = TRUE, addhead = TRUE)
 }
 \arguments{
 \item{fobj}{a forest plot object or a list of fobj with the same layout length}
+
+\item{addfoot}{logical, whether a footer is added}
+
+\item{addhead}{logical, whether a header is added}
 }
 \value{
 a plot
