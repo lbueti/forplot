@@ -1,7 +1,10 @@
+forplot 1.4.0
+------------------
+allow several reflines in forest plots
+
 forplot 1.3.1
 ------------------
 bug fix for stripes when data only has one row
-
 
 forplot 1.3.0
 ------------------
