@@ -146,7 +146,8 @@ plotfobj1<- function(fobj, addfoot = TRUE, addhead = TRUE) {
 			do.call(mapply, c(FUN = arrows, fobj$items[[i]]$arrows))
 
 			if (!is.null(fobj$items[[i]]$refline)) {
-				do.call(lines, fobj$items[[i]]$refline)
+				#do.call(lines, fobj$items[[i]]$refline)
+				lapply(fobj$items[[i]]$refline, function(x) do.call(lines, x))
 			}
 
 			if (!is.null(fobj$items[[i]]$direction)) {

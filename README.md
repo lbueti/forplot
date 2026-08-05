@@ -348,7 +348,8 @@ plotfobj(fobj)
 
 With *f_refline*, a reference line can be added and with *f_direction* a
 label for the direction below the axis. Note that the footer height has
-to be increased to fit the direction label.
+to be increased to fit the direction label. More than one reference line
+can be specified using the option *linenr*.
 
 ``` r
 fobj<-f_refline(fobj, x = c(0, 0))
@@ -492,9 +493,9 @@ plotfobj(fobj)
 
 ![](man/figures/README-unnamed-chunk-22-1.png)<!-- -->
 
-In order to also merge to arm labels, we would need to header rows using
-option *headernr*, leading to a header list with length 2: As before we
-can use further
+In order to also merge two arm labels, we would need to header rows
+using option *headernr*, leading to a header list with length 2: As
+before we can use further
 [graphics::text()](https://stat.ethz.ch/R-manual/R-devel/library/graphics/html/text.html)
 options.
 

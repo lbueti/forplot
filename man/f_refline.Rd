@@ -4,13 +4,16 @@
 \alias{f_refline}
 \title{f_refline}
 \usage{
-f_refline(fobj, item = NULL, ...)
+f_refline(fobj, item = NULL, linenr = NULL, ...)
 }
 \arguments{
 \item{fobj}{a forest plot object of class 'fobj'}
 
 \item{item}{item to be modified, either a number or the name of the column in fobj$dat.
 If NULL (the default), all items of type 'f' are affected}
+
+\item{linenr}{line to be modified if there is more than 1.
+If NULL (the default), all lines are affected.}
 
 \item{...}{options to be passed to \code{\link[graphics]{lines}}}
 }
