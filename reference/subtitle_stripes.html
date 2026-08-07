@@ -63,7 +63,12 @@ Passed to <code><a href="https://rdrr.io/r/graphics/rect.html" class="external-l
 
 
 <dl><dt id="arg-sfobj">sfobj<a class="anchor" aria-label="anchor" href="#arg-sfobj"></a></dt>
-<dd><p>a forest plot object of class 'fobj'</p></dd>
+<dd><p>a split forest plot object of class 'sfobj'</p></dd>
+
+
+<dt id="arg-snr">snr<a class="anchor" aria-label="anchor" href="#arg-snr"></a></dt>
+<dd><p>subtitle to be modified
+If NULL (the default), all subtitles are affected</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
@@ -85,9 +90,7 @@ Passed to <code><a href="https://rdrr.io/r/graphics/rect.html" class="external-l
 <span class="r-in"><span>  atrows<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">5</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  subtitle<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A first long title is added here"</span>,</span></span>
 <span class="r-in"><span>    <span class="st">"A second even longer title is added here"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in splitfobj(fobj, atrows = c(3, 5), subtitle = c("A first long title is added here",     "A second even longer title is added here")):</span> could not find function "splitfobj"</span>
 <span class="r-in"><span><span class="va">sfobj</span><span class="op">&lt;-</span><span class="fu">subtitle_stripes</span><span class="op">(</span><span class="va">sfobj</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in subtitle_stripes(sfobj):</span> could not find function "subtitle_stripes"</span>
 <span class="r-in"><span>  <span class="fu"><a href="plotfobj.html">plotfobj</a></span><span class="op">(</span><span class="va">fobj</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-plt img"><img src="subtitle_stripes-1.png" alt="" width="700" height="433"></span>
