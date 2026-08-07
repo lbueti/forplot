@@ -77,7 +77,7 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co">#install package using remotes</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"dcr-unibe-ch/forplot"</span><span class="op">)</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"dcr-unibe-ch/forplot"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># load package</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dcr-unibe-ch/forplot" class="external-link">forplot</a></span><span class="op">)</span></span></code></pre></div>
@@ -740,7 +740,7 @@
 <span>  layout <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"t"</span>,<span class="st">"t"</span>,<span class="st">"t"</span>,<span class="st">"t"</span>,<span class="st">"t"</span>,<span class="st">"t"</span>,<span class="st">"f"</span>,<span class="st">"t"</span><span class="op">)</span>, </span>
 <span>    lwidths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.3</span>,<span class="fl">0.4</span>,<span class="fl">0.6</span>,<span class="fl">0.4</span>,<span class="fl">0.6</span>,<span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">sfobj</span><span class="op">&lt;-</span><span class="fu"><a href="reference/splitfobj.html">splitfobj</a></span><span class="op">(</span><span class="va">fobj</span>,</span>
+<span><span class="va">sfobj</span><span class="op">&lt;-</span><span class="fu">splitfobj</span><span class="op">(</span><span class="va">fobj</span>,</span>
 <span>    atrows<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">5</span><span class="op">)</span>,</span>
 <span>    subtitle<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A first long title is added here"</span>,</span>
 <span>        <span class="st">"A second long title is added here"</span>,</span>
@@ -752,9 +752,9 @@
 <p>The helper functions <em>subtitle_text</em>, <em>subtitle_stripes</em> and <em>subtitles_gridlines</em> can be used to modify the subtitle. The individual parts can still be accessed (e.g. to remove the axis in the first and second part). The overall header can be accessed as for the fobj.</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#change text and background color, add gridlines</span></span>
-<span><span class="va">sfobj</span><span class="op">&lt;-</span><span class="fu"><a href="reference/subtitle_text.html">subtitle_text</a></span><span class="op">(</span><span class="va">sfobj</span>,snr<span class="op">=</span><span class="fl">1</span>, col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span></span>
-<span><span class="va">sfobj</span><span class="op">&lt;-</span><span class="fu"><a href="reference/subtitle_stripes.html">subtitle_stripes</a></span><span class="op">(</span><span class="va">sfobj</span><span class="op">)</span></span>
-<span><span class="va">sfobj</span><span class="op">&lt;-</span><span class="fu"><a href="reference/subtitle_gridlines.html">subtitle_gridlines</a></span><span class="op">(</span><span class="va">sfobj</span><span class="op">)</span></span>
+<span><span class="va">sfobj</span><span class="op">&lt;-</span><span class="fu">subtitle_text</span><span class="op">(</span><span class="va">sfobj</span>,snr<span class="op">=</span><span class="fl">1</span>, col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span></span>
+<span><span class="va">sfobj</span><span class="op">&lt;-</span><span class="fu">subtitle_stripes</span><span class="op">(</span><span class="va">sfobj</span><span class="op">)</span></span>
+<span><span class="va">sfobj</span><span class="op">&lt;-</span><span class="fu">subtitle_gridlines</span><span class="op">(</span><span class="va">sfobj</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#remove axis in first and second part</span></span>
 <span><span class="va">sfobj</span><span class="op">$</span><span class="va">split_fobj</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">items</span><span class="op">[[</span><span class="fl">7</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">axis</span><span class="op">&lt;-</span><span class="cn">NULL</span></span>
