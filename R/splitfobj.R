@@ -176,8 +176,8 @@ splitfobj<-function(fobj, atrows, subtitle = NA, lheights = NA, ...)	{
 								itemsub<-fobji$items[[i]][[j]][[z]][[za]]
 								
 								if (length(itemsub)==ncol(fobj$dat)) {
-									fobji$items[[i]][[j]][[z]][[za]]<-s
-										plit(fobj$items[[i]][[j]][[z]][[za]], splits)[[ir]]
+									fobji$items[[i]][[j]][[z]][[za]]<-
+									split(fobj$items[[i]][[j]][[z]][[za]], splits)[[ir]]
 								}
 								if (names(fobji$items[[i]][[j]][[z]])[za]=="ylim") {
 									fobji$items[[i]][[j]][[z]][[za]]<-ylimlist[[ir]]				
@@ -259,7 +259,9 @@ subtitle_text<-function(sfobj, snr = NULL, ...)	{
 #' Add or modify stripes for subtitle in a split forest plot object (sfobj).
 #'	Passed to \code{\link[graphics]{rect}}.
 #'
-#' @param sfobj a forest plot object of class 'fobj'
+#' @param sfobj a split forest plot object of class 'sfobj'
+#' @param snr subtitle to be modified
+#' 	If NULL (the default), all subtitles are affected
 #' @param ... options to be passed to \code{\link[graphics]{rect}}
 #'
 #' @returns a split forest plot object of class 'sfobj'
@@ -308,15 +310,17 @@ subtitle_stripes<-function(sfobj, snr = NULL, ...)	{
 	return(sfobj)
 }
 
-#subtitle_stripes
+#subtitle_gridlines
 #----------
 
-#' subtitle_stripes
+#' subtitle_gridlines
 #'
-#' Add or modify stripes for subtitles in a split forest plot object (sfobj).
+#' Add or modify gridlines for subtitles in a split forest plot object (sfobj).
 #'	Passed to \code{\link[graphics]{abline}}.
 #'
-#' @param sfobj a forest plot object of class 'fobj'
+#' @param sfobj a split forest plot object of class 'sfobj'
+#' @param snr subtitle to be modified
+#' 	If NULL (the default), all subtitles are affected
 #' @param ... options to be passed to \code{\link[graphics]{abline}}
 #'
 #' @returns a split forest plot object of class 'sfobj'

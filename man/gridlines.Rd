@@ -4,13 +4,10 @@
 \alias{gridlines}
 \title{gridlines}
 \usage{
-gridlines(fobj, gridnr = NULL, ...)
+gridlines(fobj, ...)
 }
 \arguments{
 \item{fobj}{a forest plot object of class 'fobj'}
-
-\item{gridnr}{grid line to be modified.
-If NULL (the default), all grid lines are affected}
 
 \item{...}{options to be passed to Passed to \code{\link[graphics]{abline}}.}
 }

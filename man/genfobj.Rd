@@ -24,7 +24,7 @@ Required of layout includes 'b' or 'd'.}
 
 \item{lwidths}{Optional numeric vector with the relative widths of the columns. Must have the same length as layout.}
 
-\item{lheights}{Optional numeric vectotr of length 3 with the relative heights of header, main panel and footer.}
+\item{lheights}{Optional numeric vector of length 3 with the relative heights of header, main panel and footer.}
 
 \item{y.at}{Optional numeric vector with the position of the rows. Usually not required.}
 
