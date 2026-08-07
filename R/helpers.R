@@ -203,4 +203,36 @@ headernames<-function(dat, layout) {
   #return(h)
 }
 
+#----------------------------
+#xlimits from point estimate plus CI
+#----------------------------
 
+defxlim<-function(pe,lci,uci) {
+	
+	lci[lci %in% c(-Inf,Inf)]<-NA
+	
+	uci[uci %in% c(-Inf,Inf)]<-NA
+	
+	if (!all(is.na(pe))) {
+		lci[is.na(lci)]<-min(pe,na.rm=TRUE)
+		uci[is.na(uci)]<-max(pe,na.rm=TRUE)
+	}
+	
+	xlim<-c(min(lci),max(uci))
+	
+	if (all(is.na(lci)) | all(is.na(uci))) {
+		xlim<-NULL
+	} else {
+		if (xlim[1]==xlim[2]) {
+			xlim[1]<-xlim[1]-0.04*xlim[1]
+			xlim[2]<-xlim[2]+0.04*xlim[2]
+		} else {
+			#add padding
+			pa<-0.04*(xlim[2]-xlim[1])
+			xlim[1]<-xlim[1]-pa
+			xlim[2]<-xlim[2]+pa		
+		}
+	}
+	
+	return(xlim)
+}

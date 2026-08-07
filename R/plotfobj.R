@@ -19,18 +19,19 @@
 plotfobj<- function(fobj) {
 	
 	isfobj<-"fobj" %in% class(fobj)
+	issfobj<-"sfobj" %in% class(fobj)
 	islistfobj<-FALSE
 	
-	if (!isfobj) {
+	if (!isfobj & !issfobj) {
 		cc<-do.call(rbind,lapply(fobj,function(x) class(x)))
 		islistfobj<-is.list(fobj) & all(cc[,1]=="fobj")
 	}
 	
-	if (!(isfobj | islistfobj)) {
-		stop("'fobj' must have class 'fobj' (or be a list of 'fobj'). Use genfobj to generate it.")
+	if (!(isfobj | islistfobj | issfobj)) {
+		stop("'fobj' must have class 'fobj' or 'sfobj' (or be a list of 'fobj'). Use genfobj to generate it.")
 	}
 	
-	if (!isfobj & islistfobj) {
+	if (!isfobj & !issfobj & islistfobj) {
 		
 		#check compatability 
 		
@@ -105,12 +106,52 @@ plotfobj<- function(fobj) {
 		plotfobj1(fobj = fobj)
 		
 	}
+	
+	if (issfobj) {
+				
+		#layout
+		margin<-sum(fobj$setup$lwidths)/100
+
+		layout(fobj$setup$lmatrix,
+			heights=fobj$setup$lheights,
+			widths=c(margin,fobj$setup$lwidths,margin))
+
+		par(mar=c(0,0,0,0))
+		
+		#header
+		hobj<-list(header=fobj$header,setup=list(lwidths=fobj$setup$lwidths))
+		plotfobj1(fobj = hobj, additems=FALSE, addfoot=FALSE)	
+		
+		#subtitles
+		for (ni in 1:length(fobj$setup$atrows)) {
+			do.call(plot, fobj$subtitle[[ni]]$plot)
+			do.call(text, fobj$subtitle[[ni]]$text)
+			
+			if (!is.null(fobj$subtitle[[ni]]$stripes)) {
+				fobj$subtitle[[ni]]$stripes$xleft<-par("usr")[1]
+				fobj$subtitle[[ni]]$stripes$xright<-par("usr")[2]
+				do.call(rect, fobj$subtitle[[ni]]$stripes)
+			}
+			if (!is.null(fobj$subtitle[[ni]]$gridlines)) {
+				do.call(abline, fobj$subtitle[[ni]]$gridlines)
+			}
+				
+		}
+
+		
+		#split fobjs
+		for (ir in 1:length(fobj$split_fobj)) {
+			plotfobj1(fobj = fobj$split_fobj[[ir]], addhead=FALSE, addfoot=FALSE)
+		}
+		
+	}
 }
 
 
 #' plotfobj1
 #'
 #' @param fobj a forest plot object or a list of fobj with the same layout length
+#' @param additems logical, whether items are plotted
 #' @param addfoot logical, whether a footer is added
 #' @param addhead logical, whether a header is added
 #'
@@ -120,104 +161,133 @@ plotfobj<- function(fobj) {
 #' @importFrom stats aggregate
 #'
 #'
-plotfobj1<- function(fobj, addfoot = TRUE, addhead = TRUE) {
+plotfobj1<- function(fobj, additems = TRUE, addfoot = TRUE, addhead = TRUE) {
 
 	#items
-	for (i in 1:length(fobj$setup$layout)) {
+	if (additems) {
+		for (i in 1:length(fobj$setup$layout)) {
 
-		if (fobj$setup$layout[i]=="t") {
-			do.call(plot, fobj$items[[i]]$plot)
-			do.call(text, fobj$items[[i]]$text)
-
-
-			lapply(fobj$gridlines, function(x) do.call(abline, x))
-
-			if (!is.null(fobj$stripes)) {
-				fobj$stripes$xleft<-par("usr")[1]
-				fobj$stripes$xright<-par("usr")[2]
-				do.call(rect, fobj$stripes)
-			}
-		}
-
-		if (fobj$setup$layout[i]=="f") {
-			do.call(plot, fobj$items[[i]]$plot)
-			do.call(axis, fobj$items[[i]]$axis)
-			do.call(points, fobj$items[[i]]$points)
-			do.call(mapply, c(FUN = arrows, fobj$items[[i]]$arrows))
-
-			if (!is.null(fobj$items[[i]]$refline)) {
-				#do.call(lines, fobj$items[[i]]$refline)
-				lapply(fobj$items[[i]]$refline, function(x) do.call(lines, x))
+			if (fobj$setup$layout[i]=="t") {
+				do.call(plot, fobj$items[[i]]$plot)
+				do.call(text, fobj$items[[i]]$text)
+				
+				if (!is.null(fobj$gridlines)) {
+					do.call(abline, fobj$gridlines)
+				}
+				
+				if (!is.null(fobj$stripes)) {
+					fobj$stripes$xleft<-par("usr")[1]
+					fobj$stripes$xright<-par("usr")[2]
+					do.call(rect, fobj$stripes)
+				}
 			}
 
-			if (!is.null(fobj$items[[i]]$direction)) {
-				do.call(mtext, fobj$items[[i]]$direction)
+			if (fobj$setup$layout[i]=="f") {
+				
+				do.call(plot, fobj$items[[i]]$plot)
+				
+				if (!is.null(fobj$items[[i]]$axis)) {
+					do.call(axis, fobj$items[[i]]$axis)
+				}
+				
+				do.call(points, fobj$items[[i]]$points)
+				do.call(mapply, c(FUN = arrows, fobj$items[[i]]$arrows))
+
+				if (!is.null(fobj$items[[i]]$refline)) {
+					#do.call(lines, fobj$items[[i]]$refline)
+					lapply(fobj$items[[i]]$refline, function(x) do.call(lines, x))
+				}
+
+				if (!is.null(fobj$items[[i]]$direction)) {
+					do.call(mtext, fobj$items[[i]]$direction)
+				}
+
+				if (!is.null(fobj$gridlines)) {
+					do.call(abline, fobj$gridlines)
+				}
+
+				if (!is.null(fobj$stripes)) {
+					fobj$stripes$xleft<-par("usr")[1]
+					fobj$stripes$xright<-par("usr")[2]
+					do.call(rect, fobj$stripes)
+				}
 			}
 
-			lapply(fobj$gridlines, function(x) do.call(abline, x))
+			if (grepl("s\\d+",fobj$setup$layout[i])) {
+				
+				do.call(plot, fobj$items[[i]]$plot)
+				
+				if (!is.null(fobj$items[[i]]$axis)) {
+					do.call(axis, fobj$items[[i]]$axis)
+				}
+				
+				do.call(abline, fobj$items[[i]]$hline)
 
-			if (!is.null(fobj$stripes)) {
-				fobj$stripes$xleft<-par("usr")[1]
-				fobj$stripes$xright<-par("usr")[2]
-				do.call(rect, fobj$stripes)
-			}
-		}
+				nstrip<-as.numeric(substr(fobj$setup$layout[i],2,nchar(fobj$setup$layout[i])))
 
-		if (grepl("s\\d+",fobj$setup$layout[i])) {
-			do.call(plot, fobj$items[[i]]$plot)
-			do.call(axis, fobj$items[[i]]$axis)
-			do.call(abline, fobj$items[[i]]$hline)
+				for (nsi in 1:nstrip) {
+					do.call(points, fobj$items[[i]][[paste0("points",nsi)]])
+				}
 
-			nstrip<-as.numeric(substr(fobj$setup$layout[i],2,nchar(fobj$setup$layout[i])))
+				if (!is.null(fobj$items[[i]]$borders)) {
+					lapply(fobj$items[[i]]$borders, function(x) do.call(abline, x))
+				}
 
-			for (nsi in 1:nstrip) {
-				do.call(points, fobj$items[[i]][[paste0("points",nsi)]])
-			}
+				if (!is.null(fobj$gridlines)) {
+					do.call(abline, fobj$gridlines)
+				}
 
-			if (!is.null(fobj$items[[i]]$borders)) {
-				lapply(fobj$items[[i]]$borders, function(x) do.call(abline, x))
-			}
-
-			lapply(fobj$gridlines, function(x) do.call(abline, x))
-
-			if (!is.null(fobj$stripes)) {
-				fobj$stripes$xleft<-par("usr")[1]
-				fobj$stripes$xright<-par("usr")[2]
-				do.call(rect, fobj$stripes)
-			}
-		}
-
-		if (fobj$setup$layout[i]=="b") {
-			do.call(plot, fobj$items[[i]]$plot)
-			do.call(boxplot, fobj$items[[i]]$boxplot)
-			do.call(axis, fobj$items[[i]]$axis)
-
-			lapply(fobj$gridlines, function(x) do.call(abline, x))
-
-			if (!is.null(fobj$stripes)) {
-				fobj$stripes$xleft<-par("usr")[1]
-				fobj$stripes$xright<-par("usr")[2]
-				do.call(rect, fobj$stripes)
+				if (!is.null(fobj$stripes)) {
+					fobj$stripes$xleft<-par("usr")[1]
+					fobj$stripes$xright<-par("usr")[2]
+					do.call(rect, fobj$stripes)
+				}
 			}
 
-		}
-		
-		if (fobj$setup$layout[i]=="d") {
+			if (fobj$setup$layout[i]=="b") {
+				
+				do.call(plot, fobj$items[[i]]$plot)
+				
+				do.call(boxplot, fobj$items[[i]]$boxplot)
+				
+				if (!is.null(fobj$items[[i]]$axis)) {
+					do.call(axis, fobj$items[[i]]$axis)
+				}
+
+				if (!is.null(fobj$gridlines)) {
+					do.call(abline, fobj$gridlines)
+				}
+
+				if (!is.null(fobj$stripes)) {
+					fobj$stripes$xleft<-par("usr")[1]
+					fobj$stripes$xright<-par("usr")[2]
+					do.call(rect, fobj$stripes)
+				}
+
+			}
 			
-			do.call(plot, fobj$items[[i]]$plot)
-			do.call(axis, fobj$items[[i]]$axis)
-			lapply(fobj$items[[i]]$lines, function(x) lapply(x, function(u) do.call(lines,u)))	
-			
-			lapply(fobj$gridlines, function(x) do.call(abline, x))
-			
-			if (!is.null(fobj$stripes)) {
-				fobj$stripes$xleft<-par("usr")[1]
-				fobj$stripes$xright<-par("usr")[2]
-				do.call(rect, fobj$stripes)
-			}		
+			if (fobj$setup$layout[i]=="d") {
+				
+				do.call(plot, fobj$items[[i]]$plot)
+				
+				if (!is.null(fobj$items[[i]]$axis)) {
+					do.call(axis, fobj$items[[i]]$axis)
+				}
+				
+				lapply(fobj$items[[i]]$lines, function(x) lapply(x, function(u) do.call(lines,u)))	
+				
+				if (!is.null(fobj$gridlines)) {
+					do.call(abline, fobj$gridlines)
+				}
+				
+				if (!is.null(fobj$stripes)) {
+					fobj$stripes$xleft<-par("usr")[1]
+					fobj$stripes$xright<-par("usr")[2]
+					do.call(rect, fobj$stripes)
+				}		
+			}
 		}
 	}
-
 
 	#footer
 	if (addfoot) {
