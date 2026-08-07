@@ -8,7 +8,7 @@
 #' @param obs Optional data frame with the observations for the boxplot.
 #'	Required of layout includes 'b' or 'd'.
 #' @param lwidths Optional numeric vector with the relative widths of the columns. Must have the same length as layout.
-#' @param lheights Optional numeric vectotr of length 3 with the relative heights of header, main panel and footer.
+#' @param lheights Optional numeric vector of length 3 with the relative heights of header, main panel and footer.
 #' @param y.at Optional numeric vector with the position of the rows. Usually not required.
 #' @param ylim Optional limits of the rows. Usually not required.
 #'
@@ -87,9 +87,9 @@ genfobj<-function(layout, dat, obs = NULL,
 		}
 
 		if (layout[i]=="f") {
-
-			xlim<-c(min(dat[,j+1],na.rm=TRUE),max(dat[,j+2],na.rm=TRUE))
-
+			
+			xlim<-defxlim(pe=dat[,j],lci=dat[,j+1],uci=dat[,j+2])
+			
 			code<-rep(3,nrow(dat))
 			angle<-rep(90,nrow(dat))
 
@@ -98,7 +98,7 @@ genfobj<-function(layout, dat, obs = NULL,
 				vname = hnames[i],
 				plot = list(x=0, type="n", xlim = xlim, ylim = ylim,
 					yaxt="n" ,ylab="", xlab="", axes=FALSE, xaxs = "i", yaxs = "i"),
-				axis = list(side = 1, line = 0, pos = ylim[1], las = 1),
+				axis = list(side = 1, line = 0, las = 1),
 				points = list(x = dat[,j], y = y.at, pch = 15),
 				arrows = list(y0 = y.at, y1 = y.at, x0 = dat[,j+1], x1 = dat[,j+2],
 					code = code, angle = angle, length = 0.05))
@@ -109,7 +109,7 @@ genfobj<-function(layout, dat, obs = NULL,
 		if (grepl("s\\d+",layout[i])) {
 
 			nstrip<-as.numeric(substr(layout[i],2,nchar(layout[i])))
-
+			
 			xlim<-c(min(dat[,j:(j+nstrip-1)],na.rm=TRUE),max(dat[,j:(j+nstrip-1)],na.rm=TRUE))
 			
 			cols<-1:nstrip
@@ -119,7 +119,7 @@ genfobj<-function(layout, dat, obs = NULL,
 				vname = hnames[i],
 				plot = list(x=0, type="n", xlim = xlim, ylim = ylim,
 					yaxt="n" ,ylab="", xlab="", axes=FALSE, xaxs = "i", yaxs = "i"),
-				axis = list(side = 1, line = 0, pos = ylim[1], las = 1),
+				axis = list(side = 1, line = 0, las = 1),
 				hline = list(h = y.at, lty = 3))
 
 			for (nsi in 1:nstrip) {
@@ -141,9 +141,9 @@ genfobj<-function(layout, dat, obs = NULL,
 					stop("'obs' must be a data frame with columns 'value', 'variable' and 'arm'.")
 				}
 			}
-
-			xlim<-c(min(obs$value),max(obs$value))
-
+			
+			xlim<-c(min(obs$value,na.rm=TRUE),max(obs$value,na.rm=TRUE))
+			
 			if (length(y.at)>1) {
 				yd<-abs(mean(diff(y.at)))
 			} else {
@@ -162,7 +162,7 @@ genfobj<-function(layout, dat, obs = NULL,
 					yaxt="n" ,ylab="", xlab="", axes=FALSE, xaxs = "i", yaxs = "i"),
 				boxplot = list(formula = value ~ arm*variable, data=obs,
 					at=rev(bp.at), boxwex = bwidth, horizontal=TRUE, axes=FALSE, col=cols, add=TRUE),
-				axis = list(side = 1, line = 0, pos = ylim[1], las = 1))
+				axis = list(side = 1, line = 0, las = 1))
 
 		}
 
@@ -176,8 +176,8 @@ genfobj<-function(layout, dat, obs = NULL,
 				}
 			}
 
-			xlim<-c(min(obs$value),max(obs$value))
-	
+			xlim<-c(min(obs$value,na.rm=TRUE),max(obs$value,na.rm=TRUE))
+			
 			plh<-ceiling(10*max(density(obs$value)$y))/10
 			
 			las<-levels(obs$arm)
@@ -202,7 +202,7 @@ genfobj<-function(layout, dat, obs = NULL,
 				vname = hnames[i],
 				plot = list(x=0, type="n", xlim = xlim, ylim = ylim,
 					yaxt="n" ,ylab="", xlab="", axes=FALSE, xaxs = "i", yaxs = "i"),
-				axis = list(side = 1, line = 0, pos = ylim[1], las = 1),
+				axis = list(side = 1, line = 0, las = 1),
 				lines = liv)
 	
 		}
@@ -1086,8 +1086,8 @@ d_lines<-function(fobj, item = NULL, linenr = NULL, ...) {
 #'
 header<-function(fobj, hlayout = NULL, headernr = NULL, ...)	{
 
-	if (!("fobj" %in% class(fobj) )) {
-		stop("fobj has to be of class fobj - use genfobj to define it")
+	if (!("fobj" %in% class(fobj) | "sfobj" %in% class(fobj))) {
+		stop("fobj has to be of class fobj or sfobj - use genfobj to define it")
 	}
 
 	input<-list(...)
@@ -1138,8 +1138,6 @@ header<-function(fobj, hlayout = NULL, headernr = NULL, ...)	{
 #'	Passed to \code{\link[graphics]{abline}}.
 #'
 #' @param fobj a forest plot object of class 'fobj'
-#' @param gridnr grid line to be modified.
-#'	If NULL (the default), all grid lines are affected
 #' @param ... options to be passed to Passed to \code{\link[graphics]{abline}}.
 #'
 #' @returns a forest plot object of class 'fobj'
@@ -1155,7 +1153,7 @@ header<-function(fobj, hlayout = NULL, headernr = NULL, ...)	{
 #'	lwidths = c(0.8,0.4,0.6,0.4,0.6,1,1,0.5))
 #' fobj<-gridlines(fobj = fobj)
 #' plotfobj(fobj)
-gridlines<-function(fobj, gridnr = NULL, ...)	{
+gridlines<-function(fobj, ...)	{
 
 	if (!("fobj" %in% class(fobj) )) {
 		stop("fobj has to be of class fobj - use genfobj to define it")
@@ -1163,30 +1161,12 @@ gridlines<-function(fobj, gridnr = NULL, ...)	{
 
 	input<-list(...)
 
-	if (length(fobj$gridlines)==0) {
-		if (is.null(gridnr)) {
-			fobj$gridlines<-list(list(h = fobj$setup$ylim[1], xpd = TRUE),list(h = fobj$setup$ylim[2], xpd = TRUE))
-		} else {
-			fobj$gridlines<-list(list(h = fobj$setup$ylim[2], xpd = TRUE))
-		}
+	if (is.null(fobj$gridlines)) {
+		fobj$gridlines<-list(h = c(fobj$setup$ylim[2], fobj$setup$ylim[1]), xpd = TRUE)	
 	}
 
-	if (is.null(gridnr)) {
-		gridnr<-length(fobj$gridlines)
-	}
-
-	for (htn in gridnr) {
-
-		if (length(fobj$gridlines)<gridnr) {
-			for (i in (length(fobj$gridlines)+1):gridnr) {
-				fobj$gridlines<-append(fobj$gridlines,list(fobj$gridlines[[i-1]]))
-			}
-		}
-
-
-		fobj$gridlines[[htn]]<-modifyList(fobj$gridlines[[htn]], input)
-	}
-
+	fobj$gridlines<-modifyList(fobj$gridlines, input)
+	
 	return(fobj)
 }
 

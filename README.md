@@ -725,7 +725,7 @@ plotfobj(fobj)
 
 ![](man/figures/README-unnamed-chunk-31-1.png)<!-- -->
 
-## Combine plots
+## Combine fobjs
 
 `plotfobj` also works with a list of `fobj` as long as the layout has
 the same length. If the `lwdiths` vary, the average is taken.
@@ -802,7 +802,7 @@ set.seed(1)
 
 fobj<-vector(10,mode="list")
 
-for (i in 1:10) {
+for (i in 1:length(fobj)) {
   
   #modify the data
     obs<-forplotdata_bp[forplotdata_bp$variable==paste0("var",i),]
@@ -827,7 +827,8 @@ for (i in 1:10) {
     #header for first fplot only
     if (i!=1) { 
         fobji$header<-NULL
-    } else {
+    }   
+    if (i==1) {
         
         fobji<-header(fobj = fobji,
       hlayout = c(1,2,2,3,3,4,5,6), headernr = 1,
@@ -839,7 +840,10 @@ for (i in 1:10) {
             labels=c("","N","mean (sd)","N","mean (sd)","","",""),
             col = 1, y = 0.35)
         
-        fobji<-gridlines(fobji,gridnr=2)
+        fobji<-gridlines(fobji, h=fobji$setup$ylim[2])
+    }
+    if (i==length(fobj)) {
+      fobji<-gridlines(fobji, h=fobji$setup$ylim[1])
     }
     
     #collect
@@ -856,3 +860,66 @@ plotfobj(fobj)
 ```
 
 ![](man/figures/README-unnamed-chunk-33-1.png)<!-- -->
+
+## Split a fobj and add subtitles
+
+In order to add subtitles over the whole width of the plot, the fobj has
+to be split. That can be done at specified positions via `splitfobj`,
+which generates an object of class **sfobj**. The **sfobj** includes
+
+- an overall *setup* with the layout matrix, heights and widths,
+- a *subtitle* element with a list for each inserted line,
+- an overall *header* which is a copy of the header element of the
+  original **fobj**,
+- *split_fobj*, a list of the split fobjects.
+
+``` r
+fobj<-genfobj(dat = forplotdata,
+  layout = c("t","t","t","t","t","t","f","t"), 
+    lwidths = c(0.3,0.4,0.6,0.4,0.6,1,1,0.5))
+
+sfobj<-splitfobj(fobj,
+    atrows=c(1, 3, 5),
+    subtitle=c("A first long title is added here",
+        "A second long title is added here",
+        "A third long title is added here")
+)
+
+plotfobj(sfobj)
+```
+
+![](man/figures/README-unnamed-chunk-34-1.png)<!-- -->
+
+The helper functions *subtitle_text*, *subtitle_stripes* and
+*subtitles_gridlines* can be used to modify the subtitle. The individual
+parts can still be accessed (e.g. to remove the axis in the first and
+second part). The overall header can be accessed as for the fobj.
+
+``` r
+#change text and background color, add gridlines
+sfobj<-subtitle_text(sfobj,snr=1, col="red")
+sfobj<-subtitle_stripes(sfobj)
+sfobj<-subtitle_gridlines(sfobj)
+
+#remove axis in first and second part
+sfobj$split_fobj[[1]]$items[[7]]$axis<-NULL
+sfobj$split_fobj[[2]]$items[[7]]$axis<-NULL
+#add gridline at the bottom
+sfobj$split_fobj[[3]]<-gridlines(sfobj$split_fobj[[3]])
+
+#format header
+sfobj<-sfobj |>
+    header(hlayout = c(1,2,2,3,3,4,4,5),  headernr = 1,
+        labels=c("","Arm A","Arm B","Mean diff (95% CI)","P-value"),
+        y=0.9) |>
+    header(hlayout = c(1,2,3,4,5,6,7,8), headernr = 2,
+        labels=c("","N","Mean (sd)","N","Mean (sd)","","",""),y=0.3) 
+    
+#adapt height of header and footer
+sfobj$setup$lheights[1]<-0.15
+sfobj$setup$lheights[length(sfobj$setup$lheights)]<-0.15
+
+plotfobj(sfobj)
+```
+
+![](man/figures/README-unnamed-chunk-35-1.png)<!-- -->

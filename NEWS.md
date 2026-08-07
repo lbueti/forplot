@@ -1,3 +1,10 @@
+forplot 2.0.0
+------------------
+add splitfobj to add subtitles
+simplify gridlines
+update default definition of xlim
+remove default pos argument for axis
+
 forplot 1.4.0
 ------------------
 allow several reflines in forest plots
