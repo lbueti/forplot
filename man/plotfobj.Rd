@@ -7,7 +7,7 @@
 plotfobj(fobj)
 }
 \arguments{
-\item{fobj}{a forest plot object or a list of fobj with the same layout length}
+\item{fobj}{a forest plot object, a list of fobj, or a split forest plot object}
 }
 \value{
 a plot

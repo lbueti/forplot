@@ -1,3 +1,7 @@
+forplot 2.1.0
+------------------
+plotting of a list of fobj with different layouts
+
 forplot 2.0.0
 ------------------
 add splitfobj to add subtitles
