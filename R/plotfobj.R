@@ -1,6 +1,6 @@
 #' plotfobj
 #'
-#' @param fobj a forest plot object or a list of fobj with the same layout length
+#' @param fobj a forest plot object, a list of fobj, or a split forest plot object
 #'
 #' @returns a plot
 #'
@@ -38,35 +38,50 @@ plotfobj<- function(fobj) {
 		le<-unlist(lapply(fobj,function(x) length(x$setup$layout)))
 		le1<-unique(le)
 		if (length(le1)!=1) {
-			stop("All elements of fobj must have a layout with the same length.")
+			warning("Not all fobj have the same number of columns. Different sized fobj are evenly distributed. ")
 		}
 		
-		#combine lheights and lwidths 
+		#find least common multiple
+		lec<-lcm_vector(le)
+		lefact<-lec/le
 		
+		#combine lheights and lwidths 	
 		cheights<-unlist(lapply(fobj, function(x) x$setup$lheights))
 		
-		cwidthsm<-do.call(rbind,lapply(fobj, function(x) x$setup$lwidths))
+		#cwidthsm<-do.call(rbind,lapply(fobj, function(x) x$setup$lwidths))
+		cwidthsm<-t(sapply(1:length(fobj), function(x) rep(fobj[[x]]$setup$lwidths,each=lefact[x])))
+		cwidthsm<-t(apply(cwidthsm,1,function(x) x/sum(x)))
+
 		dw<-sum(apply(cwidthsm,2,sd))
 		if (abs(dw)>10^(-5)) {
 			warning("lwidths are not the same in all fobj. The average is used.")
 		}
 		cwidths<-apply(cwidthsm,2,mean)
-		
-		#creat new layout matrix 
-		
-		ma<-lma(rows=1,cols=length(fobj[[1]]$setup$layout),
-			commonx1=TRUE,commonx2=TRUE)
-
-		ma[,1]<-min(ma[,1])
-		ma[,ncol(ma)]<-min(ma[,1])+1
-		
-		mac<-ma
-		
-		for (i in 2:length(fobj)) {
-			mai<-ma + max(mac)
+					
+		#create new layout matrix 
+		mac<-numeric(0)
+		for (i in 1:length(fobj)) {
+			
+			#main panel
+			mainp<-1:le[i]
+			mainp<-rep(mainp,each=lefact[i])
+			if (i!=1) {
+				mainp<-mainp + max(mac)
+			}
+			
+			#header and footer
+			mai<-rbind(rep(max(mainp)+2,length(cwidths)),
+				mainp,
+				rep(max(mainp)+1,length(cwidths)))
+			
 			mac<-rbind(mac,mai)
+
 		}
-		
+
+		#add side 
+		mac<-cbind(max(mac)+1,mac,max(mac)+2)
+			
+		#layout	
 		margin<-sum(cwidths)/100
 		
 		layout(mac,
@@ -74,19 +89,25 @@ plotfobj<- function(fobj) {
 			widths=c(margin,cwidths,margin))
 
 		par(mar=c(0,0,0,0))
-
-		for (i in 1:length(fobj)) {
-	
-			plotfobj1(fobj = fobj[[i]])
+				
+		for (fi in 1:length(fobj)) {
 			
-			jmax<-2
-			if (is.null(fobj[[i]]$header)) {
-				jmax<-3
-			}
+			fobji<-fobj[[fi]]
 			
-			for (j in 1:jmax) {
+			#common widths 
+			fobji$setup$lwidths<-cwidths
+			
+			#adapt header layout: 
+			for (fj in 1:length(fobj[[fi]]$header)) {
+				fobji$header[[fj]]$hlayout<-rep(fobji$header[[fj]]$hlayout,each=lefact[fi])
+			}	
+					
+			plotfobj1(fobj = fobji)
+			
+			if (is.null(fobji$header)) {
 				plot(0,type = "n", axes=FALSE, xlab="", ylab="")
 			}
+			
 		}	
 	}
 	

@@ -236,3 +236,28 @@ defxlim<-function(pe,lci,uci) {
 	
 	return(xlim)
 }
+
+
+#-----------------
+#Least common multiple
+#-----------------
+
+# 1. Define a Greatest Common Divisor function
+gcd <- function(a, b) {
+  while(b != 0) {
+    temp <- b
+    b <- a %% b
+    a <- temp
+  }
+  return(a)
+}
+
+# 2. Define a binary LCM function
+lcm <- function(a, b) {
+  return(abs(a * b) / gcd(a, b))
+}
+
+# 3. Apply to a vector using Reduce
+lcm_vector <- function(vec) {
+  Reduce(lcm, vec)
+}

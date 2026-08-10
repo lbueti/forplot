@@ -727,8 +727,9 @@ plotfobj(fobj)
 
 ## Combine fobjs
 
-`plotfobj` also works with a list of `fobj` as long as the layout has
-the same length. If the `lwdiths` vary, the average is taken.
+`plotfobj` also works with a list of `fobj`. If there are a different
+number of columns, they are distributed using a grid with the least
+common multiple. If the `lwdiths` vary, the average is taken.
 
 ``` r
 #define common lwidths
@@ -792,6 +793,40 @@ plotfobj(fobj = list(fobj1, fobj2))
 ```
 
 ![](man/figures/README-unnamed-chunk-32-1.png)<!-- -->
+
+Lists of fobj can also be used to add rows with a long text. However, if
+the layout of the two fobj is the same, the better approach might be
+splitting the fobj usung splitfobj (see below).
+
+``` r
+#prepare first fobj
+fobj1<-genfobj(dat = forplotdata[1:2,],
+  layout = c("t","t","t","t","t","t","f","t"),
+  lwidths = c(0.3,0.4,0.6,0.4,0.6,1,1,0.5),
+  lheights = c(0.1,1/10*2,0.01)) |>
+  gridlines()
+
+#prepare second fobj  
+fobj2<-genfobj(dat = forplotdata[3:10,],
+  layout = c("t","t","t","t","t","t","f","t"),
+  lwidths = c(0.3,0.4,0.6,0.4,0.6,1,1,0.5),
+  lheights = c(0.01,1/10*7,0.1)) |>
+  gridlines()
+
+fobj2$header<-NULL
+
+#title row
+st<-genfobj(dat = data.frame("Add a long title over several columns"),
+  layout="t",lwidths=c(2),lheights=c(0.01,0.05,0.01)) |>
+  t_options(x=0,adj=c(0,0.5)) 
+
+st$header<-NULL 
+
+#plot list:
+plotfobj(fobj = list(fobj1, st, fobj2))
+```
+
+![](man/figures/README-unnamed-chunk-33-1.png)<!-- -->
 
 Combining plots can also be used to get different scaling for the plots
 of the individual variables. Assume we would like to present a number of
@@ -859,7 +894,7 @@ fobj[[length(fobj)]]$setup$lheights[3]<-0.5
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-33-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-34-1.png)<!-- -->
 
 ## Split a fobj and add subtitles
 
@@ -888,7 +923,7 @@ sfobj<-splitfobj(fobj,
 plotfobj(sfobj)
 ```
 
-![](man/figures/README-unnamed-chunk-34-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-35-1.png)<!-- -->
 
 The helper functions *subtitle_text*, *subtitle_stripes* and
 *subtitles_gridlines* can be used to modify the subtitle. The individual
@@ -922,4 +957,4 @@ sfobj$setup$lheights[length(sfobj$setup$lheights)]<-0.15
 plotfobj(sfobj)
 ```
 
-![](man/figures/README-unnamed-chunk-35-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-36-1.png)<!-- -->
