@@ -4,16 +4,13 @@
 \alias{s_borders}
 \title{s_borders}
 \usage{
-s_borders(fobj, item = NULL, bordernr = NULL, ...)
+s_borders(fobj, item = NULL, ...)
 }
 \arguments{
 \item{fobj}{a forest plot object of class 'fobj'}
 
 \item{item}{item to be modified, either a number or the name of the column in fobj$dat.
 If NULL (the default), all items of type 's' are affected}
-
-\item{bordernr}{border to be modified, 1 (left) or 2 (right).
-If NULL (the default), all borders are affected.}
 
 \item{...}{options to be passed to \code{\link[graphics]{abline}}}
 }
@@ -23,6 +20,7 @@ a forest plot object of class 'fobj'
 \description{
 Add and modify borders of a sripe (s) item of a forest plot object (fobj).
 Passed to \code{\link[graphics]{abline}}.
+Wihout options two vertical lines are plotted at x-axis limits.
 }
 \examples{
 

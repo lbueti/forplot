@@ -768,13 +768,12 @@ s_points<-function(fobj, item = NULL, pointnr = NULL, ...) {
 #' s_borders
 #'
 #' Add and modify borders of a sripe (s) item of a forest plot object (fobj).
-#' Passed to \code{\link[graphics]{abline}}.
+#' Passed to \code{\link[graphics]{abline}}. 
+#' Wihout options two vertical lines are plotted at x-axis limits.
 #'
 #' @param fobj a forest plot object of class 'fobj'
 #' @param item item to be modified, either a number or the name of the column in fobj$dat.
 #' 	If NULL (the default), all items of type 's' are affected
-#' @param bordernr border to be modified, 1 (left) or 2 (right).
-#'	If NULL (the default), all borders are affected.
 #' @param ... options to be passed to \code{\link[graphics]{abline}}
 #'
 #' @returns a forest plot object of class 'fobj'
@@ -791,7 +790,7 @@ s_points<-function(fobj, item = NULL, pointnr = NULL, ...) {
 #'fobj<-s_borders(fobj=fobj)
 #'plotfobj(fobj)
 #'
-s_borders<-function(fobj, item = NULL, bordernr = NULL, ...) {
+s_borders<-function(fobj, item = NULL, ...) {
 
 	itemnr<-check_convert(fobj = fobj, item = item, lay = "s")
 
@@ -801,29 +800,15 @@ s_borders<-function(fobj, item = NULL, bordernr = NULL, ...) {
 
 		if (is.null(fobj$items[[itn]]$borders)) {
 
-			fobj$items[[itn]]$borders<-list(list(v = fobj$items[[itn]]$plot$xlim[1]),list(v = fobj$items[[itn]]$plot$xlim[2]))
-
+			fobj$items[[itn]]$borders<-
+				list(v = c(fobj$items[[itn]]$plot$xlim[1],
+				fobj$items[[itn]]$plot$xlim[2]))
 		}
-
-
-		if (is.null(bordernr)) {
-
-			bordernr<-1:2
-
-			for (pn in bordernr) {
-
-				fobj$items[[itn]]$borders[[pn]]<-
-					modifyList(fobj$items[[itn]]$borders[[pn]], input)
-			}
-
-		} else {
-
-				fobj$items[[itn]]$borders[[pn]]<-
-					modifyList(fobj$items[[itn]]$borders[[pn]], input)
-
-		}
+		
+		fobj$items[[itn]]$borders<-
+			modifyList(fobj$items[[itn]]$borders, input)
 	}
-
+	
 	return(fobj)
 }
 
@@ -1086,18 +1071,25 @@ d_lines<-function(fobj, item = NULL, linenr = NULL, ...) {
 #'
 header<-function(fobj, hlayout = NULL, headernr = NULL, ...)	{
 
-	if (!("fobj" %in% class(fobj) | "sfobj" %in% class(fobj))) {
-		stop("fobj has to be of class fobj or sfobj - use genfobj to define it")
+	if (!("fobj" %in% class(fobj) | "sfobj" %in% class(fobj) | "cfobj" %in% class(fobj))) {
+		stop("fobj has to be of class fobj, sfobj or cfobj - use genfobj to define it")
 	}
 
 	input<-list(...)
 
 	if (length(fobj$header)==0) {
-
-		h<-headernames(dat = fobj$dat, layout = fobj$setup$layout)
-
-		fobj$header<-list(list(hlayout = 1:length(fobj$setup$layout),
-			text = list(x = NULL, y = 0.5, labels = h, adj = c(0.5,0.5))))
+		
+		if (is.null(fobj$dat)) {
+			h<-paste0("header",1:length(fobj$setup$lwidth))
+			fobj$header<-list(list(hlayout = 1:length(fobj$setup$lwidth),
+				text = list(x = NULL, y = 0.5, labels = h, adj = c(0.5,0.5))))
+		} else {
+			h<-headernames(dat = fobj$dat, layout = fobj$setup$layout)
+			fobj$header<-list(list(hlayout = 1:length(fobj$setup$layout),
+				text = list(x = NULL, y = 0.5, labels = h, adj = c(0.5,0.5))))
+		}
+		
+		
 	}
 
 

@@ -727,18 +727,19 @@ plotfobj(fobj)
 
 ## Combine fobjs
 
-`plotfobj` also works with a list of `fobj`. If there are a different
-number of columns, they are distributed using a grid with the least
-common multiple. If the `lwdiths` vary, the average is taken.
+A list of **fobj** can be combined using `combinefobj` resulting in an
+object of class **cfobj**, which includes an overall *setup*, an overall
+*header* and the list of the individual **fobj**.
+
+The layout is adapted automatically. If there are different number of
+columns, they are distributed using a grid with the least common
+multiple. If the *lwdiths* vary, the average is taken.
 
 ``` r
-#define common lwidths
-commonlwidths<-c(0.3,0.4,0.6,0.4,0.6,1,1,1,0.5)
-
 #prepare first fobj
 fobj1<-genfobj(dat = forplotdata, obs = forplotdata_bp,
   layout = c("t","t","t","t","t","b","t","f","t"),
-  lwidths = commonlwidths)
+  lwidths = c(0.3,0.4,0.6,0.4,0.6,1,1,1,0.5))
 
 fobj1$setup$lheights[1]<-0.2
 fobj1$setup$lheights[3]<-0.2
@@ -762,7 +763,7 @@ fobj1<-header(fobj = fobj1, hlayout = c(1,2,3,4,5,6,7,8,9), headernr = 3,
 #prepare second fobj
 fobj2<-genfobj(dat = forplotdata_prop,
   layout = c("t","t","t","t","t","s2","t","f","t"),
-  lwidths = commonlwidths)
+  lwidths = c(0.3,0.4,0.6,0.4,0.6,1,1,1,0.5))
 
 fobj2$setup$lheights[1]<-0.2
 fobj2$setup$lheights[3]<-0.2
@@ -787,43 +788,39 @@ fobj2<-header(fobj = fobj2, hlayout = c(1,2,3,4,5,6,7,8,9), headernr = 3,
     labels=c("","N","n (%)","N","n (%)","","","",""),
     col = 1, y = 0.15, font = 1, cex = 1)
 
+#combine:
+cfobj<-combinefobj(list(fobj1, fobj2))
 
-#plot list:
-plotfobj(fobj = list(fobj1, fobj2))
+names(cfobj)
+#> [1] "setup"  "header" "fobjs"
+cfobj$setup
+#> $lmatrix
+#>      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11]
+#> [1,]   25    1    1    1    1    1    1    1    1     1    26
+#> [2,]   25   12   12   12   12   12   12   12   12    12    26
+#> [3,]   25    2    3    4    5    6    7    8    9    10    26
+#> [4,]   25   11   11   11   11   11   11   11   11    11    26
+#> [5,]   25   23   23   23   23   23   23   23   23    23    26
+#> [6,]   25   13   14   15   16   17   18   19   20    21    26
+#> [7,]   25   22   22   22   22   22   22   22   22    22    26
+#> [8,]   25   24   24   24   24   24   24   24   24    24    26
+#> 
+#> $lwidths
+#> [1] 0.05172414 0.06896552 0.10344828 0.06896552 0.10344828 0.17241379 0.17241379
+#> [8] 0.17241379 0.08620690
+#> 
+#> $lheights
+#> [1] 0.200 0.200 1.000 0.200 0.200 1.000 0.200 0.028
+#> 
+#> $iheadfoot
+#> [1] TRUE
 ```
 
-![](man/figures/README-unnamed-chunk-32-1.png)<!-- -->
-
-Lists of fobj can also be used to add rows with a long text. However, if
-the layout of the two fobj is the same, the better approach might be
-splitting the fobj usung splitfobj (see below).
+The **cfobj** can be plotted using the same plot function:
 
 ``` r
-#prepare first fobj
-fobj1<-genfobj(dat = forplotdata[1:2,],
-  layout = c("t","t","t","t","t","t","f","t"),
-  lwidths = c(0.3,0.4,0.6,0.4,0.6,1,1,0.5),
-  lheights = c(0.1,1/10*2,0.01)) |>
-  gridlines()
-
-#prepare second fobj  
-fobj2<-genfobj(dat = forplotdata[3:10,],
-  layout = c("t","t","t","t","t","t","f","t"),
-  lwidths = c(0.3,0.4,0.6,0.4,0.6,1,1,0.5),
-  lheights = c(0.01,1/10*7,0.1)) |>
-  gridlines()
-
-fobj2$header<-NULL
-
-#title row
-st<-genfobj(dat = data.frame("Add a long title over several columns"),
-  layout="t",lwidths=c(2),lheights=c(0.01,0.05,0.01)) |>
-  t_options(x=0,adj=c(0,0.5)) 
-
-st$header<-NULL 
-
 #plot list:
-plotfobj(fobj = list(fobj1, st, fobj2))
+plotfobj(fobj = cfobj)
 ```
 
 ![](man/figures/README-unnamed-chunk-33-1.png)<!-- -->
@@ -859,22 +856,10 @@ for (i in 1:length(fobj)) {
     fobji<-b_axis(fobji, cex.axis=0.8, mgp=c(0,0.3,0), tck=-0.1)
     fobji<-d_axis(fobji, cex.axis=0.8, mgp=c(0,0.3,0), tck=-0.1)
     
-    #header for first fplot only
-    if (i!=1) { 
-        fobji$header<-NULL
-    }   
+    #remove individual headers
+    fobji$header<-NULL
+        
     if (i==1) {
-        
-        fobji<-header(fobj = fobji,
-      hlayout = c(1,2,2,3,3,4,5,6), headernr = 1,
-            labels=c("","Arm A","Arm B","Boxplot","","Density"),
-            col = c(1,"red","blue",1,1), y = 0.9)
-
-        fobji<-header(fobj = fobji,
-      hlayout = c(1,2,3,4,5,6,7,8), headernr = 2,
-            labels=c("","N","mean (sd)","N","mean (sd)","","",""),
-            col = 1, y = 0.35)
-        
         fobji<-gridlines(fobji, h=fobji$setup$ylim[2])
     }
     if (i==length(fobj)) {
@@ -885,65 +870,79 @@ for (i in 1:length(fobj)) {
     fobj[[i]]<-fobji
     
 }
+cfobj<-combinefobj(fobj)
 
+#combine and add overall header
+cfobj<-combinefobj(fobj) |>
+  header(hlayout = c(1,2,2,3,3,4,5,6), headernr = 1,
+        labels=c("","Arm A","Arm B","Boxplot","","Density"),
+        col = c(1,"red","blue",1,1), y = 0.9) |>
+  header(hlayout = c(1,2,3,4,5,6,7,8), headernr = 2,
+            labels=c("","N","mean (sd)","N","mean (sd)","","",""),
+            col = 1, y = 0.35)
+        
 #adapt top header and bottom footer
-fobj[[1]]$setup$lheights[1]<-1
-fobj[[length(fobj)]]$setup$lheights[3]<-0.5
+cfobj$setup$lheights[1]<-1
+cfobj$setup$lheights[length(cfobj$setup$lheights)]<-0.5
 
-#plot the list of fobj
-plotfobj(fobj)
+#combine and plot the list of fobj
+plotfobj(cfobj)
 ```
 
 ![](man/figures/README-unnamed-chunk-34-1.png)<!-- -->
 
-## Split a fobj and add subtitles
+## Inserting subtitles
 
-In order to add subtitles over the whole width of the plot, the fobj has
-to be split. That can be done at specified positions via `splitfobj`,
-which generates an object of class **sfobj**. The **sfobj** includes
-
-- an overall *setup* with the layout matrix, heights and widths,
-- a *subtitle* element with a list for each inserted line,
-- an overall *header* which is a copy of the header element of the
-  original **fobj**,
-- *split_fobj*, a list of the split fobjects.
+Subtitles can be inserted using the `combinefobj` functionality with an
+**fobj** that does only have one column. The function `insert_subtitle`
+helps with the preparation:
 
 ``` r
 fobj<-genfobj(dat = forplotdata,
   layout = c("t","t","t","t","t","t","f","t"), 
     lwidths = c(0.3,0.4,0.6,0.4,0.6,1,1,0.5))
 
-sfobj<-splitfobj(fobj,
+cfobj<-insert_subtitle(fobj,
     atrows=c(1, 3, 5),
     subtitle=c("A first long title is added here",
         "A second long title is added here",
         "A third long title is added here")
 )
 
-plotfobj(sfobj)
+plotfobj(cfobj)
 ```
 
 ![](man/figures/README-unnamed-chunk-35-1.png)<!-- -->
 
-The helper functions *subtitle_text*, *subtitle_stripes* and
-*subtitles_gridlines* can be used to modify the subtitle. The individual
-parts can still be accessed (e.g. to remove the axis in the first and
-second part). The overall header can be accessed as for the fobj.
+The resulting **cfobj** contains 6 individual **fobj** (for each
+subtitle and the parts in between), which can be modified individually.
+We can e.g. modify subtitles or remove the axes in the first and second
+part of the plot.
+
+Note that there are no individual headers and footers for this 6
+**fobj**, which is the case if they are combined directly via
+`combinefobj`.
+
+The overall header can be accessed via the `header` function in the same
+way as for an individual `fobj`.
 
 ``` r
 #change text and background color, add gridlines
-sfobj<-subtitle_text(sfobj,snr=1, col="red")
-sfobj<-subtitle_stripes(sfobj)
-sfobj<-subtitle_gridlines(sfobj)
+cfobj$fobjs[[1]]<-t_options(cfobj$fobjs[[1]], col = "red")
+for (i in c(1,3,5)) {
+  cfobj$fobjs[[i]]<-cfobj$fobjs[[i]] |>
+      stripes() |>
+      gridlines()
+}
 
-#remove axis in first and second part
-sfobj$split_fobj[[1]]$items[[7]]$axis<-NULL
-sfobj$split_fobj[[2]]$items[[7]]$axis<-NULL
+#only keep bottom axis
+cfobj$fobjs[[2]]$items[[7]]$axis<-NULL
+cfobj$fobjs[[4]]$items[[7]]$axis<-NULL
 #add gridline at the bottom
-sfobj$split_fobj[[3]]<-gridlines(sfobj$split_fobj[[3]])
+cfobj$fobjs[[6]]<-gridlines(cfobj$fobjs[[6]])
 
-#format header
-sfobj<-sfobj |>
+#overall header
+cfobj<-cfobj |>
     header(hlayout = c(1,2,2,3,3,4,4,5),  headernr = 1,
         labels=c("","Arm A","Arm B","Mean diff (95% CI)","P-value"),
         y=0.9) |>
@@ -951,10 +950,10 @@ sfobj<-sfobj |>
         labels=c("","N","Mean (sd)","N","Mean (sd)","","",""),y=0.3) 
     
 #adapt height of header and footer
-sfobj$setup$lheights[1]<-0.15
-sfobj$setup$lheights[length(sfobj$setup$lheights)]<-0.15
+cfobj$setup$lheights[1]<-0.15
+cfobj$setup$lheights[length(cfobj$setup$lheights)]<-0.15
 
-plotfobj(sfobj)
+plotfobj(cfobj)
 ```
 
 ![](man/figures/README-unnamed-chunk-36-1.png)<!-- -->
