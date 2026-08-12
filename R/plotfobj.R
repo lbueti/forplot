@@ -1,6 +1,6 @@
 #' plotfobj
 #'
-#' @param fobj a forest plot object, a list of fobj, or a split forest plot object
+#' @param fobj a forest plot object or a combined forest plot object
 #'
 #' @returns a plot
 #'
@@ -19,19 +19,19 @@
 plotfobj<- function(fobj) {
 	
 	isfobj<-"fobj" %in% class(fobj)
-	issfobj<-"sfobj" %in% class(fobj)
+	iscfobj<-"cfobj" %in% class(fobj)
 	islistfobj<-FALSE
 	
-	if (!isfobj & !issfobj) {
+	if (!isfobj & !iscfobj) {
 		cc<-do.call(rbind,lapply(fobj,function(x) class(x)))
 		islistfobj<-is.list(fobj) & all(cc[,1]=="fobj")
 	}
 	
-	if (!(isfobj | islistfobj | issfobj)) {
-		stop("'fobj' must have class 'fobj' or 'sfobj' (or be a list of 'fobj'). Use genfobj to generate it.")
+	if (!(isfobj | islistfobj | iscfobj)) {
+		stop("'fobj' must have class 'fobj' or 'cfobj'. Use genfobj to generate it.")
 	}
 	
-	if (!isfobj & !issfobj & islistfobj) {
+	if (!isfobj & !iscfobj & islistfobj) {
 		
 		#check compatability 
 		
@@ -128,8 +128,8 @@ plotfobj<- function(fobj) {
 		
 	}
 	
-	if (issfobj) {
-				
+	if (iscfobj) {
+						
 		#layout
 		margin<-sum(fobj$setup$lwidths)/100
 
@@ -139,30 +139,21 @@ plotfobj<- function(fobj) {
 
 		par(mar=c(0,0,0,0))
 		
-		#header
-		hobj<-list(header=fobj$header,setup=list(lwidths=fobj$setup$lwidths))
-		plotfobj1(fobj = hobj, additems=FALSE, addfoot=FALSE)	
-		
-		#subtitles
-		for (ni in 1:length(fobj$setup$atrows)) {
-			do.call(plot, fobj$subtitle[[ni]]$plot)
-			do.call(text, fobj$subtitle[[ni]]$text)
-			
-			if (!is.null(fobj$subtitle[[ni]]$stripes)) {
-				fobj$subtitle[[ni]]$stripes$xleft<-par("usr")[1]
-				fobj$subtitle[[ni]]$stripes$xright<-par("usr")[2]
-				do.call(rect, fobj$subtitle[[ni]]$stripes)
-			}
-			if (!is.null(fobj$subtitle[[ni]]$gridlines)) {
-				do.call(abline, fobj$subtitle[[ni]]$gridlines)
-			}
-				
+		#ovearall header
+		if (!is.null(fobj$header)) {
+			hobj<-list(header=fobj$header,setup=list(lwidths=fobj$setup$lwidths))
+			plotfobj1(fobj = hobj, additems=FALSE, addfoot=FALSE)	
+		} else {
+			plot(0,type="n",axes=FALSE,ylim=c(0,1),xlim=c(0,1),xlab="",ylab="")
 		}
-
 		
-		#split fobjs
-		for (ir in 1:length(fobj$split_fobj)) {
-			plotfobj1(fobj = fobj$split_fobj[[ir]], addhead=FALSE, addfoot=FALSE)
+		#individual fobjs
+		for (ir in 1:length(fobj$fobjs)) {
+			if (fobj$setup$iheadfoot) {
+				plotfobj1(fobj = fobj$fobjs[[ir]], addhead=TRUE, addfoot=TRUE)
+			} else {			
+				plotfobj1(fobj = fobj$fobjs[[ir]], addhead=FALSE, addfoot=FALSE)
+			}
 		}
 		
 	}
@@ -211,14 +202,14 @@ plotfobj1<- function(fobj, additems = TRUE, addfoot = TRUE, addhead = TRUE) {
 					do.call(axis, fobj$items[[i]]$axis)
 				}
 				
-				do.call(points, fobj$items[[i]]$points)
-				do.call(mapply, c(FUN = arrows, fobj$items[[i]]$arrows))
-
 				if (!is.null(fobj$items[[i]]$refline)) {
 					#do.call(lines, fobj$items[[i]]$refline)
 					lapply(fobj$items[[i]]$refline, function(x) do.call(lines, x))
 				}
 
+				do.call(points, fobj$items[[i]]$points)
+				do.call(mapply, c(FUN = arrows, fobj$items[[i]]$arrows))
+				
 				if (!is.null(fobj$items[[i]]$direction)) {
 					do.call(mtext, fobj$items[[i]]$direction)
 				}
@@ -251,7 +242,7 @@ plotfobj1<- function(fobj, additems = TRUE, addfoot = TRUE, addhead = TRUE) {
 				}
 
 				if (!is.null(fobj$items[[i]]$borders)) {
-					lapply(fobj$items[[i]]$borders, function(x) do.call(abline, x))
+					do.call(abline,fobj$items[[i]]$borders)
 				}
 
 				if (!is.null(fobj$gridlines)) {
@@ -348,6 +339,8 @@ plotfobj1<- function(fobj, additems = TRUE, addfoot = TRUE, addhead = TRUE) {
 
 				do.call(text, fobj$header[[hi]]$text)
 			}
+		} else {
+			plot(0,type="n",axes=FALSE,ylim=c(0,1),xlim=c(0,1),xlab="",ylab="")
 		}
 	}
 

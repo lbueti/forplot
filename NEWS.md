@@ -1,3 +1,12 @@
+forplot 3.0.0
+------------------
+add combinefobj to combine fobj
+replace splitfobj by insert_subtitle
+
+forplot 2.1.1
+------------------
+simplify s_borders
+
 forplot 2.1.0
 ------------------
 plotting of a list of fobj with different layouts
