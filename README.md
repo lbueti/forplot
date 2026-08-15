@@ -813,7 +813,7 @@ cfobj$setup
 #> [1] 0.200 0.200 1.000 0.200 0.200 1.000 0.200 0.028
 #> 
 #> $iheadfoot
-#> [1] TRUE
+#> [1] TRUE TRUE
 ```
 
 The **cfobj** can be plotted using the same plot function:
@@ -827,7 +827,10 @@ plotfobj(fobj = cfobj)
 
 Combining plots can also be used to get different scaling for the plots
 of the individual variables. Assume we would like to present a number of
-differently scaled continuous variables with boxplots and densities:
+differently scaled continuous variables with boxplots and densities.
+Note that we removed the headers of the indiviual fobj but kept the
+footer (to have space for the axes) by setting *ikeepheadfoot* to
+c(FALSE, TRUE).
 
 ``` r
 set.seed(1)
@@ -857,8 +860,9 @@ for (i in 1:length(fobj)) {
     fobji<-d_axis(fobji, cex.axis=0.8, mgp=c(0,0.3,0), tck=-0.1)
     
     #remove individual headers
-    fobji$header<-NULL
-        
+    #fobji$header<-NULL
+    
+    #gridlines on first and last fobj
     if (i==1) {
         fobji<-gridlines(fobji, h=fobji$setup$ylim[2])
     }
@@ -873,7 +877,7 @@ for (i in 1:length(fobj)) {
 cfobj<-combinefobj(fobj)
 
 #combine and add overall header
-cfobj<-combinefobj(fobj) |>
+cfobj<-combinefobj(fobj, keepiheadfoot = c(FALSE, TRUE)) |>
   header(hlayout = c(1,2,2,3,3,4,5,6), headernr = 1,
         labels=c("","Arm A","Arm B","Boxplot","","Density"),
         col = c(1,"red","blue",1,1), y = 0.9) |>
@@ -881,7 +885,7 @@ cfobj<-combinefobj(fobj) |>
             labels=c("","N","mean (sd)","N","mean (sd)","","",""),
             col = 1, y = 0.35)
         
-#adapt top header and bottom footer
+#adapt overall header and footer
 cfobj$setup$lheights[1]<-1
 cfobj$setup$lheights[length(cfobj$setup$lheights)]<-0.5
 
@@ -921,7 +925,7 @@ part of the plot.
 
 Note that there are no individual headers and footers for this 6
 **fobj**, which is the case if they are combined directly via
-`combinefobj`.
+`combinefobj` (unless option *keepiheadfoot* is set to FALSE).
 
 The overall header can be accessed via the `header` function in the same
 way as for an individual `fobj`.

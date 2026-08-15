@@ -149,11 +149,9 @@ plotfobj<- function(fobj) {
 		
 		#individual fobjs
 		for (ir in 1:length(fobj$fobjs)) {
-			if (fobj$setup$iheadfoot) {
-				plotfobj1(fobj = fobj$fobjs[[ir]], addhead=TRUE, addfoot=TRUE)
-			} else {			
-				plotfobj1(fobj = fobj$fobjs[[ir]], addhead=FALSE, addfoot=FALSE)
-			}
+			plotfobj1(fobj = fobj$fobjs[[ir]], 
+				addhead = fobj$setup$iheadfoot[1],
+				addfoot = fobj$setup$iheadfoot[2])
 		}
 		
 	}

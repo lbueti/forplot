@@ -8,6 +8,7 @@
 #' @param subtitle optional character vector with  subtitles, has to be of the same length as atrows
 #' @param lheights Optional numeric vector with the relative heights of header, subtitles, main panels and footer.
 #'	The length has to correspond to 3 + 2*number of inserted subtitles.
+#' @param keepiheadfoot logical of length 2, whether the header and footers of the individual fobjs are kept.
 #'
 #' @returns a combined forest plot object of class 'cfobj'
 #'
@@ -28,7 +29,7 @@
 #' cfobj<-combinefobj(list(fobj1,fobj2))
 #' plotfobj(cfobj)
 #'
-combinefobj<-function(lfobj, atrows = NA, subtitle = NA, lheights = NA)	{
+combinefobj<-function(lfobj, atrows = NA, subtitle = NA, lheights = NA, keepiheadfoot = c(TRUE, TRUE))	{
 		
 		#check if list 
 		cc<-do.call(rbind,lapply(lfobj,function(x) class(x)))
@@ -46,13 +47,30 @@ combinefobj<-function(lfobj, atrows = NA, subtitle = NA, lheights = NA)	{
 			warning("Not all fobj have the same number of columns. Different sized fobj are evenly distributed. ")
 		}
 		
+		#check keepiheadfoot
+		if (!is.logical(keepiheadfoot) || length(keepiheadfoot) != 2 || any(is.na(keepiheadfoot))) {
+			stop("Argument 'keepiheadfoot' must be a logical vector of length 2.")
+		}
+  
 		#find least common multiple
 		lec<-lcm_vector(le)
 		lefact<-lec/le
 		
 		#combine lheights and lwidths 	
-		cheights<-unlist(lapply(lfobj, function(x) x$setup$lheights))
-		cheights<-c(cheights[1],cheights,sum(cheights)/100)
+		avhead<-mean(unlist(lapply(lfobj, function(x) x$setup$lheights[1])))
+		cheightl<-lapply(lfobj, function(x) x$setup$lheights)
+		
+		if (!keepiheadfoot[1]) {
+			cheightl<-lapply(cheightl, function(x) x[-1])
+		}
+		if (!keepiheadfoot[2]) {
+			cheightl<-lapply(cheightl, function(x) x[-length(x)])
+		}
+		#cheights<-unlist(lapply(lfobj, function(x) x$setup$lheights[-c(1,length(x$setup$lheights))]))
+		
+		cheights<-unlist(cheightl)
+		cheights<-c(avhead,cheights,sum(cheights)/100)
+		
 		cwidthsm<-t(sapply(1:length(lfobj), function(x) rep(lfobj[[x]]$setup$lwidths,each=lefact[x])))
 		cwidthsm<-t(apply(cwidthsm,1,function(x) x/sum(x)))
 		dw<-sum(apply(cwidthsm,2,sd))
@@ -73,13 +91,25 @@ combinefobj<-function(lfobj, atrows = NA, subtitle = NA, lheights = NA)	{
 			}
 			
 			#individual headers and footers
-			mai<-rbind(rep(max(mainp)+2,length(cwidths)),
-				mainp,rep(max(mainp)+1,length(cwidths)))
-			#mai<-rbind(rep(max(mainp)+1,length(cwidths)),mainp)
-				
+			if (all(keepiheadfoot)) {
+				mai<-rbind(rep(max(mainp)+2,length(cwidths)),
+					mainp,rep(max(mainp)+1,length(cwidths)))
+			} else {
+				if (all(!keepiheadfoot)) {
+					mai<-mainp
+				} else {
+					if (keepiheadfoot[1]) {
+						mai<-rbind(rep(max(mainp)+1,length(cwidths)),mainp)
+					}
+					if (keepiheadfoot[2]) {
+						mai<-rbind(mainp,rep(max(mainp)+1,length(cwidths)))
+					}
+				}
+			}
+			
 			mac<-rbind(mac,mai)
-
 		}
+		
 		#overall header and footer:
 		mac<-rbind(rep(1,ncol(mac)),mac+1,rep(max(mac)+2,ncol(mac)))
 		
@@ -94,9 +124,13 @@ combinefobj<-function(lfobj, atrows = NA, subtitle = NA, lheights = NA)	{
 			lfobj[[fi]]$setup$lwidths<-cwidths
 			
 			#adapt header layout: 
-			for (fj in 1:length(lfobj[[fi]]$header)) {
-				lfobj[[fi]]$header[[fj]]$hlayout<-rep(lfobj[[fi]]$header[[fj]]$hlayout,each=lefact[fi])
-			}		
+			if (keepiheadfoot[1]) {
+				for (fj in 1:length(lfobj[[fi]]$header)) {
+					lfobj[[fi]]$header[[fj]]$hlayout<-rep(lfobj[[fi]]$header[[fj]]$hlayout,each=lefact[fi])
+				}
+			} else {
+				lfobj[[fi]]$header<-NULL
+			}			
 		}
 
 		
@@ -104,7 +138,7 @@ combinefobj<-function(lfobj, atrows = NA, subtitle = NA, lheights = NA)	{
 			setup = list(lmatrix=mac,
 				lwidths=cwidths,
 				lheights=cheights,
-				iheadfoot=TRUE),
+				iheadfoot=keepiheadfoot),
 			header=NULL,
 			fobjs=lfobj)
 		
@@ -242,7 +276,7 @@ insert_subtitle<-function(fobj, atrows, subtitle = NA, lheights = NA)	{
 		setup = list(lmatrix=mac,
 			lwidths=fobj$setup$lwidths,
 			lheights=lheights,
-			iheadfoot=FALSE),
+			iheadfoot=c(FALSE, FALSE)),
 		header = fobj$header,
 		fobjs=fobjs)
 
