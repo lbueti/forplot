@@ -4,7 +4,13 @@
 \alias{combinefobj}
 \title{combinefobj}
 \usage{
-combinefobj(lfobj, atrows = NA, subtitle = NA, lheights = NA)
+combinefobj(
+  lfobj,
+  atrows = NA,
+  subtitle = NA,
+  lheights = NA,
+  keepiheadfoot = c(TRUE, TRUE)
+)
 }
 \arguments{
 \item{lfobj}{a list of forest plot objects of class 'fobj'}
@@ -15,6 +21,8 @@ combinefobj(lfobj, atrows = NA, subtitle = NA, lheights = NA)
 
 \item{lheights}{Optional numeric vector with the relative heights of header, subtitles, main panels and footer.
 The length has to correspond to 3 + 2*number of inserted subtitles.}
+
+\item{keepiheadfoot}{logical of length 2, whether the header and footers of the individual fobjs are kept.}
 }
 \value{
 a combined forest plot object of class 'cfobj'

@@ -1,3 +1,7 @@
+forplot 3.0.1
+------------------
+add option to drop individual headers and footers in combinefobj
+
 forplot 3.0.0
 ------------------
 add combinefobj to combine fobj
