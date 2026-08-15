@@ -204,6 +204,23 @@ headernames<-function(dat, layout) {
 }
 
 #----------------------------
+#padding for axis limits
+#----------------------------
+addpad<-function(lims, padding = 0.04) {
+	
+	if (lims[1]==lims[2]) {
+		lims[1]<-lims[1]-padding*lims[1]
+		lims[2]<-lims[2]+padding*lims[2]
+	} else {
+		#add padding
+		pa<-padding*(lims[2]-lims[1])
+		lims[1]<-lims[1]-pa
+		lims[2]<-lims[2]+pa		
+	}
+	return(lims)
+}
+
+#----------------------------
 #xlimits from point estimate plus CI
 #----------------------------
 
@@ -223,15 +240,7 @@ defxlim<-function(pe,lci,uci) {
 	if (all(is.na(lci)) | all(is.na(uci))) {
 		xlim<-NULL
 	} else {
-		if (xlim[1]==xlim[2]) {
-			xlim[1]<-xlim[1]-0.04*xlim[1]
-			xlim[2]<-xlim[2]+0.04*xlim[2]
-		} else {
-			#add padding
-			pa<-0.04*(xlim[2]-xlim[1])
-			xlim[1]<-xlim[1]-pa
-			xlim[2]<-xlim[2]+pa		
-		}
+		xlim<-addpad(xlim)
 	}
 	
 	return(xlim)

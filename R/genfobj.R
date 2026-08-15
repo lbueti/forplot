@@ -111,6 +111,7 @@ genfobj<-function(layout, dat, obs = NULL,
 			nstrip<-as.numeric(substr(layout[i],2,nchar(layout[i])))
 			
 			xlim<-c(min(dat[,j:(j+nstrip-1)],na.rm=TRUE),max(dat[,j:(j+nstrip-1)],na.rm=TRUE))
+			xlim<-addpad(lims = xlim, padding = 0.04)
 			
 			cols<-1:nstrip
 
@@ -143,6 +144,7 @@ genfobj<-function(layout, dat, obs = NULL,
 			}
 			
 			xlim<-c(min(obs$value,na.rm=TRUE),max(obs$value,na.rm=TRUE))
+			xlim<-addpad(lims = xlim, padding = 0.04)	
 			
 			if (length(y.at)>1) {
 				yd<-abs(mean(diff(y.at)))
@@ -177,6 +179,7 @@ genfobj<-function(layout, dat, obs = NULL,
 			}
 
 			xlim<-c(min(obs$value,na.rm=TRUE),max(obs$value,na.rm=TRUE))
+			xlim<-addpad(lims = xlim, padding = 0.04)	
 			
 			plh<-ceiling(10*max(density(obs$value)$y))/10
 			

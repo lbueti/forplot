@@ -1,6 +1,7 @@
 forplot 3.0.1
 ------------------
 add option to drop individual headers and footers in combinefobj
+add padding to xlims
 
 forplot 3.0.0
 ------------------
