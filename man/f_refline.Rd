@@ -4,7 +4,7 @@
 \alias{f_refline}
 \title{f_refline}
 \usage{
-f_refline(fobj, item = NULL, linenr = NULL, ...)
+f_refline(fobj, item = NULL, ...)
 }
 \arguments{
 \item{fobj}{a forest plot object of class 'fobj'}
@@ -12,22 +12,19 @@ f_refline(fobj, item = NULL, linenr = NULL, ...)
 \item{item}{item to be modified, either a number or the name of the column in fobj$dat.
 If NULL (the default), all items of type 'f' are affected}
 
-\item{linenr}{line to be modified if there is more than 1.
-If NULL (the default), all lines are affected.}
-
-\item{...}{options to be passed to \code{\link[graphics]{lines}}}
+\item{...}{options to be passed to \code{\link[graphics]{abline}}}
 }
 \value{
 a forest plot object of class 'fobj'
 }
 \description{
 Add and modify the reference line in forest (f) items of a forest plot object (fobj).
-Passed to \code{\link[graphics]{lines}}.
+Passed to \code{\link[graphics]{abline}}.
 }
 \examples{
 
 fobj<-genfobj(layout = c("t","t","t","t","t","t","f","t"),
 	dat = forplotdata, lwidths = c(0.8,0.4,0.6,0.4,0.6,1,1,0.5))
-fobj<-f_refline(fobj = fobj, x = c(0,0))
+fobj<-f_refline(fobj = fobj, v = 0)
 plotfobj(fobj)
 }
