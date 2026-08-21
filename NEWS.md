@@ -1,3 +1,7 @@
+forplot 3.1.0
+------------------
+use abline for f_refline
+
 forplot 3.0.1
 ------------------
 add option to drop individual headers and footers in combinefobj

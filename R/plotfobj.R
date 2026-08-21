@@ -200,11 +200,14 @@ plotfobj1<- function(fobj, additems = TRUE, addfoot = TRUE, addhead = TRUE) {
 					do.call(axis, fobj$items[[i]]$axis)
 				}
 				
+				#if (!is.null(fobj$items[[i]]$refline)) {
+				#	lapply(fobj$items[[i]]$refline, function(x) do.call(lines, x))
+				#}
+				
 				if (!is.null(fobj$items[[i]]$refline)) {
-					#do.call(lines, fobj$items[[i]]$refline)
-					lapply(fobj$items[[i]]$refline, function(x) do.call(lines, x))
+					do.call(abline, fobj$items[[i]]$refline)
 				}
-
+				
 				do.call(points, fobj$items[[i]]$points)
 				do.call(mapply, c(FUN = arrows, fobj$items[[i]]$arrows))
 				

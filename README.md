@@ -3,14 +3,18 @@
 
 # `forplot`
 
-A package to generate forest plots.
+An R package to generate highly customizable forest plots.
+
+It relies on the [R](https://r-project.org) [graphics
+package](http://127.0.0.1:28323/library/graphics/html/graphics-package.html)
+and generates an overall layout that is then populated with the desired
+elements (e.g. a text column or a specific plot).
 
 ## Installation
 
 `forplot` can be installed from github:
 
 ``` r
-
 #install package using remotes
 remotes::install_github("dcr-unibe-ch/forplot")
 
@@ -20,20 +24,22 @@ library(forplot)
 
 ## Usage
 
-`forplot` contains two main functions to build a forest plot.
+`forplot` contains two main functions:
 
-`genfobj` requires a *layout*, specifying the elements to be plotted and
-a data frame (*dat*) with the data to be plotted and produces a list of
-class **fobj**.
+- `genfobj` generates a list of class **fobj** based on a data frame
+  (*dat*) and a *layout*
 
-The **fobj** can be modified using a set of helper functions or directly
-by changing the list.
+- `plotfobj` produces the plot from the **fobj**
 
-`plotfobj` produces the plot from the **fobj**.
+The **fobj** can be modified using a set of helper functions or by
+directly changing the list. The individual elements are from the
+[R](https://r-project.org) [graphics
+package](http://127.0.0.1:28323/library/graphics/html/graphics-package.html)
+and all options available there can be used.
 
 ## Example data
 
-The package includes three data sets:
+The `forplot` package includes three data sets:
 
 - *forplotdata*: summary data with a 10 continuous variables
 - *forplotdata_prop*: summary data with 10 binary variables
@@ -106,16 +112,17 @@ head(forplotdata_bp)
 #> 6 4.179532     var1   1
 ```
 
-*forplotdata* has a text column with the variable names (*vlabel*), text
-columns *n\[1-4\]* with the number of observations and descriptives for
-each arm (either mean (sd) or n(%)), the formatted treatment effect
-(*beta_format*) and the p-value (*p1*), and three numeric columns to
-draw the forest (*beta*, *beta_lci* and *beta_uci*).
+*forplotdata* and *forplotdata_prop* have a character variable with the
+variable names (*vlabel*), further character variables *n\[1-4\]* with
+the number of observations and descriptives for each arm (either mean
+(sd) or n(%)), the formatted treatment effect (*beta_format*) and the
+p-value (*p1*), and three numeric variables to draw the forest (*beta*,
+*beta_lci* and *beta_uci*).
 
-In *forplotdata_prop* there are two further numeric columns with the
-proportion in each arm (*prop1*, *prop2*) to draw a srip plot.
+In *forplotdata_prop* there are two further numeric variables with the
+proportion in each arm (*prop1*, *prop2*) to draw a strip plot.
 
-*forplotdata_bp* has three columns with the actual observations of
+*forplotdata_bp* has three variables with the actual observations of
 *forplotdata* with
 
 - *value*: the variable value (numerical),
@@ -124,27 +131,26 @@ proportion in each arm (*prop1*, *prop2*) to draw a srip plot.
 
 ## Generating the **fobj** with `genfobj`
 
-`genfobj` requires the input of a *layout* and a data frame *dat*.
+The required input for `genfobj` are a *layout* and a data frame
+(*dat*).
 
 *layout* must be a character vector with elements *t* (text), *f*
 (forest), *s\[1-9\]* (strip), or *b* (boxplot).
 
-For each *t* element, *dat* must contain a single column, for each *f*
-element three columns (point estimate, lower confidence limit, upper
+For each *t* element, *dat* must contain a single variable, for each *f*
+element three variables (point estimate, lower confidence limit, upper
 confidence limit, in that order), and for each *s\[1-9\]* the number of
-columns indicated in \[\].
+variables indicated in \[\].
 
-The order of the columns must correspond to the layout.
+The order of the variables in *dat* must correspond to the layout.
 
 A *b* element does not need a column in *dat* but the specifcation of
 *obs*, a data frame in a long format with columns *value* (the outcome
-value), *variable* (the outcome variable, safest as a factor to preserve
-the order in the plot), and *arm* (the treatment arm, safest as a factor
-to preserve the order in the plot)
+value), *variable* (the outcome variable), and *arm* (the treatment arm)
 
-We want to use *forplotdata* and generate a plot with a text columns
-with the label, the descriptives, the formatted effect and the p-value,
-and a forest for the beta.
+Let’s generate a forest plot with the *forplotdata* including the label,
+the descriptives, the formatted effect, the p-value, and a forest for
+the beta:
 
 ``` r
 fobj<-genfobj(dat = forplotdata, layout = c("t","t","t","t","t","t","f","t"))
@@ -153,9 +159,9 @@ fobj<-genfobj(dat = forplotdata, layout = c("t","t","t","t","t","t","f","t"))
 The produced **fobj** is a list of length 5 with class *fobj*. It
 includes those elements:
 
-- *dat* and *obs*: the data
-- *setup*: the options from `genfobj` which has been given or assumed by
-  default (i.e. *layout*, *lheights*, *lwidths*, *y.at*, *ylim*)
+- *dat* and *obs*: the data (with obs = NULL in this example)
+- *setup*: overall composition of the plot, *layout*, *lheights*,
+  *lwidths*, *y.at*, and *ylim*
 - *items*: a list of length from *layout* with the options for each item
 - *header*: a list with the options for the header
 
@@ -244,8 +250,9 @@ fobj$item[[1]]
 ```
 
 *type* is the item type, *vname* is the variable in *dat* the item
-corresponds to, *plot* and *text* are the options used for plotting with
-base r.
+corresponds to, *plot* and *text* are used for plotting with the
+[R](https://r-project.org) [graphics
+package](http://127.0.0.1:28323/library/graphics/html/graphics-package.html).
 
 The *f* items are more complex, including options for *axis*, *points*
 and *arrows* of the fores plots.
@@ -276,8 +283,8 @@ plotfobj(fobj)
 
 ![](man/figures/README-unnamed-chunk-10-1.png)<!-- -->
 
-And with a bit nicer widths, which can be given as options in `genfobj`
-or just be changing the **fobj**:
+Column widths can be given as options in `genfobj` or directly changed
+in the **fobj**:
 
 ``` r
 fobj$setup$lwidths <- c(0.3,0.4,0.6,0.4,0.6,1,1,0.5)
@@ -308,14 +315,14 @@ plotfobj(fobj)
 
 ## Modify the items
 
-All items, grid lines and stripes can be modified using helper functions
-or within the list directly.
+All items, gridlines and stripes can be modified using helper functions
+or by changing the **fobj** directly.
 
-For *t* items helper function *t_options* allows to use all options used
-in R
-[graphics::text()](https://stat.ethz.ch/R-manual/R-devel/library/graphics/html/text.html)
-function. That can be done for a specific t item by using the number or
-column name of the item, or for all (by keeping item=NULL):
+With helper function *t_options*, *t* items can be modified using all
+options from R
+[graphics::text()](https://stat.ethz.ch/R-manual/R-devel/library/graphics/html/text.html).
+That can be done for a specific *t* item by using the number or column
+name of the item, or for all *t* items (by keeping item=NULL):
 
 ``` r
 fobj<-t_options(fobj = fobj, item = c("vlabel"), cex = 1.1, font = 2, col = "red", x=0.2, adj=0)
@@ -332,8 +339,8 @@ all options from
 [graphics::points()](https://stat.ethz.ch/R-manual/R-devel/library/graphics/html/points.html)
 and
 [graphics::arrows()](https://stat.ethz.ch/R-manual/R-devel/library/graphics/html/arrows.html)
-can be used. As we do only have one forest item, we do not have specify
-the *item*.
+can be used. As we do only have one forest item, we do not have to
+specify the *item*.
 
 ``` r
 fobj<-f_axis(fobj = fobj, xlim = c(-1.1,0.2), at = c(-1,-0.6,-0.2,0.2), 
@@ -346,13 +353,12 @@ plotfobj(fobj)
 
 ![](man/figures/README-unnamed-chunk-15-1.png)<!-- -->
 
-With *f_refline*, a reference line can be added and with *f_direction* a
-label for the direction below the axis. Note that the footer height has
-to be increased to fit the direction label. More than one reference line
-can be specified using the option *linenr*.
+With *f_refline*, reference line(s) can be added and with *f_direction*
+a label for the direction below the axis. Note that the footer height
+has to be increased to fit the direction label.
 
 ``` r
-fobj<-f_refline(fobj, x = c(0, 0))
+fobj<-f_refline(fobj, v = 0)
 
 fobj<-f_direction(fobj, text = "A better    B better", line = 1.6)
 
@@ -390,7 +396,7 @@ genfobj(dat = forplotdata,
   t_options(item = c("vlabel"), cex = 1.1, font = 2, col = "red", x=0.2, adj=0) |>
   f_axis(xlim=c(-1.1,0.2), at = c(-1,-0.6,-0.2,0.2), tck = -0.03, mgp = c(2,0.5,0)) |>
   f_points(pch = 16, cex = 1.5) |>
-  f_refline(x = c(0, 0)) |>
+  f_refline(v = 0) |>
   f_direction(text = "A better    B better", line = 1.6) |>
   plotfobj()
 ```
@@ -457,21 +463,20 @@ fobj$header
 #> [1] 0.5 0.5
 ```
 
-The *header* function can be used to modify the options using all
-options from
+The *header* helper function can be used with all options from
 [graphics::text()](https://stat.ethz.ch/R-manual/R-devel/library/graphics/html/text.html)
 As an extra element, the *hlayout* can be used to merge columns, i.e. to
 print a label over more than one column. And more than one header row
 can be specified using *headernr*, leading to a list of length \> 1.
 
-Let’s first just use different names, also including a line separator.
-Note that an empty character has to be included to leave column 1 and 8
-empty. And the y is also modified to place the label it a bit higher.
+Let’s first use different names, also including a line separator. Note
+that an empty character has to be included to leave column 1 and 8
+empty. And the y is also modified to place the label higher.
 
 ``` r
 fobj<-header(fobj = fobj,
   labels = c("","Arm A\nN","Arm A\nmean (sd)","Arm B\nN","Arm B\nmean (sd)",
-    "Mean difference\n95% CI","","P-value"),
+    "Mean difference\n(95% CI)","","P-value"),
   y = 0.6)
 
 plotfobj(fobj)
@@ -479,81 +484,37 @@ plotfobj(fobj)
 
 ![](man/figures/README-unnamed-chunk-21-1.png)<!-- -->
 
-We could also merge the label for the effect over the format and forest
-columns. We would then change the layout to include one label twice. And
-remove the empty label for the forest column.
+We can merge the label for the effect over the format and forest columns
+using the layout option where 6 is included twice.
 
 ``` r
 fobj<-header(fobj = fobj, hlayout = c(1,2,3,4,5,6,6,7),
   labels = c("","Arm A\nN","Arm A\nmean (sd)","Arm B\nN","Arm B\nmean (sd)",
-    "Mean difference 95% CI","P-value"))
+    "Mean difference (95% CI)","P-value"))
 
 plotfobj(fobj)
 ```
 
 ![](man/figures/README-unnamed-chunk-22-1.png)<!-- -->
 
-In order to also merge two arm labels, we would need to header rows
-using option *headernr*, leading to a header list with length 2: As
-before we can use further
+In order to merge two arm labels, we would need two header rows using
+option *headernr*, leading to a header list with length 2. As before we
+can use further
 [graphics::text()](https://stat.ethz.ch/R-manual/R-devel/library/graphics/html/text.html)
 options.
 
 ``` r
 fobj<-header(fobj=fobj, hlayout = c(1,2,2,3,3,4,4,5),  headernr = 1,
-    labels=c("","Arm A","Arm B","Mean diff (95% CI)","P-value"),
+    labels=c("","Arm A","Arm B","Mean difference (95% CI)","P-value"),
     y=0.9)
 
 fobj<-header(fobj=fobj, hlayout = c(1,2,3,4,5,6,7,8), headernr = 2,
     labels=c("","N","Mean (sd)","N","Mean (sd)","","",""),y=0.3)
 
-
-fobj$header 
-#> [[1]]
-#> [[1]]$hlayout
-#> [1] 1 2 2 3 3 4 4 5
-#> 
-#> [[1]]$text
-#> [[1]]$text$x
-#> NULL
-#> 
-#> [[1]]$text$y
-#> [1] 0.9
-#> 
-#> [[1]]$text$labels
-#> [1] ""                   "Arm A"              "Arm B"             
-#> [4] "Mean diff (95% CI)" "P-value"           
-#> 
-#> [[1]]$text$adj
-#> [1] 0.5 0.5
-#> 
-#> 
-#> 
-#> [[2]]
-#> [[2]]$hlayout
-#> [1] 1 2 3 4 5 6 7 8
-#> 
-#> [[2]]$text
-#> [[2]]$text$x
-#> NULL
-#> 
-#> [[2]]$text$y
-#> [1] 0.3
-#> 
-#> [[2]]$text$labels
-#> [1] ""          "N"         "Mean (sd)" "N"         "Mean (sd)" ""         
-#> [7] ""          ""         
-#> 
-#> [[2]]$text$adj
-#> [1] 0.5 0.5
-```
-
-``` r
-
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-24-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-23-1.png)<!-- -->
 
 ## Boxplots
 
@@ -581,7 +542,7 @@ fobj<-genfobj(dat = forplotdata, obs = forplotdata_bp,
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-25-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-24-1.png)<!-- -->
 
 Adding header gridlines and stripes:
 
@@ -601,7 +562,7 @@ fobj<-header(fobj, hlayout = c(1,2,3,4,5,6,7,8,9), headernr = 2,
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-26-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-25-1.png)<!-- -->
 
 ## Density plots
 
@@ -630,7 +591,7 @@ fobj<-header(fobj, hlayout = c(1,2,3,4,5,6,7,8,9,10), headernr = 2,
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-27-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-26-1.png)<!-- -->
 
 Options can be change via *d_axis* and *d_lines* using all options
 available for
@@ -656,7 +617,7 @@ fobj<-d_lines(fobj=fobj, lw=1.5)
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-28-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-27-1.png)<!-- -->
 
 ``` r
 #only one arm:
@@ -665,7 +626,7 @@ fobj<-d_lines(fobj=fobj, linenr=c(NA,2), col=1)
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-29-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-28-1.png)<!-- -->
 
 Different density curves could be added by using *x* and *y* options in
 *d_lines* (or the *lines* list in the **fobj**). Note that the
@@ -692,7 +653,7 @@ fobj<-genfobj(dat = forplotdata_prop,
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-30-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-29-1.png)<!-- -->
 
 Options can be modified via *s_axis*, *s_hline* and *s_points* using all
 options available for using all options available for
@@ -723,7 +684,7 @@ fobj<-gridlines(fobj)
 plotfobj(fobj)
 ```
 
-![](man/figures/README-unnamed-chunk-31-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-30-1.png)<!-- -->
 
 ## Combine fobjs
 
@@ -823,7 +784,7 @@ The **cfobj** can be plotted using the same plot function:
 plotfobj(fobj = cfobj)
 ```
 
-![](man/figures/README-unnamed-chunk-33-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-32-1.png)<!-- -->
 
 Combining plots can also be used to get different scaling for the plots
 of the individual variables. Assume we would like to present a number of
@@ -893,7 +854,7 @@ cfobj$setup$lheights[length(cfobj$setup$lheights)]<-0.5
 plotfobj(cfobj)
 ```
 
-![](man/figures/README-unnamed-chunk-34-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-33-1.png)<!-- -->
 
 ## Inserting subtitles
 
@@ -916,7 +877,7 @@ cfobj<-insert_subtitle(fobj,
 plotfobj(cfobj)
 ```
 
-![](man/figures/README-unnamed-chunk-35-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-34-1.png)<!-- -->
 
 The resulting **cfobj** contains 6 individual **fobj** (for each
 subtitle and the parts in between), which can be modified individually.
@@ -960,4 +921,4 @@ cfobj$setup$lheights[length(cfobj$setup$lheights)]<-0.15
 plotfobj(cfobj)
 ```
 
-![](man/figures/README-unnamed-chunk-36-1.png)<!-- -->
+![](man/figures/README-unnamed-chunk-35-1.png)<!-- -->

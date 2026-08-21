@@ -519,18 +519,15 @@ f_cutarrows<-function(fobj, item = NULL) {
 }
 
 
-
 #' f_refline
 #'
 #' Add and modify the reference line in forest (f) items of a forest plot object (fobj).
-#'	Passed to \code{\link[graphics]{lines}}.
+#'	Passed to \code{\link[graphics]{abline}}.
 #'
 #' @param fobj a forest plot object of class 'fobj'
 #' @param item item to be modified, either a number or the name of the column in fobj$dat.
 #' 	If NULL (the default), all items of type 'f' are affected
-#' @param linenr line to be modified if there is more than 1.
-#'	If NULL (the default), all lines are affected.
-#' @param ... options to be passed to \code{\link[graphics]{lines}}
+#' @param ... options to be passed to \code{\link[graphics]{abline}}
 #'
 #' @returns a forest plot object of class 'fobj'
 #'
@@ -542,9 +539,9 @@ f_cutarrows<-function(fobj, item = NULL) {
 #'
 #' fobj<-genfobj(layout = c("t","t","t","t","t","t","f","t"),
 #' 	dat = forplotdata, lwidths = c(0.8,0.4,0.6,0.4,0.6,1,1,0.5))
-#' fobj<-f_refline(fobj = fobj, x = c(0,0))
+#' fobj<-f_refline(fobj = fobj, v = 0)
 #' plotfobj(fobj)
-f_refline<-function(fobj, item = NULL, linenr = NULL, ...) {
+f_refline<-function(fobj, item = NULL, ...) {
 
 	itemnr<-check_convert(fobj = fobj, item = item, lay = "f")
 
@@ -552,26 +549,11 @@ f_refline<-function(fobj, item = NULL, linenr = NULL, ...) {
 
 	for (itn in itemnr) {
 		
-		if (is.null(linenr)) {
-			linenr<-1:length(fobj$items[[itn]]$refline)
+		if (is.null(fobj$items[[itn]]$refline)) {
+			fobj$items[[itn]]$refline<-list(v = 0, lty = 2)
 		}
 		
-		if (is.null(fobj$items[[itn]]$refline)) {
-			fobj$items[[itn]]$refline<-
-				list(list(x = rep(0,2), y = c(fobj$setup$ylim[1], fobj$setup$ylim[2]), lty = 2))
-		} else {
-			for (ln in linenr) {
-				if (length(fobj$items[[itn]]$refline)<ln) {
-					for (i in (length(fobj$items[[itn]]$refline)+1):linenr) {
-						fobj$items[[itn]]$refline<-append(fobj$items[[itn]]$refline,
-							list(fobj$items[[itn]]$refline[[i-1]]))
-					}
-				}
-				fobj$items[[itn]]$refline[[ln]]<-modifyList(fobj$items[[itn]]$refline[[ln]], input)
-			}		
-		}
-
-		#fobj$items[[itn]]$refline<-modifyList(fobj$items[[itn]]$refline, input)
+		fobj$items[[itn]]$refline<-modifyList(fobj$items[[itn]]$refline, input)
 	}
 
 	return(fobj)
