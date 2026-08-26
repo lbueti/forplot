@@ -2,7 +2,8 @@
 % Please edit documentation in R/genfobj.R
 \name{f_cutarrows}
 \alias{f_cutarrows}
-\title{f_cutarrows}
+\title{Adds arrowheads to confidence intervals which extend beyond the x-axis limits
+in forest (f) items of a forest plot object (fobj).}
 \usage{
 f_cutarrows(fobj, item = NULL)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/genfobj.R
 \name{s_borders}
 \alias{s_borders}
-\title{s_borders}
+\title{Add and modify borders of a sripe (s) item of a forest plot object (fobj).}
 \usage{
 s_borders(fobj, item = NULL, ...)
 }
@@ -18,9 +18,8 @@ If NULL (the default), all items of type 's' are affected}
 a forest plot object of class 'fobj'
 }
 \description{
-Add and modify borders of a sripe (s) item of a forest plot object (fobj).
 Passed to \code{\link[graphics]{abline}}.
-Wihout options two vertical lines are plotted at x-axis limits.
+Without options two vertical lines are plotted at x-axis limits.
 }
 \examples{
 

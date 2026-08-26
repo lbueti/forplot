@@ -2,7 +2,7 @@
 % Please edit documentation in R/genfobj.R
 \name{s_axis}
 \alias{s_axis}
-\title{s_axis}
+\title{Modify axis of stripe (s) items of a forest plot object (fobj).}
 \usage{
 s_axis(fobj, item = NULL, ...)
 }
@@ -18,7 +18,6 @@ If NULL (the default), all items of type 's' are affected}
 a forest plot object of class 'fobj'
 }
 \description{
-Modify axis of stripe (s) items of a forest plot object (fobj).
 Passed to \code{\link[graphics]{axis}}.
 }
 \examples{

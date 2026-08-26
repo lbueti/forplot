@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotfobj.R
 \name{plotfobj}
 \alias{plotfobj}
-\title{plotfobj}
+\title{Plot a forest plot (fobj) object}
 \usage{
 plotfobj(fobj)
 }
@@ -13,11 +13,11 @@ plotfobj(fobj)
 a plot
 }
 \description{
-plotfobj
+Plot a forest plot (fobj) object
 }
 \examples{
 
-fobj<-genfobj(layout = c("t","t","t","t","t","t","f","t"), 
+fobj<-genfobj(layout = c("t","t","t","t","t","t","f","t"),
 	dat = forplotdata,
 lwidths = c(0.8,0.4,0.6,0.4,0.6,1,1,0.5))
 plotfobj(fobj)

@@ -5,9 +5,9 @@
 #* Last update: 2026-06-12
 #* **********************************#
 
-#' forest
+#' Produce forest plots
 #'
-#' produces forest plots
+#' *This function is deprecated. We recommend using genfobj and friends instead*
 #'
 #' required input is a data frame with a column called vlabel, beta, beta_lci and beta_uci.
 #'

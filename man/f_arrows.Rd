@@ -2,7 +2,7 @@
 % Please edit documentation in R/genfobj.R
 \name{f_arrows}
 \alias{f_arrows}
-\title{f_arrows}
+\title{Modify arrows (confidence intervals) in forest (f) items of a forest plot object (fobj).}
 \usage{
 f_arrows(fobj, item = NULL, ...)
 }
@@ -18,7 +18,6 @@ If NULL (the default), all items of type 'f' are affected}
 a forest plot object of class 'fobj'
 }
 \description{
-Modify arrows (confidence intervals) in forest (f) items of a forest plot object (fobj).
 Passed to \code{\link[graphics]{arrows}}.
 }
 \examples{

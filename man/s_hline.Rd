@@ -2,7 +2,7 @@
 % Please edit documentation in R/genfobj.R
 \name{s_hline}
 \alias{s_hline}
-\title{s_hline}
+\title{Modify the hiorzontal line in stripe (s) items of forest plot object (fobj).}
 \usage{
 s_hline(fobj, item = NULL, ...)
 }
@@ -18,7 +18,6 @@ If NULL (the default), all items of type 's' are affected}
 a forest plot object of class 'fobj'
 }
 \description{
-Modify the hiorzontal line in stripe (s) items of forest plot object (fobj).
 Passed to \code{\link[graphics]{abline}}.
 }
 \examples{
