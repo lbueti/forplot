@@ -1,0 +1,56 @@
+url: https://dcr-unibe-ch.github.io/forplot/
+template:
+  bootstrap: 5
+  light-switch: true
+navbar:
+  structure:
+    right: [search, github]
+
+reference:
+- title: Generate and plot forest plots
+  contents:
+  - genfobj
+  - combinefobj
+  - plotfobj
+  - plotfobj1
+
+- subtitle: Modify overarching appearance
+  contents:
+  - header
+  - gridlines
+  - stripes
+  - insert_subtitle
+
+- title: Modify forest columns
+  contents:
+  - f_arrows
+  - f_axis
+  - f_cutarrows
+  - f_direction
+  - f_points
+  - f_refline
+
+- title: Modify text columns
+  contents:
+  - t_options
+
+- title: Modify data plot (density plots, boxplots, stripcharts)
+  contents:
+  - d_lines
+  - d_axis
+  - b_boxplot
+  - b_axis
+  - s_points
+  - s_axis
+  - s_hline
+  - s_borders
+
+- title: Demonstration datasets
+  contents:
+  - forplotdata
+  - forplotdata_bp
+  - forplotdata_prop
+
+- title: Deprecated
+  contents:
+  - fplot
