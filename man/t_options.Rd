@@ -2,7 +2,7 @@
 % Please edit documentation in R/genfobj.R
 \name{t_options}
 \alias{t_options}
-\title{t_options}
+\title{Modify text (t) items of a forest plot object (fobj).}
 \usage{
 t_options(fobj, item = NULL, ...)
 }
@@ -18,7 +18,6 @@ If NULL (the default), all items of type 't' are affected}
 a forest plot object of class 'fobj'
 }
 \description{
-Modify text (t) items of a forest plot object (fobj).
 Passed to \code{\link[graphics]{text}}.
 }
 \examples{

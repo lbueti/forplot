@@ -2,7 +2,7 @@
 % Please edit documentation in R/genfobj.R
 \name{header}
 \alias{header}
-\title{header}
+\title{Modify the header of a forest plot object (fobj).}
 \usage{
 header(fobj, hlayout = NULL, headernr = NULL, ...)
 }
@@ -20,7 +20,6 @@ If NULL (the default), all header rows are affected}
 a forest plot object of class 'fobj'
 }
 \description{
-Modify the header of a forest plot object (fobj).
 Passed to \code{\link[graphics]{text}}.
 }
 \examples{

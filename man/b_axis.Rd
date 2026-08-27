@@ -2,7 +2,7 @@
 % Please edit documentation in R/genfobj.R
 \name{b_axis}
 \alias{b_axis}
-\title{b_axis}
+\title{Modify boxplot (b) items of a forest plot object (fobj).}
 \usage{
 b_axis(fobj, item = NULL, ...)
 }
@@ -18,7 +18,6 @@ If NULL (the default), all items of type 'b' are affected.}
 a forest plot object of class 'fobj'
 }
 \description{
-Modify boxplot (b) items of a forest plot object (fobj).
 Passed to \code{\link[graphics]{axis}}.
 }
 \examples{

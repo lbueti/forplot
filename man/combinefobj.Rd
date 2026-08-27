@@ -2,7 +2,7 @@
 % Please edit documentation in R/combinefobj.R
 \name{combinefobj}
 \alias{combinefobj}
-\title{combinefobj}
+\title{Combine multiple fobjs}
 \usage{
 combinefobj(
   lfobj,
@@ -39,7 +39,7 @@ fobj1<-genfobj(dat = forplotdata[1:5,],
 fobj2<-genfobj(dat = forplotdata[6:10,],
 	layout = c("t","t","t","t","t","t","f","t"),
 	lwidths = c(0.8,0.4,0.6,0.4,0.6,1,1,0.5))
-	
+
 cfobj<-combinefobj(list(fobj1,fobj2))
 plotfobj(cfobj)
 

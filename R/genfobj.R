@@ -1,5 +1,5 @@
 
-#' genfobj
+#' Create a forest plot (fobj) object
 #'
 #' First step to generate a forest plot. Generates a fobj that can be plotted.
 #'
@@ -17,7 +17,7 @@
 #' @export
 #'
 #' @importFrom stats density
-#' 
+#'
 #' @examples
 #'
 #' fobj<-genfobj(layout = c("t","t","t","t","t","t","f","t"),
@@ -87,9 +87,9 @@ genfobj<-function(layout, dat, obs = NULL,
 		}
 
 		if (layout[i]=="f") {
-			
+
 			xlim<-defxlim(pe=dat[,j],lci=dat[,j+1],uci=dat[,j+2])
-			
+
 			code<-rep(3,nrow(dat))
 			angle<-rep(90,nrow(dat))
 
@@ -109,10 +109,10 @@ genfobj<-function(layout, dat, obs = NULL,
 		if (grepl("s\\d+",layout[i])) {
 
 			nstrip<-as.numeric(substr(layout[i],2,nchar(layout[i])))
-			
+
 			xlim<-c(min(dat[,j:(j+nstrip-1)],na.rm=TRUE),max(dat[,j:(j+nstrip-1)],na.rm=TRUE))
 			xlim<-addpad(lims = xlim, padding = 0.04)
-			
+
 			cols<-1:nstrip
 
 			addi<-list(
@@ -142,10 +142,10 @@ genfobj<-function(layout, dat, obs = NULL,
 					stop("'obs' must be a data frame with columns 'value', 'variable' and 'arm'.")
 				}
 			}
-			
+
 			xlim<-c(min(obs$value,na.rm=TRUE),max(obs$value,na.rm=TRUE))
-			xlim<-addpad(lims = xlim, padding = 0.04)	
-			
+			xlim<-addpad(lims = xlim, padding = 0.04)
+
 			if (length(y.at)>1) {
 				yd<-abs(mean(diff(y.at)))
 			} else {
@@ -179,27 +179,27 @@ genfobj<-function(layout, dat, obs = NULL,
 			}
 
 			xlim<-c(min(obs$value,na.rm=TRUE),max(obs$value,na.rm=TRUE))
-			xlim<-addpad(lims = xlim, padding = 0.04)	
-			
+			xlim<-addpad(lims = xlim, padding = 0.04)
+
 			plh<-ceiling(10*max(density(obs$value)$y))/10
-			
+
 			las<-levels(obs$arm)
 			lvs<-levels(obs$variable)
 			liv<-vector(length=length(lvs),mode="list")
-			
+
 			cols<-c(rgb(1,0,0,1),rgb(0,0,1,1))
-			
+
 			for (li in 1:length(liv)) {
 				liv[[li]]<-vector(length=length(las),mode="list")
 			}
 			for (lv in 1:length(lvs)) {
-				for (la in 1:length(las)) {			
+				for (la in 1:length(las)) {
 					sel<-obs$arm==las[la] & obs$variable==lvs[lv]
 					de<-density(obs$value[sel])
 					liv[[lv]][[la]]<-list(x=de$x,y=de$y + y.at[lv] - plh/2,col=cols[la])
 				}
 			}
-	
+
 			addi<-list(
 				type = layout[i],
 				vname = hnames[i],
@@ -207,9 +207,9 @@ genfobj<-function(layout, dat, obs = NULL,
 					yaxt="n" ,ylab="", xlab="", axes=FALSE, xaxs = "i", yaxs = "i"),
 				axis = list(side = 1, line = 0, las = 1),
 				lines = liv)
-	
+
 		}
-		
+
 		items[[i]]<-addi
 
 	}
@@ -255,9 +255,8 @@ genfobj<-function(layout, dat, obs = NULL,
 # text (f)
 #---------------------
 
-#' t_options
-#'
 #' Modify text (t) items of a forest plot object (fobj).
+#'
 #'	Passed to \code{\link[graphics]{text}}.
 #'
 #' @param fobj a forest plot object of class fobj
@@ -300,9 +299,8 @@ t_options<-function(fobj, item = NULL, ...)	{
 #forest (f)
 #---------------------
 
-#' f_axis
-#'
 #' Modify axis in forest (f) items of a forest plot object (fobj).
+#'
 #'	Passed to \code{\link[graphics]{axis}}.
 #'
 #' @param fobj a forest plot object of class 'fobj'
@@ -346,9 +344,8 @@ f_axis<-function(fobj, item = NULL, ...) {
 }
 
 
-#' f_points
-#'
 #' Modify points in forest (f) items of a forest plot object (fobj).
+#'
 #'	Passed to \code{\link[graphics]{points}}.
 #'
 #' @param fobj a forest plot object of class 'fobj'
@@ -382,9 +379,8 @@ f_points<-function(fobj, item = NULL, ...) {
 	return(fobj)
 }
 
-#' f_arrows
-#'
 #' Modify arrows (confidence intervals) in forest (f) items of a forest plot object (fobj).
+#'
 #'	Passed to \code{\link[graphics]{arrows}}.
 #'
 #' @param fobj a forest plot object of class 'fobj'
@@ -418,8 +414,6 @@ f_arrows<-function(fobj, item = NULL, ...) {
 	return(fobj)
 }
 
-#' f_cutarrows
-#'
 #' Adds arrowheads to confidence intervals which extend beyond the x-axis limits
 #'	in forest (f) items of a forest plot object (fobj).
 #'
@@ -457,21 +451,21 @@ f_cutarrows<-function(fobj, item = NULL) {
 	itemnr<-check_convert(fobj = fobj, item = item, lay = "f")
 
 	for (itn in itemnr) {
-	
+
 		#save initial arrow cap length, if only one value is given, reset at the end.
 		initlength<-fobj$items[[itn]]$arrows$length
-		
+
 		#select arrows to cut:
-		outlow<-(fobj$items[[itn]]$arrows$x0<fobj$items[[itn]]$plot$xlim[1]) & 
+		outlow<-(fobj$items[[itn]]$arrows$x0<fobj$items[[itn]]$plot$xlim[1]) &
 			!is.na(fobj$items[[itn]]$arrows$x0)
-		outhigh<-(fobj$items[[itn]]$arrows$x1>fobj$items[[itn]]$plot$xlim[2]) & 
+		outhigh<-(fobj$items[[itn]]$arrows$x1>fobj$items[[itn]]$plot$xlim[2]) &
 			!is.na(fobj$items[[itn]]$arrows$x1)
 
 		#left:
 		fobj$items[[itn]]$arrows$x0[outlow]<-fobj$items[[itn]]$plot$xlim[1]
 		fobj$items[[itn]]$arrows$code[outlow]<-1
 		fobj$items[[itn]]$arrows$angle[outlow]<-30
-		
+
 		#right
 		fobj$items[[itn]]$arrows$x1[outhigh]<-fobj$items[[itn]]$plot$xlim[2]
 		fobj$items[[itn]]$arrows$code[outhigh]<-2
@@ -479,36 +473,36 @@ f_cutarrows<-function(fobj, item = NULL) {
 
 		#both
 		fobj$items[[itn]]$arrows$code[outlow & outhigh]<-3
-		
+
 		#one-sided:
 		onesided<-(outlow & !outhigh) | (!outlow & outhigh)
-		
-		#if only left or right: 
-		#duplicate arrows and add the normal end on the other side 
+
+		#if only left or right:
+		#duplicate arrows and add the normal end on the other side
 		if (any(onesided)) {
 			narr<-length(fobj$items[[itn]]$arrows$y0)
-			
+
 			fobj$items[[itn]]$arrows<-
 				lapply(fobj$items[[itn]]$arrows,function(x) c(x,x[onesided]))
-				
+
 			newarr<-(narr+1):length(fobj$items[[itn]]$arrows$code)
-			
+
 			if (!all(fobj$items[[itn]]$arrows$code[newarr] %in% c(1,2))) {
 				warning("Problems with arrow code")
 			} else {
 				fobj$items[[itn]]$arrows$code[newarr]<-
 					fobj$items[[itn]]$arrows$code[newarr]*(-1)+3
 			}
-			fobj$items[[itn]]$arrows$angle[newarr]<-90		
-		
+			fobj$items[[itn]]$arrows$angle[newarr]<-90
+
 			#reset arrow cap length (of all are the same)
 			if (length(initlength)==1) {
 				fobj$items[[itn]]$arrows$length<-initlength
 			}
 		}
-		
-		#remove point if outside 
-		#pointout<-fobj$items[[itn]]$points$x<fobj$items[[itn]]$plot$xlim[1] | 
+
+		#remove point if outside
+		#pointout<-fobj$items[[itn]]$points$x<fobj$items[[itn]]$plot$xlim[1] |
 		#	fobj$items[[itn]]$points$x>fobj$items[[itn]]$plot$xlim[2]
 		#
 		#fobj$items[[itn]]$points$x[pointout]<-NA
@@ -519,10 +513,9 @@ f_cutarrows<-function(fobj, item = NULL) {
 }
 
 
-#' f_refline
-#'
 #' Add and modify the reference line in forest (f) items of a forest plot object (fobj).
-#'	Passed to \code{\link[graphics]{abline}}.
+#'
+#' Passed to \code{\link[graphics]{abline}}.
 #'
 #' @param fobj a forest plot object of class 'fobj'
 #' @param item item to be modified, either a number or the name of the column in fobj$dat.
@@ -548,11 +541,11 @@ f_refline<-function(fobj, item = NULL, ...) {
 	input<-list(...)
 
 	for (itn in itemnr) {
-		
+
 		if (is.null(fobj$items[[itn]]$refline)) {
 			fobj$items[[itn]]$refline<-list(v = 0, lty = 2)
 		}
-		
+
 		fobj$items[[itn]]$refline<-modifyList(fobj$items[[itn]]$refline, input)
 	}
 
@@ -560,9 +553,8 @@ f_refline<-function(fobj, item = NULL, ...) {
 }
 
 
-#' f_direction
-#'
 #' Add and modify direction indicator in forest (f) items of a forest plot object (fobj).
+#'
 #'	Passed to \code{\link[graphics]{mtext}}.
 #'
 #' @param fobj a forest plot object of class 'fobj'
@@ -608,9 +600,8 @@ f_direction<-function(fobj, item= NULL, ...) {
 # strip plot (s)
 #---------------------
 
-#' s_axis
-#'
 #' Modify axis of stripe (s) items of a forest plot object (fobj).
+#'
 #' Passed to \code{\link[graphics]{axis}}.
 #'
 #' @param fobj a forest plot object of class 'fobj'
@@ -654,9 +645,8 @@ s_axis<-function(fobj, item = NULL, ...) {
 	return(fobj)
 }
 
-#' s_hline
-#'
 #' Modify the hiorzontal line in stripe (s) items of forest plot object (fobj).
+#'
 #' Passed to \code{\link[graphics]{abline}}.
 #'
 #' @param fobj a forest plot object of class 'fobj'
@@ -694,9 +684,8 @@ s_hline<-function(fobj, item = NULL, ...) {
 
 
 
-#' s_points
-#'
 #' Modify points in stripe (s) items of a forest plot object (fobj).
+#'
 #' Passed to \code{\link[graphics]{points}}.
 #'
 #' @param fobj a forest plot object of class 'fobj'
@@ -750,11 +739,10 @@ s_points<-function(fobj, item = NULL, pointnr = NULL, ...) {
 }
 
 
-#' s_borders
-#'
 #' Add and modify borders of a sripe (s) item of a forest plot object (fobj).
-#' Passed to \code{\link[graphics]{abline}}. 
-#' Wihout options two vertical lines are plotted at x-axis limits.
+#'
+#' Passed to \code{\link[graphics]{abline}}.
+#' Without options two vertical lines are plotted at x-axis limits.
 #'
 #' @param fobj a forest plot object of class 'fobj'
 #' @param item item to be modified, either a number or the name of the column in fobj$dat.
@@ -789,11 +777,11 @@ s_borders<-function(fobj, item = NULL, ...) {
 				list(v = c(fobj$items[[itn]]$plot$xlim[1],
 				fobj$items[[itn]]$plot$xlim[2]))
 		}
-		
+
 		fobj$items[[itn]]$borders<-
 			modifyList(fobj$items[[itn]]$borders, input)
 	}
-	
+
 	return(fobj)
 }
 
@@ -801,9 +789,8 @@ s_borders<-function(fobj, item = NULL, ...) {
 # boxplot (b)
 #---------------------
 
-#' b_boxplot
-#'
 #' Modify boxplot (b) items of a forest plot object (fobj).
+#'
 #' Passed to \code{\link[graphics]{boxplot}}.
 #'
 #' @param fobj a forest plot object of class 'fobj'
@@ -847,9 +834,8 @@ b_boxplot<-function(fobj, item = NULL, ...) {
 	return(fobj)
 }
 
-#' b_axis
+#' Modify boxplot (b) axis of a forest plot object (fobj).
 #'
-#' Modify boxplot (b) items of a forest plot object (fobj).
 #' Passed to \code{\link[graphics]{axis}}.
 #'
 #' @param fobj a forest plot object of class 'fobj'
@@ -898,9 +884,8 @@ b_axis<-function(fobj, item = NULL, ...) {
 # density plot (d)
 #---------------------
 
-#' d_axis
-#'
 #' Modify density (d) items of a forest plot object (fobj).
+#'
 #' Passed to \code{\link[graphics]{axis}}.
 #'
 #' @param fobj a forest plot object of class 'fobj'
@@ -944,15 +929,14 @@ d_axis<-function(fobj, item = NULL, ...) {
 	return(fobj)
 }
 
-#' d_lines
-#'
 #' Modify lines in density (d) items of a forest plot object (fobj).
+#'
 #' Passed to \code{\link[graphics]{lines}}.
 #'
 #' @param fobj a forest plot object of class 'fobj'
 #' @param item item to be modified, either a number or the name of the column in fobj$dat.
 #' 	If NULL (the default), all items of type 's' are affected
-#' @param linenr lines to be modified. A vector of length 2 refering to the variable and the arm. 
+#' @param linenr lines to be modified. A vector of length 2 refering to the variable and the arm.
 #'	If NULL (the default), all lines are affected. If one number is NA, all lines are affected.
 #' @param ... options to be passed to \code{\link[graphics]{lines}}
 #'
@@ -984,18 +968,18 @@ d_lines<-function(fobj, item = NULL, linenr = NULL, ...) {
 	for (itn in itemnr) {
 
 		if (is.null(linenr)) {
-			lvs<-NA 
-			las<-NA 
+			lvs<-NA
+			las<-NA
 		} else {
-			
+
 			lvs<-linenr[1]
 			las<-linenr[2]
 		}
-		
+
 		if (is.na(lvs)) {
 			lvs<-1:length(fobj$items[[itn]]$lines)
 		}
-		
+
 		for (lv in lvs) {
 			if (is.na(las)) {
 				lasu<-1:length(fobj$items[[itn]]$lines[[lv]])
@@ -1017,9 +1001,8 @@ d_lines<-function(fobj, item = NULL, linenr = NULL, ...) {
 #header
 #---------------------
 
-#' header
-#'
 #' Modify the header of a forest plot object (fobj).
+#'
 #'	Passed to \code{\link[graphics]{text}}.
 #'
 #' @param fobj a forest plot object of class 'fobj'
@@ -1063,7 +1046,7 @@ header<-function(fobj, hlayout = NULL, headernr = NULL, ...)	{
 	input<-list(...)
 
 	if (length(fobj$header)==0) {
-		
+
 		if (is.null(fobj$dat)) {
 			h<-paste0("header",1:length(fobj$setup$lwidth))
 			fobj$header<-list(list(hlayout = 1:length(fobj$setup$lwidth),
@@ -1073,8 +1056,8 @@ header<-function(fobj, hlayout = NULL, headernr = NULL, ...)	{
 			fobj$header<-list(list(hlayout = 1:length(fobj$setup$layout),
 				text = list(x = NULL, y = 0.5, labels = h, adj = c(0.5,0.5))))
 		}
-		
-		
+
+
 	}
 
 
@@ -1109,9 +1092,8 @@ header<-function(fobj, hlayout = NULL, headernr = NULL, ...)	{
 # grid options
 #----------------
 
-#' gridlines
-#'
 #' Add or modify horizontal lines to a forest plot object (fobj).
+#'
 #'	Passed to \code{\link[graphics]{abline}}.
 #'
 #' @param fobj a forest plot object of class 'fobj'
@@ -1139,11 +1121,11 @@ gridlines<-function(fobj, ...)	{
 	input<-list(...)
 
 	if (is.null(fobj$gridlines)) {
-		fobj$gridlines<-list(h = c(fobj$setup$ylim[2], fobj$setup$ylim[1]), xpd = TRUE)	
+		fobj$gridlines<-list(h = c(fobj$setup$ylim[2], fobj$setup$ylim[1]), xpd = TRUE)
 	}
 
 	fobj$gridlines<-modifyList(fobj$gridlines, input)
-	
+
 	return(fobj)
 }
 
@@ -1151,9 +1133,8 @@ gridlines<-function(fobj, ...)	{
 #stripes
 #----------
 
-#' stripes
-#'
 #' Add or modify stripes in a forest plot object (fobj).
+#'
 #'	Passed to \code{\link[graphics]{rect}}.
 #'
 #' @param fobj a forest plot object of class 'fobj'
@@ -1185,12 +1166,12 @@ stripes<-function(fobj, ...)	{
 			fobj$setup$ylim[1] + sort(fobj$setup$y.at)[-length(fobj$setup$y.at)])
 		ub<-c(fobj$setup$ylim[1] + sort(fobj$setup$y.at))
 		ys<-cbind(lb,ub)[seq(1,length(lb),by=2),]
-		
+
 		if (!is.matrix(ys)) {
 			ys<-t(matrix(ys))
 		}
 
-		fobj$stripes<-list(xleft = NA, ybottom = ys[,1], xright = NA, ytop = ys[,2], 
+		fobj$stripes<-list(xleft = NA, ybottom = ys[,1], xright = NA, ytop = ys[,2],
 			col = rgb(.1,.1,.1,.1), border = NA)
 	}
 

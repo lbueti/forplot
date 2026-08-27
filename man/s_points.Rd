@@ -2,7 +2,7 @@
 % Please edit documentation in R/genfobj.R
 \name{s_points}
 \alias{s_points}
-\title{s_points}
+\title{Modify points in stripe (s) items of a forest plot object (fobj).}
 \usage{
 s_points(fobj, item = NULL, pointnr = NULL, ...)
 }
@@ -20,7 +20,6 @@ If NULL (the default), all items of type 's' are affected}
 a forest plot object of class 'fobj'
 }
 \description{
-Modify points in stripe (s) items of a forest plot object (fobj).
 Passed to \code{\link[graphics]{points}}.
 }
 \examples{

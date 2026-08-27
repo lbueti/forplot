@@ -2,7 +2,7 @@
 % Please edit documentation in R/genfobj.R
 \name{d_lines}
 \alias{d_lines}
-\title{d_lines}
+\title{Modify lines in density (d) items of a forest plot object (fobj).}
 \usage{
 d_lines(fobj, item = NULL, linenr = NULL, ...)
 }
@@ -21,7 +21,6 @@ If NULL (the default), all lines are affected. If one number is NA, all lines ar
 a forest plot object of class 'fobj'
 }
 \description{
-Modify lines in density (d) items of a forest plot object (fobj).
 Passed to \code{\link[graphics]{lines}}.
 }
 \examples{

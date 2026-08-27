@@ -2,7 +2,7 @@
 % Please edit documentation in R/combinefobj.R
 \name{insert_subtitle}
 \alias{insert_subtitle}
-\title{insert_subtitle}
+\title{Insert subtitles over the whole width of an fobj}
 \usage{
 insert_subtitle(fobj, atrows, subtitle = NA, lheights = NA)
 }
@@ -20,7 +20,6 @@ subtitles, main panels and overall footer.}
 a combined forest plot object of class 'cfobj'
 }
 \description{
-Inserts subtitles over the whole width of an fobj.
 Changes to fobj to an cfobj.
 }
 \examples{

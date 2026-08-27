@@ -2,7 +2,7 @@
 % Please edit documentation in R/genfobj.R
 \name{f_direction}
 \alias{f_direction}
-\title{f_direction}
+\title{Add and modify direction indicator in forest (f) items of a forest plot object (fobj).}
 \usage{
 f_direction(fobj, item = NULL, ...)
 }
@@ -18,7 +18,6 @@ If NULL (the default), all items of type 'f' are affected}
 a forest plot object of class 'fobj'
 }
 \description{
-Add and modify direction indicator in forest (f) items of a forest plot object (fobj).
 Passed to \code{\link[graphics]{mtext}}.
 }
 \examples{
