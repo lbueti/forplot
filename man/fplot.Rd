@@ -2,7 +2,7 @@
 % Please edit documentation in R/forest.R
 \name{fplot}
 \alias{fplot}
-\title{forest}
+\title{Produce forest plots}
 \usage{
 fplot(
   dat,
@@ -172,7 +172,7 @@ arm (the treatment arm, safest as a factor to preserve the order in the plot)}
 forest plot
 }
 \description{
-produces forest plots
+\emph{This function is deprecated. We recommend using genfobj and friends instead}
 }
 \details{
 required input is a data frame with a column called vlabel, beta, beta_lci and beta_uci.
