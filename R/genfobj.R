@@ -593,7 +593,7 @@ f_direction<-function(fobj, item= NULL, ...) {
 
 
 
-# strip plot (s)
+# strip chart (s)
 #---------------------
 
 #' Modify axis of stripchart (s) items of a forest plot object (fobj)
